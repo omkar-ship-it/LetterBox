@@ -1,0 +1,218 @@
+"use client";
+
+import { useRef } from "react";
+import { ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
+import { VoiceRecorder } from "@/components/wizard/VoiceRecorder";
+import { moodPalette } from "@/lib/mood-palette";
+import { uploadFile } from "@/lib/upload-client";
+import type { SceneDraft } from "@/components/wizard/types";
+
+export function ScenesStep({
+  scenes,
+  setScenes,
+  accentColors,
+}: {
+  scenes: SceneDraft[];
+  setScenes: (updater: (prev: SceneDraft[]) => SceneDraft[]) => void;
+  accentColors: string[];
+}) {
+  function updateScene(id: string, patch: Partial<SceneDraft>) {
+    setScenes((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+  }
+
+  function addScene() {
+    setScenes((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        eyebrow: "",
+        quote: "",
+        description: "",
+        accentColor: accentColors[prev.length % accentColors.length],
+        imageUrl: null,
+        imageUploading: false,
+        voiceNoteUrl: null,
+        voiceUploading: false,
+      },
+    ]);
+  }
+
+  function removeScene(id: string) {
+    setScenes((prev) => (prev.length <= 1 ? prev : prev.filter((s) => s.id !== id)));
+  }
+
+  async function handleImagePick(id: string, file: File) {
+    updateScene(id, { imageUploading: true });
+    try {
+      const url = await uploadFile(file);
+      updateScene(id, { imageUrl: url, imageUploading: false });
+    } catch {
+      updateScene(id, { imageUploading: false });
+    }
+  }
+
+  async function handleVoiceRecorded(id: string, blob: Blob) {
+    updateScene(id, { voiceUploading: true });
+    try {
+      const url = await uploadFile(blob, "voice-note.webm");
+      updateScene(id, { voiceNoteUrl: url, voiceUploading: false });
+    } catch {
+      updateScene(id, { voiceUploading: false });
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {scenes.map((scene, i) => (
+        <SceneCard
+          key={scene.id}
+          index={i}
+          scene={scene}
+          accentColors={accentColors}
+          canRemove={scenes.length > 1}
+          onChange={(patch) => updateScene(scene.id, patch)}
+          onRemove={() => removeScene(scene.id)}
+          onImagePick={(file) => handleImagePick(scene.id, file)}
+          onVoiceRecorded={(blob) => handleVoiceRecorded(scene.id, blob)}
+          onVoiceRemove={() => updateScene(scene.id, { voiceNoteUrl: null })}
+        />
+      ))}
+
+      <button
+        type="button"
+        onClick={addScene}
+        className="w-full rounded-xl border-2 border-dashed border-stone-300 py-4 text-sm font-semibold text-stone-500 transition hover:border-[#a8455a] hover:text-[#a8455a]"
+      >
+        + Add another scene
+      </button>
+    </div>
+  );
+}
+
+function SceneCard({
+  index,
+  scene,
+  accentColors,
+  canRemove,
+  onChange,
+  onRemove,
+  onImagePick,
+  onVoiceRecorded,
+  onVoiceRemove,
+}: {
+  index: number;
+  scene: SceneDraft;
+  accentColors: string[];
+  canRemove: boolean;
+  onChange: (patch: Partial<SceneDraft>) => void;
+  onRemove: () => void;
+  onImagePick: (file: File) => void;
+  onVoiceRecorded: (blob: Blob) => void;
+  onVoiceRemove: () => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function paintMood() {
+    const seed = `${scene.quote}${scene.description}` || `scene-${index}`;
+    onChange({ accentColor: moodPalette(seed, accentColors) });
+  }
+
+  return (
+    <div className="rounded-2xl border border-stone-200 bg-white p-5">
+      <div className="mb-3 flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-[0.15em] text-stone-400">Scene {index + 1}</span>
+        {canRemove && (
+          <button type="button" onClick={onRemove} className="text-stone-400 hover:text-red-500" aria-label="Remove scene">
+            <Trash2 size={15} />
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_140px]">
+        <div className="space-y-3">
+          <input
+            value={scene.eyebrow}
+            onChange={(e) => onChange({ eyebrow: e.target.value })}
+            placeholder="Label (optional) — e.g. Steady"
+            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-stone-500 focus:border-[#a8455a] focus:outline-none"
+          />
+          <textarea
+            value={scene.quote}
+            onChange={(e) => onChange({ quote: e.target.value })}
+            placeholder="The line that says it — a quote or moment."
+            rows={2}
+            className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm italic focus:border-[#a8455a] focus:outline-none"
+          />
+          <textarea
+            value={scene.description}
+            onChange={(e) => onChange({ description: e.target.value })}
+            placeholder="A little more detail (optional)."
+            rows={2}
+            className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-[#a8455a] focus:outline-none"
+          />
+
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onImagePick(file);
+                e.target.value = "";
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={scene.imageUploading}
+              className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-50 disabled:opacity-60"
+            >
+              {scene.imageUploading ? <Loader2 size={13} className="animate-spin" /> : <ImagePlus size={13} />}
+              {scene.imageUploading ? "Uploading…" : scene.imageUrl ? "Replace photo" : "Upload photo"}
+            </button>
+            <button
+              type="button"
+              onClick={paintMood}
+              className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-50"
+            >
+              <Sparkles size={13} /> AI paint
+            </button>
+            <VoiceRecorder
+              voiceNoteUrl={scene.voiceNoteUrl}
+              uploading={scene.voiceUploading}
+              onRecorded={onVoiceRecorded}
+              onRemove={onVoiceRemove}
+            />
+          </div>
+          <p className="text-[11px] text-stone-400">
+            No photo? This scene becomes a full-color closing-style card instead — great for the last scene.
+          </p>
+        </div>
+
+        <div
+          className="relative flex aspect-[3/4] items-center justify-center overflow-hidden rounded-xl"
+          style={{ background: scene.imageUrl ? undefined : `linear-gradient(160deg, ${scene.accentColor}, #2b2117)` }}
+        >
+          {scene.imageUrl ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element -- preview thumbnail for an uploaded/data-url image */}
+              <img src={scene.imageUrl} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => onChange({ imageUrl: null })}
+                className="absolute right-1.5 top-1.5 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
+                aria-label="Remove photo"
+              >
+                <X size={12} />
+              </button>
+            </>
+          ) : (
+            <span className="px-3 text-center text-[11px] font-semibold uppercase tracking-wide text-white/80">Peak card</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

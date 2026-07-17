@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local-dev fallback card store (used only when POSTGRES_URL isn't set)
+/.data
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
