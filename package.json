@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:push": "drizzle-kit push"
+    "db:push": "node --env-file=.env.local node_modules/.bin/drizzle-kit push"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.112.1",
