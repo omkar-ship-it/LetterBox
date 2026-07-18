@@ -488,6 +488,11 @@
 }
 .root[data-variant="fullscreen"] .deckScene {
   position: fixed;
+  /* Bigger card on the real receiver view specifically — the wizard's
+     small phone-preview frame doesn't have room for this without the card
+     overlapping the "tap to close" hint and the corner envelope (confirmed
+     visually: the base padding/width above stays what the preview needs). */
+  padding: 1.5rem 0.6rem;
 }
 .deckScene.active {
   opacity: 1;
@@ -499,6 +504,9 @@
   width: min(520px, 92%);
   aspect-ratio: 3 / 2;
   perspective: 1200px;
+}
+.root[data-variant="fullscreen"] .postcardStage {
+  width: min(640px, 98%);
 }
 .postcard {
   position: absolute;
