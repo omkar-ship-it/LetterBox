@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import { ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
+import { Check, ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { VoiceRecorder } from "@/components/wizard/VoiceRecorder";
 import { moodPalette } from "@/lib/mood-palette";
+import { LIGHT_PALETTE } from "@/lib/light-palette";
 import { uploadFile } from "@/lib/upload-client";
 import { SCENE_EYEBROW_MAX_LENGTH, SCENE_QUOTE_MAX_LENGTH, SCENE_DESCRIPTION_MAX_LENGTH } from "@/lib/schemas";
 import type { SceneDraft } from "@/components/wizard/types";
@@ -200,6 +201,28 @@ function SceneCard({
               onRemove={onVoiceRemove}
             />
           </div>
+
+          <div>
+            <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-stone-400">Card color</span>
+            <div className="flex flex-wrap gap-1.5">
+              {LIGHT_PALETTE.map((color) => {
+                const selected = scene.accentColor.toLowerCase() === color.toLowerCase();
+                return (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => onChange({ accentColor: color })}
+                    aria-label={`Set card color ${color}`}
+                    className="flex h-6 w-6 items-center justify-center rounded-full ring-offset-2 transition"
+                    style={{ background: color, boxShadow: selected ? `0 0 0 2px ${color}` : undefined, outline: selected ? "2px solid #2b2117" : "none", outlineOffset: 2 }}
+                  >
+                    {selected && <Check size={12} className="text-black/50" strokeWidth={3} />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <p className="text-[11px] text-stone-400">
             Keep it postcard-short — a line or two reads better than a paragraph. No photo? This scene becomes a
             full-color closing-style card instead — great for the last scene.
