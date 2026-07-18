@@ -614,7 +614,7 @@
 .pcQuote {
   font-family: var(--font-hand);
   font-weight: 700;
-  font-size: clamp(1.05rem, 3.2vw, 1.3rem);
+  font-size: calc(clamp(1.05rem, 3.2vw, 1.3rem) * var(--content-scale, 1));
   line-height: 1.26;
   color: var(--ink);
   margin: 0 0 0.35rem;
@@ -622,7 +622,7 @@
 }
 .pcDesc {
   font-family: var(--font-body);
-  font-size: clamp(0.78rem, 1.9vw, 0.9rem);
+  font-size: calc(clamp(0.78rem, 1.9vw, 0.9rem) * var(--content-scale, 1));
   line-height: 1.46;
   color: var(--ink-soft);
   margin: 0;
@@ -723,7 +723,7 @@
 }
 .pcPeak .pcQuote {
   color: #fff;
-  font-size: clamp(1.3rem, 4.4vw, 1.7rem);
+  font-size: calc(clamp(1.3rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
   line-height: 1.4;
   margin: 0;
   overflow: hidden;
@@ -788,6 +788,28 @@
   text-transform: uppercase;
   color: var(--ink-faint);
   margin: 0;
+}
+
+/* On tall/narrow phone screens, 50%-centering everything leaves a large dead
+   zone above the content (confirmed on a real device). Shift the anchor up.
+   `:not(.corner)` on envelopeShell is required, not decorative — the fullscreen
+   variant selector below has higher specificity than `.envelopeShell.corner`
+   (same class of bug fixed earlier for `width`), so without it this would
+   silently break the corner-shrink position too. */
+@media (max-aspect-ratio: 3/5) {
+  .root[data-variant="fullscreen"] .envelopeShell:not(.corner) {
+    top: 38%;
+  }
+  .root[data-variant="fullscreen"] .gateCaption {
+    top: calc(38% - (min(460px, 90vw) / 3) - 2.9rem);
+  }
+  .root[data-variant="fullscreen"] .deckScene {
+    justify-content: flex-start;
+    padding-top: 12vh;
+  }
+  .root[data-variant="fullscreen"] .closingText {
+    top: calc(38% + (min(460px, 90vw) / 3) + 2rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

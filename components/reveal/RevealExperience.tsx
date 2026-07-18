@@ -44,6 +44,18 @@ function playChime() {
   }
 }
 
+/** Longer real letters were getting silently clipped by the fixed-size
+ * postcard (confirmed on a real device) — shrink to fit instead of hiding
+ * whatever the sender wrote past the card's fixed height. */
+function contentScale(...text: string[]): number {
+  const len = text.reduce((sum, t) => sum + t.length, 0);
+  if (len <= 70) return 1;
+  if (len <= 120) return 0.88;
+  if (len <= 180) return 0.78;
+  if (len <= 260) return 0.68;
+  return 0.6;
+}
+
 export function templateVars(template: EnvelopeTemplate): CSSVars {
   return {
     "--desk": template.colors.desk,
@@ -467,6 +479,8 @@ export function RevealExperience({
             const vars = flyVars[entry.key];
             const style: CSSVars = {
               "--scene": scene.accentColor,
+              // inherited by .pcQuote/.pcDesc below — set once here rather than per-element
+              "--content-scale": contentScale(scene.quote, isPeak ? "" : scene.description),
               ...(vars ? { "--tx": `${vars.tx}px`, "--ty": `${vars.ty}px` } : {}),
             };
             return (
