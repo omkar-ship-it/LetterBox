@@ -45,14 +45,13 @@ function playChime() {
 }
 
 /** Longer real letters were getting silently clipped by the fixed-size
- * postcard (confirmed on a real device). Went through two iterations:
- * first leaned entirely on shrinking the font (unreadable at the low end),
- * then let the card grow freely taller (looked like a portrait strip
- * instead of a postcard — also confirmed on a real device). Landed here:
- * the card never grows past square (see stageAspectRatio), and past a
- * length threshold the layout switches to photo-on-top (see
- * isStackedLayout) so text gets the full card width instead of a narrow
- * side column — that buys much more room than shrinking font ever could. */
+ * postcard (confirmed on a real device). Three iterations: shrinking font
+ * alone got unreadable; growing the card freely taller looked like a
+ * portrait strip instead of a postcard; switching to a photo-on-top layout
+ * for long scenes fixed the fit but lost the original side-by-side look.
+ * Landed here: always side-by-side, the card grows up to square (never
+ * taller than wide — see stageAspectRatio), and .pcDesc's CSS line-clamp
+ * is the final safety net for text too long to fit even then. */
 function contentScale(...text: string[]): number {
   const len = text.reduce((sum, t) => sum + t.length, 0);
   if (len <= 70) return 1;
@@ -68,14 +67,6 @@ function stageAspectRatio(...text: string[]): string {
   if (len <= 70) return "3 / 2";
   if (len <= 160) return "4 / 3";
   return "1 / 1";
-}
-
-/** Past this length, side-by-side (photo left, text in a narrow right
- * column) stops being able to fit the text without the card growing tall
- * and thin — switch to photo-on-top so text spans the full card width. */
-function isStackedLayout(...text: string[]): boolean {
-  const len = text.reduce((sum, t) => sum + t.length, 0);
-  return len > 160;
 }
 
 /** The envelope's address block grows upward from a fixed bottom edge (it
@@ -516,7 +507,6 @@ export function RevealExperience({
             const scene = scenes[entry.sceneIndex];
             if (!scene) return null;
             const isPeak = !scene.imageUrl;
-            const stacked = !isPeak && isStackedLayout(scene.quote, scene.description);
             const vars = flyVars[entry.key];
             const style: CSSVars = {
               "--scene": scene.accentColor,
@@ -527,7 +517,7 @@ export function RevealExperience({
             return (
               <div
                 key={entry.key}
-                className={cn(styles.postcard, SLOT_CLASS[entry.slot], isPeak && styles.peak, stacked && styles.stacked)}
+                className={cn(styles.postcard, SLOT_CLASS[entry.slot], isPeak && styles.peak)}
                 style={style}
                 onAnimationEnd={() => {
                   if (entry.slot === "gather-out") {
