@@ -44,29 +44,22 @@ function playChime() {
   }
 }
 
-/** Longer real letters were getting silently clipped by the fixed-size
- * postcard (confirmed on a real device). Three iterations: shrinking font
- * alone got unreadable; growing the card freely taller looked like a
- * portrait strip instead of a postcard; switching to a photo-on-top layout
- * for long scenes fixed the fit but lost the original side-by-side look.
- * Landed here: always side-by-side, the card grows up to square (never
- * taller than wide — see stageAspectRatio), and .pcDesc's CSS line-clamp
- * is the final safety net for text too long to fit even then. */
+/** Four iterations on this before landing here (all confirmed on a real
+ * device, not guessed): shrinking font alone got unreadable; growing the
+ * card taller looked like a portrait strip, not a postcard; a photo-on-top
+ * layout for long scenes fixed the fit but lost the side-by-side look. The
+ * actual fix was upstream — `SCENE_QUOTE_MAX_LENGTH`/`SCENE_DESCRIPTION_MAX_LENGTH`
+ * (lib/schemas.ts) now cap new scene text at the wizard, so the card can go
+ * back to a fixed, always-side-by-side 3:2 postcard shape (see
+ * RevealExperience.module.css's `.postcardStage`) instead of adapting
+ * defensively. This mild scale + the CSS line-clamp below are just a safety
+ * net for content right at the cap, or scenes published before the cap
+ * existed — not the primary mechanism anymore. */
 function contentScale(...text: string[]): number {
   const len = text.reduce((sum, t) => sum + t.length, 0);
-  if (len <= 70) return 1;
-  if (len <= 160) return 0.92;
-  if (len <= 260) return 0.86;
-  return 0.8;
-}
-
-/** Capped at 1/1 — never taller than wide, so it still reads as a postcard
- * rather than a portrait strip, regardless of how long the text gets. */
-function stageAspectRatio(...text: string[]): string {
-  const len = text.reduce((sum, t) => sum + t.length, 0);
-  if (len <= 70) return "3 / 2";
-  if (len <= 160) return "4 / 3";
-  return "1 / 1";
+  if (len <= 100) return 1;
+  if (len <= 180) return 0.94;
+  return 0.88;
 }
 
 /** The envelope's address block grows upward from a fixed bottom edge (it
@@ -411,10 +404,6 @@ export function RevealExperience({
   }
 
   const atPeak = current === scenes.length - 1;
-  const frontScene = scenes[current];
-  const stageStyle: CSSVars | undefined = frontScene
-    ? { "--stage-ratio": stageAspectRatio(frontScene.quote, frontScene.imageUrl ? frontScene.description : "") }
-    : undefined;
 
   return (
     <div className={styles.root} data-variant={variant} style={templateVars(template)}>
@@ -497,7 +486,6 @@ export function RevealExperience({
       <div className={cn(styles.deckScene, deckActive && styles.active)}>
         <div
           className={styles.postcardStage}
-          style={stageStyle}
           ref={stageRef}
           onClick={handleStageClick}
           onTouchStart={handleTouchStart}

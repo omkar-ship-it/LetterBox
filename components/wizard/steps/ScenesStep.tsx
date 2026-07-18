@@ -5,6 +5,7 @@ import { ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { VoiceRecorder } from "@/components/wizard/VoiceRecorder";
 import { moodPalette } from "@/lib/mood-palette";
 import { uploadFile } from "@/lib/upload-client";
+import { SCENE_QUOTE_MAX_LENGTH, SCENE_DESCRIPTION_MAX_LENGTH } from "@/lib/schemas";
 import type { SceneDraft } from "@/components/wizard/types";
 
 export function ScenesStep({
@@ -136,20 +137,32 @@ function SceneCard({
             placeholder="Label (optional) — e.g. Steady"
             className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-stone-500 focus:border-[#a8455a] focus:outline-none"
           />
-          <textarea
-            value={scene.quote}
-            onChange={(e) => onChange({ quote: e.target.value })}
-            placeholder="The line that says it — a quote or moment."
-            rows={2}
-            className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm italic focus:border-[#a8455a] focus:outline-none"
-          />
-          <textarea
-            value={scene.description}
-            onChange={(e) => onChange({ description: e.target.value })}
-            placeholder="A little more detail (optional)."
-            rows={2}
-            className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-[#a8455a] focus:outline-none"
-          />
+          <div>
+            <textarea
+              value={scene.quote}
+              onChange={(e) => onChange({ quote: e.target.value.slice(0, SCENE_QUOTE_MAX_LENGTH) })}
+              placeholder="The line that says it — a quote or moment."
+              rows={2}
+              maxLength={SCENE_QUOTE_MAX_LENGTH}
+              className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm italic focus:border-[#a8455a] focus:outline-none"
+            />
+            <p className="mt-1 text-right text-[10px] text-stone-400">
+              {scene.quote.length}/{SCENE_QUOTE_MAX_LENGTH}
+            </p>
+          </div>
+          <div>
+            <textarea
+              value={scene.description}
+              onChange={(e) => onChange({ description: e.target.value.slice(0, SCENE_DESCRIPTION_MAX_LENGTH) })}
+              placeholder="A little more detail (optional)."
+              rows={2}
+              maxLength={SCENE_DESCRIPTION_MAX_LENGTH}
+              className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-[#a8455a] focus:outline-none"
+            />
+            <p className="mt-1 text-right text-[10px] text-stone-400">
+              {scene.description.length}/{SCENE_DESCRIPTION_MAX_LENGTH}
+            </p>
+          </div>
 
           <div className="flex flex-wrap items-center gap-2">
             <input
@@ -187,7 +200,8 @@ function SceneCard({
             />
           </div>
           <p className="text-[11px] text-stone-400">
-            No photo? This scene becomes a full-color closing-style card instead — great for the last scene.
+            Keep it postcard-short — a line or two reads better than a paragraph. No photo? This scene becomes a
+            full-color closing-style card instead — great for the last scene.
           </p>
         </div>
 

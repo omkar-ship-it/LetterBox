@@ -496,9 +496,8 @@
 
 .postcardStage {
   position: relative;
-  width: min(560px, 94%);
-  aspect-ratio: var(--stage-ratio, 3/2);
-  transition: aspect-ratio 0.4s ease;
+  width: min(520px, 92%);
+  aspect-ratio: 3 / 2;
   perspective: 1200px;
 }
 .postcard {
@@ -670,7 +669,7 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
 }
 .pcDesc {
   font-family: var(--font-body);
@@ -682,7 +681,7 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 11;
+  -webkit-line-clamp: 7;
 }
 .pcVoice {
   margin-top: 0.6rem;
