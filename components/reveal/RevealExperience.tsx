@@ -70,6 +70,20 @@ function stageAspectRatio(...text: string[]): string {
   return "3 / 4";
 }
 
+/** The envelope's address block grows upward from a fixed bottom edge (it
+ * sits above the wax seal), so long names/messages risk growing tall enough
+ * to visually run under the seal graphic — same "don't hide what they
+ * wrote" principle as the postcard fix, applied here to keep the block
+ * short instead. */
+export function addressScale(name: string, sub: string): number {
+  const len = name.length + sub.length;
+  if (len <= 40) return 1;
+  if (len <= 70) return 0.85;
+  if (len <= 110) return 0.72;
+  if (len <= 160) return 0.62;
+  return 0.54;
+}
+
 export function templateVars(template: EnvelopeTemplate): CSSVars {
   return {
     "--desk": template.colors.desk,
@@ -153,7 +167,6 @@ export function RevealExperience({
   const bgAudioRef = useRef<HTMLAudioElement>(null);
   const voiceAudioRef = useRef<HTMLAudioElement>(null);
   const nextKeyRef = useRef(3);
-  const peakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pulseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openedRef = useRef(false);
   const finishingRef = useRef(false);
@@ -200,16 +213,6 @@ export function RevealExperience({
       if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
       pulseTimerRef.current = setTimeout(() => setReceiving(false), 550);
     });
-  }
-
-  function scheduleAutoFinish(atIndex: number) {
-    if (peakTimerRef.current) {
-      clearTimeout(peakTimerRef.current);
-      peakTimerRef.current = null;
-    }
-    if (atIndex === scenes.length - 1) {
-      peakTimerRef.current = setTimeout(() => finishDeck(), reduced ? 400 : 3200);
-    }
   }
 
   function startMusic() {
@@ -286,7 +289,6 @@ export function RevealExperience({
         setEnvHideDetails(true);
         setDeckActive(true);
         setSoundShown(true);
-        scheduleAutoFinish(0);
       },
       reduced ? 300 : 2100
     );
@@ -327,10 +329,7 @@ export function RevealExperience({
 
     if (frontEntry && vars) setFlyVars((v) => ({ ...v, [frontEntry.key]: vars }));
     if (!reduced) pulseEnvelope();
-    setCurrent((c) => {
-      scheduleAutoFinish(c + 1);
-      return c + 1;
-    });
+    setCurrent((c) => c + 1);
   }
 
   function goPrev() {
@@ -350,19 +349,12 @@ export function RevealExperience({
       return next;
     });
     if (!reduced) setFlyVars((v) => ({ ...v, [enteringKey]: vars }));
-    setCurrent((c) => {
-      scheduleAutoFinish(c - 1);
-      return c - 1;
-    });
+    setCurrent((c) => c - 1);
   }
 
   function finishDeck() {
     if (finishingRef.current) return;
     finishingRef.current = true;
-    if (peakTimerRef.current) {
-      clearTimeout(peakTimerRef.current);
-      peakTimerRef.current = null;
-    }
 
     const frontEntry = visibleCards.find((c) => c.slot === "front");
     if (frontEntry) {
@@ -450,7 +442,10 @@ export function RevealExperience({
               <span className={styles.stampLabel}>{template.stampLabel}</span>
               <span className={styles.stampValue}>✦</span>
             </div>
-            <div className={styles.envAddress}>
+            <div
+              className={styles.envAddress}
+              style={{ "--address-scale": addressScale(recipientName, message || "a letter, with love") } as CSSVars}
+            >
               <p className={styles.to}>To,</p>
               <p className={styles.name}>{recipientName}</p>
               <p className={styles.sub}>{message || "a letter, with love"}</p>
@@ -552,8 +547,8 @@ export function RevealExperience({
             );
           })}
         </div>
-        <p className={styles.deckHint} style={{ opacity: atPeak ? 0 : 0.8 }}>
-          tap or swipe to continue
+        <p className={styles.deckHint} style={{ opacity: 0.8 }}>
+          {atPeak ? "tap to close the letter" : "tap or swipe to continue"}
         </p>
       </div>
 

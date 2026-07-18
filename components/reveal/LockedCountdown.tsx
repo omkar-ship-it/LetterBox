@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
-import { templateVars } from "./RevealExperience";
+import { templateVars, addressScale } from "./RevealExperience";
+import type { CSSVars } from "@/lib/css-vars";
 import styles from "./RevealExperience.module.css";
 
 function splitRemaining(ms: number) {
@@ -58,7 +59,10 @@ export function LockedCountdown({
               <span className={styles.stampLabel}>{template.stampLabel}</span>
               <span className={styles.stampValue}>✦</span>
             </div>
-            <div className={styles.envAddress}>
+            <div
+              className={styles.envAddress}
+              style={{ "--address-scale": addressScale(recipientName, "a letter is on its way") } as CSSVars}
+            >
               <p className={styles.to}>To,</p>
               <p className={styles.name}>{recipientName}</p>
               <p className={styles.sub}>a letter is on its way</p>
