@@ -6,12 +6,13 @@ import { z } from "zod";
 // card-growth both stopped looking like a postcard past a certain length).
 // Enforced here (server) and mirrored as `maxLength` in the wizard's
 // textareas (client) — both matter, not just the UI hint.
+export const SCENE_EYEBROW_MAX_LENGTH = 40;
 export const SCENE_QUOTE_MAX_LENGTH = 70;
 export const SCENE_DESCRIPTION_MAX_LENGTH = 160;
 
 export const sceneInputSchema = z.object({
   id: z.string().optional(),
-  eyebrow: z.string().default(""),
+  eyebrow: z.string().max(SCENE_EYEBROW_MAX_LENGTH, `Keep it postcard-short — ${SCENE_EYEBROW_MAX_LENGTH} characters max.`).default(""),
   quote: z
     .string()
     .min(1, "Every scene needs a line, even a short one.")

@@ -5,7 +5,7 @@ import { ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { VoiceRecorder } from "@/components/wizard/VoiceRecorder";
 import { moodPalette } from "@/lib/mood-palette";
 import { uploadFile } from "@/lib/upload-client";
-import { SCENE_QUOTE_MAX_LENGTH, SCENE_DESCRIPTION_MAX_LENGTH } from "@/lib/schemas";
+import { SCENE_EYEBROW_MAX_LENGTH, SCENE_QUOTE_MAX_LENGTH, SCENE_DESCRIPTION_MAX_LENGTH } from "@/lib/schemas";
 import type { SceneDraft } from "@/components/wizard/types";
 
 export function ScenesStep({
@@ -133,8 +133,9 @@ function SceneCard({
         <div className="space-y-3">
           <input
             value={scene.eyebrow}
-            onChange={(e) => onChange({ eyebrow: e.target.value })}
+            onChange={(e) => onChange({ eyebrow: e.target.value.slice(0, SCENE_EYEBROW_MAX_LENGTH) })}
             placeholder="Label (optional) — e.g. Steady"
+            maxLength={SCENE_EYEBROW_MAX_LENGTH}
             className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-stone-500 focus:border-[#a8455a] focus:outline-none"
           />
           <div>
