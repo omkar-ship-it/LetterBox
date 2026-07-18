@@ -21,6 +21,8 @@ export type Card = {
   envelopeTemplateId: string;
   musicTrackId: string | null;
   unlockAt: string | null;
+  /** Salted scrypt hash ("salt:hash"), or null if the letter has no passcode. Never sent to the client. */
+  passcodeHash: string | null;
   viewCount: number;
   createdAt: string;
   scenes: Scene[];
@@ -37,5 +39,16 @@ export type NewCardInput = {
   envelopeTemplateId: string;
   musicTrackId: string | null;
   unlockAt: string | null;
+  passcodeHash: string | null;
   scenes: NewSceneInput[];
+};
+
+/** What an unauthenticated visitor gets before proving they know the
+ * passcode — no scenes, no message, no music, nothing worth protecting. */
+export type LockedCardPreview = {
+  slug: string;
+  recipientName: string;
+  senderName: string;
+  envelopeTemplateId: string;
+  unlockAt: string | null;
 };

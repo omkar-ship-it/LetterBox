@@ -12,6 +12,7 @@ import { SendStep } from "./steps/SendStep";
 import { WIZARD_STEPS, type SceneDraft } from "./types";
 import { ENVELOPE_TEMPLATES, getEnvelopeTemplate } from "@/lib/envelope-templates";
 import { MUSIC_TRACKS } from "@/lib/music";
+import { PASSCODE_MIN_LENGTH } from "@/lib/schemas";
 import type { Scene } from "@/lib/types";
 
 function newScene(accentColor: string): SceneDraft {
@@ -47,6 +48,8 @@ export function CreateWizard() {
 
   const [scheduled, setScheduled] = useState(false);
   const [unlockAtLocal, setUnlockAtLocal] = useState("");
+  const [passcodeEnabled, setPasscodeEnabled] = useState(false);
+  const [passcode, setPasscode] = useState("");
 
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
@@ -77,7 +80,11 @@ export function CreateWizard() {
   const canContinue = (() => {
     if (step === "recipient") return recipientName.trim().length > 0;
     if (step === "scenes") return scenes.some((s) => s.quote.trim().length > 0);
-    if (step === "schedule") return !scheduled || unlockAtLocal.length > 0;
+    if (step === "schedule") {
+      if (scheduled && !unlockAtLocal) return false;
+      if (passcodeEnabled && passcode.trim().length < PASSCODE_MIN_LENGTH) return false;
+      return true;
+    }
     return true;
   })();
 
@@ -102,6 +109,7 @@ export function CreateWizard() {
           envelopeTemplateId,
           musicTrackId,
           unlockAt: scheduled && unlockAtLocal ? new Date(unlockAtLocal).toISOString() : null,
+          passcode: passcodeEnabled && passcode.trim() ? passcode.trim() : null,
           scenes: cleanScenes.map((s) => ({
             eyebrow: s.eyebrow,
             quote: s.quote,
@@ -172,6 +180,10 @@ export function CreateWizard() {
           setScheduled={setScheduled}
           unlockAtLocal={unlockAtLocal}
           setUnlockAtLocal={setUnlockAtLocal}
+          passcodeEnabled={passcodeEnabled}
+          setPasscodeEnabled={setPasscodeEnabled}
+          passcode={passcode}
+          setPasscode={setPasscode}
         />
       )}
       {step === "send" && (
@@ -187,6 +199,7 @@ export function CreateWizard() {
           isPremiumTemplate={template.tier === "premium"}
           templateName={template.name}
           onEditEnvelope={() => goToStep("envelope")}
+          passcode={passcodeEnabled && passcode.trim() ? passcode.trim() : null}
         />
       )}
     </WizardShell>

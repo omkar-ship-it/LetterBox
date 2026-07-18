@@ -12,6 +12,8 @@ export const cards = pgTable("cards", {
   envelopeTemplateId: text("envelope_template_id").notNull(),
   musicTrackId: text("music_track_id"),
   unlockAt: timestamp("unlock_at", { withTimezone: true }),
+  // Salted scrypt hash ("salt:hash"), never the plaintext passcode — see lib/passcode.ts.
+  passcodeHash: text("passcode_hash"),
   viewCount: integer("view_count").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

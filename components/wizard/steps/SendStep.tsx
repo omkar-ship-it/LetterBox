@@ -15,6 +15,7 @@ export function SendStep({
   isPremiumTemplate,
   templateName,
   onEditEnvelope,
+  passcode,
 }: {
   senderName: string;
   setSenderName: (v: string) => void;
@@ -27,6 +28,7 @@ export function SendStep({
   isPremiumTemplate: boolean;
   templateName: string;
   onEditEnvelope: () => void;
+  passcode: string | null;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -51,6 +53,16 @@ export function SendStep({
             {copied ? "Copied" : "Copy"}
           </button>
         </div>
+        {passcode && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-left">
+            <p className="text-xs font-bold uppercase tracking-wide text-amber-800">Don&apos;t forget the passcode</p>
+            <p className="mt-1 text-sm text-amber-700">
+              This letter needs <span className="font-mono font-semibold">{passcode}</span> to open — the link alone
+              isn&apos;t enough. Share it with {recipientName || "them"} separately (a text, a call — not the same
+              message as the link).
+            </p>
+          </div>
+        )}
         <button
           type="button"
           onClick={() => window.location.assign("/create")}

@@ -23,6 +23,9 @@ export const sceneInputSchema = z.object({
   accentColor: z.string(),
 });
 
+export const PASSCODE_MIN_LENGTH = 4;
+export const PASSCODE_MAX_LENGTH = 30;
+
 export const cardInputSchema = z.object({
   senderName: z.string().min(1, "Your name is required."),
   recipientName: z.string().min(1, "Who is this for?"),
@@ -32,5 +35,12 @@ export const cardInputSchema = z.object({
   envelopeTemplateId: z.string().min(1),
   musicTrackId: z.string().nullable(),
   unlockAt: z.string().nullable(),
+  // Plaintext, submitted once at create/update time only — the API route
+  // hashes it before it ever reaches the database (see lib/passcode.ts).
+  passcode: z
+    .string()
+    .min(PASSCODE_MIN_LENGTH, `A passcode needs at least ${PASSCODE_MIN_LENGTH} characters.`)
+    .max(PASSCODE_MAX_LENGTH, `Keep the passcode under ${PASSCODE_MAX_LENGTH} characters.`)
+    .nullable(),
   scenes: z.array(sceneInputSchema).min(1, "Add at least one scene."),
 });

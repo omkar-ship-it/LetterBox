@@ -59,6 +59,7 @@ export async function memCreateCard(input: NewCardInput): Promise<Card> {
     envelopeTemplateId: input.envelopeTemplateId,
     musicTrackId: input.musicTrackId,
     unlockAt: input.unlockAt,
+    passcodeHash: input.passcodeHash,
     viewCount: 0,
     createdAt: new Date().toISOString(),
     scenes: toScenes(input.scenes),
@@ -93,6 +94,7 @@ export async function memUpdateCardByEditToken(
     envelopeTemplateId: input.envelopeTemplateId,
     musicTrackId: input.musicTrackId,
     unlockAt: input.unlockAt,
+    passcodeHash: input.passcodeHash,
     scenes: toScenes(input.scenes),
   };
 

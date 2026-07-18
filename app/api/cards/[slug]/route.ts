@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getCardBySlug, updateCardByEditToken } from "@/lib/db/queries";
 import { cardInputSchema } from "@/lib/schemas";
 import { isPurchasableTemplateBlocked } from "@/lib/envelope-templates";
+import { hashPasscode } from "@/lib/passcode";
+import type { LockedCardPreview } from "@/lib/types";
 
 export async function GET(req: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -10,12 +12,30 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   const card = await getCardBySlug(slug);
   if (!card) return NextResponse.json({ error: "not found" }, { status: 404 });
 
-  if (editToken !== card.editToken) {
-    const { editToken: _drop, ...publicCard } = card;
+  if (editToken === card.editToken) {
+    const { passcodeHash: _drop, ...senderCard } = card;
     void _drop;
-    return NextResponse.json({ card: publicCard });
+    return NextResponse.json({ card: senderCard });
   }
-  return NextResponse.json({ card });
+
+  // Not the owner: never leak scenes/message/passcodeHash. If it's
+  // passcode-protected, only a locked preview goes out — the actual content
+  // only comes from a successful POST to verify-passcode.
+  if (card.passcodeHash) {
+    const locked: LockedCardPreview = {
+      slug: card.slug,
+      recipientName: card.recipientName,
+      senderName: card.senderName,
+      envelopeTemplateId: card.envelopeTemplateId,
+      unlockAt: card.unlockAt,
+    };
+    return NextResponse.json({ locked });
+  }
+
+  const { editToken: _drop2, passcodeHash: _drop3, ...publicCard } = card;
+  void _drop2;
+  void _drop3;
+  return NextResponse.json({ card: publicCard });
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ slug: string }> }) {
@@ -35,7 +55,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
     return NextResponse.json({ error: "This envelope template requires a purchase, which isn't available yet." }, { status: 402 });
   }
 
-  const card = await updateCardByEditToken(slug, editToken, parsed.data);
+  const { passcode, ...updateRest } = parsed.data;
+  const card = await updateCardByEditToken(slug, editToken, {
+    ...updateRest,
+    passcodeHash: passcode ? hashPasscode(passcode) : null,
+  });
   if (!card) return NextResponse.json({ error: "not found or not yours" }, { status: 404 });
-  return NextResponse.json({ card });
+
+  const { passcodeHash: _drop, ...senderCard } = card;
+  void _drop;
+  return NextResponse.json({ card: senderCard });
 }

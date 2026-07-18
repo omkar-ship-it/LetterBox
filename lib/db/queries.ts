@@ -3,6 +3,7 @@ import { db, hasDb } from "./index";
 import { cards, scenes } from "./schema";
 import type { Card, NewCardInput } from "@/lib/types";
 import { generateSlug, generateEditToken } from "@/lib/slug";
+import { verifyPasscode } from "@/lib/passcode";
 import * as mem from "./memory-store";
 
 type CardRow = typeof cards.$inferSelect;
@@ -21,6 +22,7 @@ function rowsToCard(cardRow: CardRow, sceneRows: SceneRow[]): Card {
     envelopeTemplateId: cardRow.envelopeTemplateId,
     musicTrackId: cardRow.musicTrackId,
     unlockAt: cardRow.unlockAt ? cardRow.unlockAt.toISOString() : null,
+    passcodeHash: cardRow.passcodeHash,
     viewCount: cardRow.viewCount,
     createdAt: cardRow.createdAt.toISOString(),
     scenes: sceneRows
@@ -75,6 +77,7 @@ export async function createCard(input: NewCardInput): Promise<Card> {
       envelopeTemplateId: input.envelopeTemplateId,
       musicTrackId: input.musicTrackId,
       unlockAt: input.unlockAt ? new Date(input.unlockAt) : null,
+      passcodeHash: input.passcodeHash,
     })
     .returning();
 
@@ -115,6 +118,7 @@ export async function updateCardByEditToken(
       envelopeTemplateId: input.envelopeTemplateId,
       musicTrackId: input.musicTrackId,
       unlockAt: input.unlockAt ? new Date(input.unlockAt) : null,
+      passcodeHash: input.passcodeHash,
     })
     .where(eq(cards.id, cardRow.id))
     .returning();
@@ -133,4 +137,13 @@ export async function incrementViewCount(slug: string): Promise<void> {
   const [cardRow] = await db.select({ id: cards.id, viewCount: cards.viewCount }).from(cards).where(eq(cards.slug, slug)).limit(1);
   if (!cardRow) return;
   await db.update(cards).set({ viewCount: cardRow.viewCount + 1 }).where(eq(cards.id, cardRow.id));
+}
+
+/** Returns the full card (scenes included) only if the guess matches the
+ * stored hash — this is the one place a correct passcode actually unlocks
+ * content, so the API route has nothing to leak before calling this. */
+export async function verifyCardPasscode(slug: string, guess: string): Promise<Card | null> {
+  const card = await getCardBySlug(slug);
+  if (!card || !card.passcodeHash) return null;
+  return verifyPasscode(guess, card.passcodeHash) ? card : null;
 }

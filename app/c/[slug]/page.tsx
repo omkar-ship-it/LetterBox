@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCardBySlug, incrementViewCount } from "@/lib/db/queries";
 import { getEnvelopeTemplate } from "@/lib/envelope-templates";
-import { getMusicTrack } from "@/lib/music";
 import { CardClient } from "./CardClient";
 
 export async function generateMetadata({
@@ -13,6 +12,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const card = await getCardBySlug(slug);
   if (!card) return { title: "Letterbox" };
+  if (card.passcodeHash) {
+    return { title: "A private letter — Letterbox", description: "This letter needs a passcode to open." };
+  }
   return {
     title: `${card.title || "A letter"} — Letterbox`,
     description: card.message || `${card.senderName} sent ${card.recipientName} a letter.`,
@@ -28,10 +30,24 @@ export default async function CardPage({
   const card = await getCardBySlug(slug);
   if (!card) notFound();
 
-  await incrementViewCount(slug).catch(() => {});
-
   const template = getEnvelopeTemplate(card.envelopeTemplateId);
-  const track = getMusicTrack(card.musicTrackId);
+  const isPasscodeProtected = Boolean(card.passcodeHash);
 
-  return <CardClient card={card} template={template} musicUrl={track?.fileUrl ?? null} />;
+  // Passcode-protected cards: scenes/message never reach the client until a
+  // correct guess hits /verify-passcode — view count moves there too, so a
+  // page load alone (without ever entering the code) doesn't count as a view.
+  if (!isPasscodeProtected) {
+    await incrementViewCount(slug).catch(() => {});
+  }
+
+  return (
+    <CardClient
+      slug={slug}
+      template={template}
+      recipientName={card.recipientName}
+      senderName={card.senderName}
+      unlockAt={card.unlockAt}
+      initialCard={isPasscodeProtected ? null : card}
+    />
+  );
 }
