@@ -45,29 +45,37 @@ function playChime() {
 }
 
 /** Longer real letters were getting silently clipped by the fixed-size
- * postcard (confirmed on a real device). First fix leaned entirely on
- * shrinking the font, which at the low end became hard to read — now the
- * card itself grows taller for longer content (see stageAspectRatio) and
- * the font only needs a mild trim on top of that, never below ~0.8x. */
+ * postcard (confirmed on a real device). Went through two iterations:
+ * first leaned entirely on shrinking the font (unreadable at the low end),
+ * then let the card grow freely taller (looked like a portrait strip
+ * instead of a postcard — also confirmed on a real device). Landed here:
+ * the card never grows past square (see stageAspectRatio), and past a
+ * length threshold the layout switches to photo-on-top (see
+ * isStackedLayout) so text gets the full card width instead of a narrow
+ * side column — that buys much more room than shrinking font ever could. */
 function contentScale(...text: string[]): number {
   const len = text.reduce((sum, t) => sum + t.length, 0);
   if (len <= 70) return 1;
-  if (len <= 140) return 0.94;
-  if (len <= 220) return 0.88;
-  if (len <= 300) return 0.82;
-  return 0.78;
+  if (len <= 160) return 0.92;
+  if (len <= 260) return 0.86;
+  return 0.8;
 }
 
-/** The stage (and every card in the swipeable stack, since they share its
- * box via inset:0) grows taller as the current front scene's text grows,
- * so long letters get more room instead of just smaller text. */
+/** Capped at 1/1 — never taller than wide, so it still reads as a postcard
+ * rather than a portrait strip, regardless of how long the text gets. */
 function stageAspectRatio(...text: string[]): string {
   const len = text.reduce((sum, t) => sum + t.length, 0);
   if (len <= 70) return "3 / 2";
-  if (len <= 140) return "5 / 4";
-  if (len <= 220) return "1 / 1";
-  if (len <= 300) return "4 / 5";
-  return "3 / 4";
+  if (len <= 160) return "4 / 3";
+  return "1 / 1";
+}
+
+/** Past this length, side-by-side (photo left, text in a narrow right
+ * column) stops being able to fit the text without the card growing tall
+ * and thin — switch to photo-on-top so text spans the full card width. */
+function isStackedLayout(...text: string[]): boolean {
+  const len = text.reduce((sum, t) => sum + t.length, 0);
+  return len > 160;
 }
 
 /** The envelope's address block grows upward from a fixed bottom edge (it
@@ -508,6 +516,7 @@ export function RevealExperience({
             const scene = scenes[entry.sceneIndex];
             if (!scene) return null;
             const isPeak = !scene.imageUrl;
+            const stacked = !isPeak && isStackedLayout(scene.quote, scene.description);
             const vars = flyVars[entry.key];
             const style: CSSVars = {
               "--scene": scene.accentColor,
@@ -518,7 +527,7 @@ export function RevealExperience({
             return (
               <div
                 key={entry.key}
-                className={cn(styles.postcard, SLOT_CLASS[entry.slot], isPeak && styles.peak)}
+                className={cn(styles.postcard, SLOT_CLASS[entry.slot], isPeak && styles.peak, stacked && styles.stacked)}
                 style={style}
                 onAnimationEnd={() => {
                   if (entry.slot === "gather-out") {

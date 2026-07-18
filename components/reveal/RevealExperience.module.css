@@ -649,6 +649,26 @@
     margin: 0 0.65rem;
   }
 }
+
+/* Longer scenes (see isStackedLayout): photo becomes a top banner instead
+   of a narrow side column, so text gets the card's full width — this is
+   what keeps the card from having to grow tall and thin to fit long text. */
+.postcard.stacked {
+  flex-direction: column;
+}
+.postcard.stacked .pcPhotoWrap {
+  flex: 0 0 38%;
+}
+.postcard.stacked .pcAccent {
+  width: auto;
+  height: 3px;
+  align-self: stretch;
+  margin: 0.7rem 0;
+}
+.postcard.stacked .pcContent {
+  flex: 1;
+  justify-content: flex-start;
+}
 .pcEyebrow {
   font-family: var(--font-body);
   font-weight: 800;
