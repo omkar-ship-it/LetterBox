@@ -502,7 +502,7 @@
 .postcardStage {
   position: relative;
   width: min(520px, 92%);
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 4 / 3;
   perspective: 1200px;
 }
 .root[data-variant="fullscreen"] .postcardStage {
@@ -612,7 +612,7 @@
 }
 
 .pcPhotoWrap {
-  flex: 1.1;
+  flex: 1.25;
   position: relative;
   overflow: hidden;
   border-radius: 8px;
@@ -647,10 +647,10 @@
     padding: 0.8rem 0.85rem;
   }
   .pcPhotoWrap {
-    flex: 0.85;
+    flex: 1;
   }
   .pcContent {
-    flex: 1.15;
+    flex: 1.05;
   }
   .pcAccent {
     margin: 0 0.65rem;
