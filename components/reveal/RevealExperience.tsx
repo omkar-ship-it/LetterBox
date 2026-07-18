@@ -436,6 +436,18 @@ export function RevealExperience({
         className={cn(styles.envelopeShell, envCorner && styles.corner, envHideDetails && styles.hideDetails, receiving && styles.receiving)}
       >
         <div className={styles.envelope}>
+          {(template.decoration === "filigree" || template.decoration === "botanical") && (
+            <div
+              className={template.decoration === "filigree" ? styles.decorFiligree : styles.decorBotanical}
+              style={{ "--decoration-color": template.decorationColor } as CSSVars}
+            >
+              <span className={cn(styles.decorCorner, styles.tl)} />
+              <span className={cn(styles.decorCorner, styles.br)} />
+            </div>
+          )}
+          {template.decoration === "confetti" && (
+            <div className={styles.decorConfetti} style={{ "--decoration-color": template.decorationColor } as CSSVars} />
+          )}
           <div className={styles.envTape} />
           <div className={cn(styles.envBody, styles.paperFiber)}>
             <div className={styles.envStamp}>

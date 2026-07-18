@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
 import { templateVars, addressScale } from "./RevealExperience";
 import type { CSSVars } from "@/lib/css-vars";
+import { cn } from "@/lib/cn";
 import styles from "./RevealExperience.module.css";
 
 function splitRemaining(ms: number) {
@@ -53,6 +54,18 @@ export function LockedCountdown({
       <div className={styles.deskGrain} />
       <div className={styles.envelopeShell}>
         <div className={styles.envelope}>
+          {(template.decoration === "filigree" || template.decoration === "botanical") && (
+            <div
+              className={template.decoration === "filigree" ? styles.decorFiligree : styles.decorBotanical}
+              style={{ "--decoration-color": template.decorationColor } as CSSVars}
+            >
+              <span className={cn(styles.decorCorner, styles.tl)} />
+              <span className={cn(styles.decorCorner, styles.br)} />
+            </div>
+          )}
+          {template.decoration === "confetti" && (
+            <div className={styles.decorConfetti} style={{ "--decoration-color": template.decorationColor } as CSSVars} />
+          )}
           <div className={`${styles.envTape}`} />
           <div className={`${styles.envBody} ${styles.paperFiber}`}>
             <div className={styles.envStamp}>

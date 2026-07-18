@@ -1,9 +1,15 @@
+export type EnvelopeDecoration = "none" | "filigree" | "botanical" | "confetti";
+
 export type EnvelopeTemplate = {
   id: string;
   name: string;
   description: string;
   stampLabel: string;
   tagline: string;
+  tier: "free" | "premium";
+  decoration: EnvelopeDecoration;
+  /** Tints the decoration (mask-based, so any color works regardless of the source SVG). */
+  decorationColor: string;
   colors: {
     desk: string;
     ink: string;
@@ -31,6 +37,9 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     description: "Sun-warmed paper, a green wax seal, a little gold tape. Tender and bright.",
     stampLabel: "WITH LOVE",
     tagline: "a letter, made with care",
+    tier: "free",
+    decoration: "none",
+    decorationColor: "#d19a35",
     colors: {
       desk: "#fbf1e7",
       ink: "#2b1f1a",
@@ -55,6 +64,9 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     description: "Tan parchment, a deep red seal. Steady, old-friend warmth.",
     stampLabel: "FOR YOU",
     tagline: "in your corner, always",
+    tier: "free",
+    decoration: "none",
+    decorationColor: "#8a6a3c",
     colors: {
       desk: "#f4ede1",
       ink: "#2b1f16",
@@ -79,6 +91,9 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     description: "A dark desk, cream paper, red wax, airmail stripes. Quietly dramatic.",
     stampLabel: "PAR AVION",
     tagline: "sealed with a promise",
+    tier: "free",
+    decoration: "none",
+    decorationColor: "#c9a05c",
     colors: {
       desk: "#2a2019",
       ink: "#f0e6d8",
@@ -103,6 +118,9 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     description: "Marigold paper, a berry-pink seal, teal tape. Confetti in envelope form.",
     stampLabel: "CELEBRATE",
     tagline: "a little party, just for you",
+    tier: "free",
+    decoration: "none",
+    decorationColor: "#f2933f",
     colors: {
       desk: "#fff2e6",
       ink: "#3a2318",
@@ -127,6 +145,9 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     description: "Sage paper, a terracotta seal, cream tape. Grounded and grateful.",
     stampLabel: "THANK YOU",
     tagline: "gratitude, gathered here",
+    tier: "free",
+    decoration: "none",
+    decorationColor: "#b5622f",
     colors: {
       desk: "#f3f1e6",
       ink: "#2c3326",
@@ -151,6 +172,9 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     description: "Sky-blue paper, a coral seal, sunflower tape. Bright and rooting for you.",
     stampLabel: "YOU'VE GOT THIS",
     tagline: "in your corner, cheering you on",
+    tier: "free",
+    decoration: "none",
+    decorationColor: "#4f8cae",
     colors: {
       desk: "#eef4f7",
       ink: "#1f2f38",
@@ -169,8 +193,96 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     },
     accentColors: ["#4f8cae", "#e0724a", "#f2c14e", "#6b8f5c", "#8a6bae", "#3a6b8a"],
   },
+  {
+    id: "golden-filigree",
+    name: "Golden Filigree",
+    description: "Ink-black paper, gold foil flourishes, an ornate gold seal. Formal and unforgettable.",
+    stampLabel: "WITH HONOR",
+    tagline: "sealed in gold",
+    tier: "premium",
+    decoration: "filigree",
+    decorationColor: "#d4af5a",
+    colors: {
+      desk: "#171310",
+      ink: "#f3e6c8",
+      inkSoft: "#d4c19a",
+      inkFaint: "#a3906a",
+      envPaper: "#2b241c",
+      envPaper2: "#1c1712",
+      envPaper3: "#100d0a",
+      envShadow: "#000000",
+      seal: "#c9a34a",
+      sealLight: "#e6c874",
+      sealDark: "#8a6a24",
+      gold: "#d4af5a",
+      tape: "#d4af5a",
+      tape2: "#e6c874",
+    },
+    accentColors: ["#d4af5a", "#8a6a24", "#6b5a3c", "#a3906a", "#c9a34a", "#4a3f2e"],
+  },
+  {
+    id: "blush-botanical",
+    name: "Blush Botanical",
+    description: "Ivory paper, hand-drawn botanical sprigs, a dusty-rose seal. Soft and romantic.",
+    stampLabel: "WITH LOVE",
+    tagline: "grown just for you",
+    tier: "premium",
+    decoration: "botanical",
+    decorationColor: "#7a8f6a",
+    colors: {
+      desk: "#faf3ee",
+      ink: "#3a2c2e",
+      inkSoft: "#6b4f52",
+      inkFaint: "#a3838a",
+      envPaper: "#f3e0d9",
+      envPaper2: "#e8c9c0",
+      envPaper3: "#d9aca3",
+      envShadow: "#a3746c",
+      seal: "#b5677a",
+      sealLight: "#cc8494",
+      sealDark: "#7a3f4c",
+      gold: "#c9a05c",
+      tape: "#d9aca3",
+      tape2: "#e8c9c0",
+    },
+    accentColors: ["#b5677a", "#7a8f6a", "#c9a05c", "#a3746c", "#cc8494", "#5c6b4f"],
+  },
+  {
+    id: "midnight-confetti",
+    name: "Midnight Confetti",
+    description: "Emerald paper scattered with gold and silver confetti, a bold coral seal. Pure celebration.",
+    stampLabel: "CELEBRATE",
+    tagline: "a party in an envelope",
+    tier: "premium",
+    decoration: "confetti",
+    decorationColor: "#e6c874",
+    colors: {
+      desk: "#0f2a24",
+      ink: "#f3ede0",
+      inkSoft: "#c9d9c4",
+      inkFaint: "#8fa89c",
+      envPaper: "#1c4a3c",
+      envPaper2: "#123a2e",
+      envPaper3: "#0a2620",
+      envShadow: "#051611",
+      seal: "#e0724a",
+      sealLight: "#ec8f6a",
+      sealDark: "#a8482a",
+      gold: "#e6c874",
+      tape: "#e6c874",
+      tape2: "#f0dca0",
+    },
+    accentColors: ["#e0724a", "#e6c874", "#c9d9c4", "#4f8cae", "#8a5cc9", "#de5486"],
+  },
 ];
 
 export function getEnvelopeTemplate(id: string): EnvelopeTemplate {
   return ENVELOPE_TEMPLATES.find((t) => t.id === id) ?? ENVELOPE_TEMPLATES[0];
+}
+
+/** Purchasing isn't wired up yet — enforced server-side too, not just hidden
+ * in the wizard UI, so a direct API call can't ship a premium template for
+ * free by skipping the client. */
+export function isPurchasableTemplateBlocked(id: string): boolean {
+  return getEnvelopeTemplate(id).tier === "premium";
 }
