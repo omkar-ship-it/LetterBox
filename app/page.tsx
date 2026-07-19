@@ -46,7 +46,7 @@ export default async function Home() {
 
       <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-12 lg:grid-cols-2 lg:py-20">
         <div>
-          <p className="mb-4 font-hand text-2xl text-[#a8455a]">no login, no fuss — just say it</p>
+          <p className="mb-4 font-hand text-2xl text-[#a8455a]">no fuss — just say it</p>
           <h1 className="font-serif text-4xl leading-[1.1] text-[#2b2117] sm:text-5xl lg:text-6xl">
             Say it like you mean it.
           </h1>
@@ -70,7 +70,7 @@ export default async function Home() {
       </section>
 
       <section id="how-it-works" className="mx-auto max-w-6xl px-6 py-16">
-        <h2 className="mb-10 text-center font-serif text-3xl text-[#2b2117]">Four steps. No account required.</h2>
+        <h2 className="mb-10 text-center font-serif text-3xl text-[#2b2117]">Four steps. Free to send.</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s, i) => (
             <div key={s.title} className="rounded-2xl border border-stone-200 bg-white p-6">
@@ -134,7 +134,7 @@ export default async function Home() {
       </section>
 
       <footer className="mx-auto max-w-6xl px-6 py-8 text-center text-xs text-stone-400">
-        Letterbox — no login, no tracking, just a letter worth opening.
+        Letterbox — no tracking, just a letter worth opening.
       </footer>
     </div>
   );

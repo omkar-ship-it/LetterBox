@@ -29,7 +29,7 @@ function newScene(accentColor: string): SceneDraft {
   };
 }
 
-export function CreateWizard() {
+export function CreateWizard({ accountEmail }: { accountEmail: string }) {
   const [stepIndex, setStepIndex] = useState(0);
   const step = WIZARD_STEPS[stepIndex];
 
@@ -214,6 +214,7 @@ export function CreateWizard() {
           onEditEnvelope={() => goToStep("envelope")}
           passcode={passcodeEnabled && passcode.trim() ? passcode.trim() : null}
           selfDestruct={selfDestruct}
+          accountEmail={accountEmail}
         />
       )}
     </WizardShell>

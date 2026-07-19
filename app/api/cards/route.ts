@@ -6,6 +6,14 @@ import { hashPasscode } from "@/lib/passcode";
 import { getSessionUser } from "@/lib/session";
 
 export async function POST(req: Request) {
+  // The wizard UI is gated behind sign-in (app/create/page.tsx), but that's
+  // just a redirect — this is the actual boundary, since the endpoint is
+  // reachable directly regardless of what the UI shows.
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) {
+    return NextResponse.json({ error: "Sign in to create a letter." }, { status: 401 });
+  }
+
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "invalid JSON" }, { status: 400 });
 
@@ -18,12 +26,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "This envelope template requires a purchase, which isn't available yet." }, { status: 402 });
   }
 
-  const sessionUser = await getSessionUser();
   const { passcode, ...rest } = parsed.data;
   const card = await createCard({
     ...rest,
     passcodeHash: passcode ? hashPasscode(passcode) : null,
-    userId: sessionUser?.id ?? null,
+    userId: sessionUser.id,
   });
 
   // The sender gets editToken back (needed to edit later) but never the hash.
