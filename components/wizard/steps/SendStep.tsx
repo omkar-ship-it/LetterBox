@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Copy, Crown, Flame, Loader2, Send } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Check, Copy, Crown, Flame, Loader2, Send, UserRound } from "lucide-react";
 
 export function SendStep({
   senderName,
@@ -33,6 +33,14 @@ export function SendStep({
   selfDestruct: boolean;
 }) {
   const [copied, setCopied] = useState(false);
+  const [accountEmail, setAccountEmail] = useState<string | null | undefined>(undefined);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => setAccountEmail(data?.user?.email ?? null))
+      .catch(() => setAccountEmail(null));
+  }, []);
 
   if (shareUrl) {
     return (
@@ -76,6 +84,22 @@ export function SendStep({
             </p>
           </div>
         )}
+        {accountEmail ? (
+          <p className="text-sm text-stone-500">
+            Saved to your letters —{" "}
+            <a href="/letters" className="font-semibold text-[#a8455a] underline underline-offset-4">
+              view them anytime
+            </a>
+            .
+          </p>
+        ) : accountEmail === null ? (
+          <p className="text-sm text-stone-500">
+            <a href="/login" target="_blank" rel="noreferrer" className="font-semibold text-[#a8455a] underline underline-offset-4">
+              Sign in
+            </a>{" "}
+            to keep track of letters like this one.
+          </p>
+        ) : null}
         <button
           type="button"
           onClick={() => window.location.assign("/create")}
@@ -98,6 +122,21 @@ export function SendStep({
           className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
         />
       </label>
+
+      {accountEmail ? (
+        <p className="flex items-center gap-1.5 text-xs text-stone-500">
+          <UserRound size={13} /> Signed in as <span className="font-semibold text-stone-600">{accountEmail}</span> — this will
+          be saved to your letters.
+        </p>
+      ) : accountEmail === null ? (
+        <p className="flex items-center gap-1.5 text-xs text-stone-500">
+          <UserRound size={13} />{" "}
+          <a href="/login" target="_blank" rel="noreferrer" className="font-semibold text-[#a8455a] underline underline-offset-4">
+            Sign in
+          </a>{" "}
+          first if you want this saved to your account (opens in a new tab — your draft here is safe).
+        </p>
+      ) : null}
 
       {isPremiumTemplate ? (
         <div className="max-w-md rounded-xl border border-amber-200 bg-amber-50 p-4">

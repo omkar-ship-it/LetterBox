@@ -51,6 +51,7 @@ export async function memCreateCard(input: NewCardInput): Promise<Card> {
     id: randomUUID(),
     slug,
     editToken: generateEditToken(),
+    userId: input.userId,
     senderName: input.senderName,
     recipientName: input.recipientName,
     tone: input.tone,
@@ -80,7 +81,7 @@ export async function memGetCardBySlug(slug: string): Promise<Card | null> {
 export async function memUpdateCardByEditToken(
   slug: string,
   editToken: string,
-  input: NewCardInput
+  input: Omit<NewCardInput, "userId">
 ): Promise<Card | null> {
   const all = await readAll();
   const existing = all[slug];

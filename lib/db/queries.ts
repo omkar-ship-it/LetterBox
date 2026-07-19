@@ -1,4 +1,4 @@
-import { eq, asc, and, isNull } from "drizzle-orm";
+import { eq, asc, and, isNull, desc } from "drizzle-orm";
 import { db, hasDb } from "./index";
 import { cards, scenes } from "./schema";
 import type { Card, NewCardInput } from "@/lib/types";
@@ -14,6 +14,7 @@ function rowsToCard(cardRow: CardRow, sceneRows: SceneRow[]): Card {
     id: cardRow.id,
     slug: cardRow.slug,
     editToken: cardRow.editToken,
+    userId: cardRow.userId,
     senderName: cardRow.senderName,
     recipientName: cardRow.recipientName,
     tone: cardRow.tone,
@@ -71,6 +72,7 @@ export async function createCard(input: NewCardInput): Promise<Card> {
     .values({
       slug,
       editToken: generateEditToken(),
+      userId: input.userId,
       senderName: input.senderName,
       recipientName: input.recipientName,
       tone: input.tone,
@@ -103,7 +105,7 @@ export async function getCardBySlug(slug: string): Promise<Card | null> {
 export async function updateCardByEditToken(
   slug: string,
   editToken: string,
-  input: NewCardInput
+  input: Omit<NewCardInput, "userId">
 ): Promise<Card | null> {
   if (!hasDb || !db) return mem.memUpdateCardByEditToken(slug, editToken, input);
 
@@ -150,6 +152,21 @@ export async function verifyCardPasscode(slug: string, guess: string): Promise<C
   const card = await getCardBySlug(slug);
   if (!card || !card.passcodeHash) return null;
   return verifyPasscode(guess, card.passcodeHash) ? card : null;
+}
+
+/** All letters attached to an account, newest first — cards created
+ * anonymously (or while signed out) never have a userId, so they can't show
+ * up here regardless of who's logged in. Scenes aren't needed for a list
+ * view, so this skips the per-card scenes join `getCardBySlug` does. */
+export async function getCardsByUserId(userId: string): Promise<Omit<Card, "scenes">[]> {
+  if (!hasDb || !db) return [];
+
+  const rows = await db.select().from(cards).where(eq(cards.userId, userId)).orderBy(desc(cards.createdAt));
+  return rows.map((cardRow) => {
+    const { scenes: _scenes, ...rest } = rowsToCard(cardRow, []);
+    void _scenes;
+    return rest;
+  });
 }
 
 /** Marks a self-destruct letter as fully read. Idempotent (only the first

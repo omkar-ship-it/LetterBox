@@ -3,6 +3,7 @@ import { createCard } from "@/lib/db/queries";
 import { cardInputSchema } from "@/lib/schemas";
 import { isPurchasableTemplateBlocked } from "@/lib/envelope-templates";
 import { hashPasscode } from "@/lib/passcode";
+import { getSessionUser } from "@/lib/session";
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
@@ -17,8 +18,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "This envelope template requires a purchase, which isn't available yet." }, { status: 402 });
   }
 
+  const sessionUser = await getSessionUser();
   const { passcode, ...rest } = parsed.data;
-  const card = await createCard({ ...rest, passcodeHash: passcode ? hashPasscode(passcode) : null });
+  const card = await createCard({
+    ...rest,
+    passcodeHash: passcode ? hashPasscode(passcode) : null,
+    userId: sessionUser?.id ?? null,
+  });
 
   // The sender gets editToken back (needed to edit later) but never the hash.
   const { passcodeHash: _drop, ...senderCard } = card;

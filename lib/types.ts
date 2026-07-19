@@ -13,6 +13,8 @@ export type Card = {
   id: string;
   slug: string;
   editToken: string;
+  /** Null for letters sent anonymously or while signed out. */
+  userId: string | null;
   senderName: string;
   recipientName: string;
   tone: string;
@@ -35,6 +37,7 @@ export type Card = {
 export type NewSceneInput = Omit<Scene, "id" | "order"> & { id?: string };
 
 export type NewCardInput = {
+  userId: string | null;
   senderName: string;
   recipientName: string;
   tone: string;

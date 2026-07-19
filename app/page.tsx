@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Heart, Mail, Mic, Music2, PartyPopper, Sparkles, Timer } from "lucide-react";
 import { HeroPreview } from "@/components/marketing/HeroPreview";
 import { ENVELOPE_TEMPLATES } from "@/lib/envelope-templates";
+import { getSessionUser } from "@/lib/session";
 
 const USE_CASES = [
   { icon: Heart, label: "Thank someone", copy: "For the person who always shows up and never asks for credit." },
@@ -17,7 +18,9 @@ const STEPS = [
   { icon: Timer, title: "Share the link", copy: "Send it now, or schedule it to unlock at the exact right moment." },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const user = await getSessionUser();
+
   return (
     <div className="bg-[#fbf6ef]">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
@@ -29,6 +32,9 @@ export default function Home() {
           <a href="#templates" className="hover:text-[#2b2117]">
             Templates
           </a>
+          <Link href={user ? "/letters" : "/login"} className="hover:text-[#2b2117]">
+            {user ? "My letters" : "Sign in"}
+          </Link>
         </nav>
         <Link
           href="/create"

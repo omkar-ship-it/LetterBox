@@ -1,9 +1,42 @@
 import { pgTable, text, timestamp, integer, uuid, boolean } from "drizzle-orm/pg-core";
 
+export const users = pgTable("users", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// One-time email login codes. Hashed at rest (see lib/otp.ts) the same way
+// passcodes are — a code is only ever compared, never read back.
+export const otpCodes = pgTable("otp_codes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  email: text("email").notNull(),
+  codeHash: text("code_hash").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  consumedAt: timestamp("consumed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// The session id itself is the opaque bearer token stored in the browser's
+// httpOnly cookie — same "random unguessable string as credential" pattern
+// as `cards.editToken` below, not a signed/JWT session.
+export const sessions = pgTable("sessions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const cards = pgTable("cards", {
   id: uuid("id").defaultRandom().primaryKey(),
   slug: text("slug").notNull().unique(),
   editToken: text("edit_token").notNull(),
+  // Null for letters sent anonymously (no account, or not signed in at send
+  // time) — set null on account deletion rather than cascading, since the
+  // letter itself isn't the account's data to lose.
+  userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
   senderName: text("sender_name").notNull(),
   recipientName: text("recipient_name").notNull(),
   tone: text("tone").notNull().default("warm"),
