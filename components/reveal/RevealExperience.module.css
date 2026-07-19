@@ -890,6 +890,57 @@
   }
 }
 
+/* ================= SELF-DESTRUCT: PIXEL SHATTER ================= */
+/* Each tile shows a slice of the SAME paper gradient the envelope itself is
+   painted with (`background-size` pinned to the envelope's actual rendered
+   px size, `background-position` offset to that tile's own top/left) — a
+   sprite-sheet trick, so the grid reads as literal fragments of the letter
+   breaking apart rather than a generic overlay. No canvas/rasterization
+   needed since the envelope's surface is gradient-only at this point in the
+   flow (the postcard deck, the only place a real photo could be, is already
+   torn down by the time closingShown fires). */
+.shatterField {
+  position: absolute;
+  z-index: 92;
+  left: 50%;
+  top: 50%;
+  width: min(460px, 90%);
+  aspect-ratio: 3 / 2;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.root[data-variant="fullscreen"] .shatterField {
+  position: fixed;
+}
+.shatterTile {
+  position: absolute;
+  left: var(--tile-left);
+  top: var(--tile-top);
+  width: var(--tile-w);
+  height: var(--tile-h);
+  background-image: linear-gradient(155deg, var(--env-paper) 0%, var(--env-paper-2) 55%, var(--env-paper-3) 100%);
+  background-size: var(--shatter-w) var(--shatter-h);
+  background-position: calc(-1 * var(--tile-left)) calc(-1 * var(--tile-top));
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(40, 15, 5, 0.18);
+  opacity: 1;
+  animation-name: tileShatter;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+  animation-fill-mode: forwards;
+  animation-duration: var(--tile-duration);
+  animation-delay: var(--tile-delay);
+}
+@keyframes tileShatter {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tile-tx), var(--tile-ty)) rotate(var(--tile-rot)) scale(0.35);
+  }
+}
+
 /* ================= SELF-DESTRUCT: EMBER DISSOLVE ================= */
 .emberField {
   position: absolute;
@@ -993,7 +1044,8 @@
   .envelope,
   .sealGlow,
   .pcVoiceWave span,
-  .ember {
+  .ember,
+  .shatterTile {
     animation: none !important;
   }
 }

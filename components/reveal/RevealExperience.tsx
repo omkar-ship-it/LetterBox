@@ -57,6 +57,37 @@ const EMBER_PARTICLES: EmberParticle[] = (() => {
   });
 })();
 
+const SHATTER_COLS = 8;
+const SHATTER_ROWS = 5;
+type ShatterTile = { col: number; row: number; tx: number; ty: number; rot: number; delay: number; duration: number };
+
+/** A seeded grid "explosion" — each tile drifts outward along the direction
+ * from the grid's center through its own cell (so edge tiles fly further
+ * out than center ones, like real fragments), with an upward bias and a
+ * short randomized delay so the break reads as a cascade, not a single pop. */
+const SHATTER_TILES: ShatterTile[] = (() => {
+  const random = mulberry32(20260719 + 1);
+  const tiles: ShatterTile[] = [];
+  for (let row = 0; row < SHATTER_ROWS; row++) {
+    for (let col = 0; col < SHATTER_COLS; col++) {
+      const u = col / (SHATTER_COLS - 1) - 0.5;
+      const v = row / (SHATTER_ROWS - 1) - 0.5;
+      const mag = Math.hypot(u, v) || 1;
+      const distance = 90 + random() * 160;
+      tiles.push({
+        col,
+        row,
+        tx: (u / mag) * distance + (random() - 0.5) * 40,
+        ty: (v / mag) * distance * 0.7 - (40 + random() * 70),
+        rot: (random() - 0.5) * 200,
+        delay: random() * 500,
+        duration: 1400 + random() * 1000,
+      });
+    }
+  }
+  return tiles;
+})();
+
 function playChime() {
   try {
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -261,6 +292,10 @@ export function RevealExperience({
   const [closingShown, setClosingShown] = useState(false);
   const [dissolving, setDissolving] = useState(false);
   const [fadedAway, setFadedAway] = useState(false);
+  // Captured once, right as the shatter starts, from the envelope's actual
+  // rendered size — the tile grid's background-position math needs real px,
+  // and by then the envelope is back at its full centered size (not .corner).
+  const [shatterSize, setShatterSize] = useState({ w: 460, h: 307 });
 
   const [musicStarted, setMusicStarted] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
@@ -486,9 +521,16 @@ export function RevealExperience({
                 if (selfDestruct) {
                   onSelfDestruct?.();
                   // Let them read the closing line for a couple seconds, then
-                  // the envelope dissolves into embers; the final message
-                  // only appears once that's fully settled.
-                  setTimeout(() => setDissolving(true), reduced ? 300 : 2200);
+                  // the envelope shatters into tiles + embers; the final
+                  // message only appears once that's fully settled.
+                  setTimeout(
+                    () => {
+                      const rect = envelopeRef.current?.getBoundingClientRect();
+                      if (rect) setShatterSize({ w: rect.width, h: rect.height });
+                      setDissolving(true);
+                    },
+                    reduced ? 300 : 2200
+                  );
                   setTimeout(() => setFadedAway(true), reduced ? 700 : 2200 + 2600);
                 }
               },
@@ -733,24 +775,55 @@ export function RevealExperience({
       </div>
 
       {selfDestruct && dissolving && !reduced && (
-        <div className={styles.emberField}>
-          {EMBER_PARTICLES.map((p, i) => (
-            <span
-              key={i}
-              className={styles.ember}
-              style={
-                {
-                  "--ember-size": `${p.size}px`,
-                  "--ember-tx": `${p.tx}px`,
-                  "--ember-ty": `${p.ty}px`,
-                  "--ember-rot": `${p.rot}deg`,
-                  "--ember-delay": `${p.delay}ms`,
-                  "--ember-duration": `${p.duration}ms`,
-                } as CSSVars
-              }
-            />
-          ))}
-        </div>
+        <>
+          <div className={styles.shatterField}>
+            {SHATTER_TILES.map((t) => {
+              const tileW = shatterSize.w / SHATTER_COLS;
+              const tileH = shatterSize.h / SHATTER_ROWS;
+              const left = t.col * tileW;
+              const top = t.row * tileH;
+              return (
+                <span
+                  key={`${t.col}-${t.row}`}
+                  className={styles.shatterTile}
+                  style={
+                    {
+                      "--tile-left": `${left}px`,
+                      "--tile-top": `${top}px`,
+                      "--tile-w": `${tileW}px`,
+                      "--tile-h": `${tileH}px`,
+                      "--shatter-w": `${shatterSize.w}px`,
+                      "--shatter-h": `${shatterSize.h}px`,
+                      "--tile-tx": `${t.tx}px`,
+                      "--tile-ty": `${t.ty}px`,
+                      "--tile-rot": `${t.rot}deg`,
+                      "--tile-delay": `${t.delay}ms`,
+                      "--tile-duration": `${t.duration}ms`,
+                    } as CSSVars
+                  }
+                />
+              );
+            })}
+          </div>
+          <div className={styles.emberField}>
+            {EMBER_PARTICLES.map((p, i) => (
+              <span
+                key={i}
+                className={styles.ember}
+                style={
+                  {
+                    "--ember-size": `${p.size}px`,
+                    "--ember-tx": `${p.tx}px`,
+                    "--ember-ty": `${p.ty}px`,
+                    "--ember-rot": `${p.rot}deg`,
+                    "--ember-delay": `${p.delay}ms`,
+                    "--ember-duration": `${p.duration}ms`,
+                  } as CSSVars
+                }
+              />
+            ))}
+          </div>
+        </>
       )}
 
       {selfDestruct && (
