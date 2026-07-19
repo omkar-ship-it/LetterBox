@@ -1,13 +1,9 @@
-/** Sends the OTP via MSG91's v5 template-email API. The exact request shape
- * couldn't be confirmed against MSG91's live docs (their reference site is
- * client-rendered and not scrapable) — this follows their documented v5
- * template pattern. If sends start failing, log the response body from the
- * catch below first; that's MSG91 telling us what's actually wrong.
- *
- * Requires an email template created in the MSG91 dashboard containing a
- * variable named to match OTP_VARIABLE_NAME (default "OTP") — update that
- * constant if your template uses a different variable name. */
-const OTP_VARIABLE_NAME = "OTP";
+/** Sends the OTP via MSG91's v5 template-email API. Confirmed working against
+ * a live MSG91 account/template (the request shape itself was accepted on
+ * the first real try — only the `from` domain and this variable name needed
+ * correcting). The `letterbox_otp` template's placeholder is `{{OTP_CODE}}`,
+ * not `{{OTP}}` — keep this in sync with whatever the template actually uses. */
+const OTP_VARIABLE_NAME = "OTP_CODE";
 
 type SendResult = { ok: true } | { ok: false; error: string };
 
