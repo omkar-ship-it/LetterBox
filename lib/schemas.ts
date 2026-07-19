@@ -30,12 +30,20 @@ export const sceneInputSchema = z.object({
 export const PASSCODE_MIN_LENGTH = 4;
 export const PASSCODE_MAX_LENGTH = 30;
 
+// The opening message is the only place it's shown to the recipient — the
+// envelope's address block, a small fixed-position corner of a fixed-size
+// graphic (see .envAddress in RevealExperience.module.css). An unbounded
+// field there isn't a "generous" choice, it's just a guaranteed illegible
+// or overflowing box once someone writes a real paragraph. Capped for the
+// same reason the scene fields are.
+export const MESSAGE_MAX_LENGTH = 240;
+
 export const cardInputSchema = z.object({
   senderName: z.string().min(1, "Your name is required."),
   recipientName: z.string().min(1, "Who is this for?"),
   tone: z.string().default("warm"),
   title: z.string().default(""),
-  message: z.string().default(""),
+  message: z.string().max(MESSAGE_MAX_LENGTH, `Keep it envelope-short — ${MESSAGE_MAX_LENGTH} characters max.`).default(""),
   envelopeTemplateId: z.string().min(1),
   musicTrackId: z.string().nullable(),
   unlockAt: z.string().nullable(),

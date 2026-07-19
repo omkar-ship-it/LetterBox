@@ -69,7 +69,7 @@ export function LockedCountdown({
           <div className={`${styles.envBody} ${styles.paperFiber}`}>
             <div
               className={styles.envAddress}
-              style={{ "--address-scale": addressScale(recipientName, "a letter is on its way") } as CSSVars}
+              style={{ "--address-scale": addressScale(recipientName) } as CSSVars}
             >
               <p className={styles.to}>To,</p>
               <p className={styles.name}>{recipientName}</p>

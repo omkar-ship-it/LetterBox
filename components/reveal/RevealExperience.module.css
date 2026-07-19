@@ -181,40 +181,75 @@
    envelope color in the palette, not just the orange/brown ones this was
    originally tuned against — confirmed too low-contrast on the blue
    "Encouragement" template on a real device. */
+/* Narrower and taller on purpose (a "vertical" card, not a wide banner) —
+   the sender's message has no length cap beyond MESSAGE_MAX_LENGTH and this
+   is the ONLY place it's ever shown to the recipient (confirmed: not
+   repeated anywhere else in the reveal), so this box has to genuinely hold
+   several sentences at a readable size, not just a short teaser.
+   z-index: the envelope's flap (.envFlap, z-index 3) is a solid triangle
+   covering the top of the envelope, and this box's left edge sits close
+   enough to center that a tall box can grow up underneath it. The wax seal
+   already solves the identical problem by sitting at z-index 4, layered
+   over the flap on purpose (that's how a seal works on a real envelope) —
+   this box gets the same treatment rather than being height-budgeted
+   around the flap's diagonal, which left almost no room for the message. */
 .envAddress {
   position: absolute;
   left: 8%;
   bottom: 9%;
-  width: 40%;
-  padding: 0.45rem 0.6rem;
-  border-radius: 7px;
-  background: rgba(10, 8, 8, 0.58);
+  /* Capped well clear of the seal's left edge (seal is centered, 66px wide
+     — on a small phone's ~338px envelope that's ~40% from the left) at
+     every envelope size, not just the one this was eyeballed against. */
+  width: min(200px, 28%);
+  max-height: 74%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 9px;
+  background: rgba(10, 8, 8, 0.6);
   color: #fff;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
   transition: opacity 0.4s ease;
+  overflow: hidden;
+  z-index: 4;
 }
 .envAddress .to {
   font-family: var(--font-hand);
-  font-size: calc(0.85rem * var(--address-scale, 1));
+  font-size: calc(0.8rem * var(--address-scale, 1));
   color: rgba(255, 255, 255, 0.95);
   margin: 0 0 0.05rem;
 }
+/* Always one line — a name long enough to need two lines instead gets
+   ellipsis-truncated (addressScale already shrinks it hard before that
+   point). Wrapping to a second line was the actual cause of the flap
+   collision above: it could roughly double this element's height. */
 .envAddress .name {
   font-family: var(--font-hand);
   font-weight: 700;
-  font-size: calc(1.3rem * var(--address-scale, 1));
-  line-height: 1.05;
-  margin: 0 0 0.35rem;
+  font-size: calc(1.1rem * var(--address-scale, 1));
+  line-height: 1.15;
+  margin: 0 0 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+/* Fixed size, not scaled by --address-scale — that scale now only accounts
+   for the recipient name (see addressScale()), so a long message doesn't
+   also shrink the name, and the message itself gets a real, legible size
+   instead of being crushed down toward illegibility as it grows. Sentence
+   case (not uppercase) because all-caps stops being readable past a
+   handful of words. */
 .envAddress .sub {
   font-family: var(--font-body);
-  font-weight: 600;
-  font-size: calc(0.44rem * var(--address-scale, 1));
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
   color: rgba(255, 255, 255, 0.92);
   line-height: 1.5;
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
 }
 
 .envFlap {

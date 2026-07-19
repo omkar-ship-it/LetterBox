@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Sparkles, Loader2 } from "lucide-react";
+import { MESSAGE_MAX_LENGTH } from "@/lib/schemas";
 
 const TONES = ["warm", "heartfelt", "playful", "proud", "encouraging", "nostalgic"];
 
@@ -123,11 +124,15 @@ export function RecipientStep({
         <span className="mb-1.5 block text-xs font-bold uppercase tracking-[0.1em] text-stone-500">Your message</span>
         <textarea
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => setMessage(e.target.value.slice(0, MESSAGE_MAX_LENGTH))}
           placeholder="Say the thing. It doesn't have to be perfect — it has to be true."
           rows={5}
+          maxLength={MESSAGE_MAX_LENGTH}
           className="w-full resize-none rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm italic focus:border-[#a8455a] focus:outline-none"
         />
+        <p className="mt-1 text-right text-[10px] text-stone-400">
+          {message.length}/{MESSAGE_MAX_LENGTH} — this is what shows on the envelope face, keep it a preview
+        </p>
       </label>
     </div>
   );

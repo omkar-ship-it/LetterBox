@@ -132,18 +132,16 @@ function contentScale(...text: string[]): number {
   return 0.78;
 }
 
-/** The envelope's address block grows upward from a fixed bottom edge (it
- * sits above the wax seal), so long names/messages risk growing tall enough
- * to visually run under the seal graphic — same "don't hide what they
- * wrote" principle as the postcard fix, applied here to keep the block
- * short instead. */
-export function addressScale(name: string, sub: string): number {
-  const len = name.length + sub.length;
-  if (len <= 40) return 1;
-  if (len <= 70) return 0.85;
-  if (len <= 110) return 0.72;
-  if (len <= 160) return 0.62;
-  return 0.54;
+/** Sizes just the "To, {name}" line — the message preview below it has its
+ * own fixed size + line-clamp (see .envAddress .sub in the CSS module) so a
+ * long message no longer also shrinks the name down with it. Only the name
+ * itself needs this: it's a single line and a very long one would otherwise
+ * run past the card edge. */
+export function addressScale(name: string): number {
+  if (name.length <= 10) return 1;
+  if (name.length <= 16) return 0.85;
+  if (name.length <= 22) return 0.7;
+  return 0.58;
 }
 
 export function templateVars(template: EnvelopeTemplate): CSSVars {
@@ -606,7 +604,7 @@ export function RevealExperience({
           <div className={cn(styles.envBody, styles.paperFiber)}>
             <div
               className={styles.envAddress}
-              style={{ "--address-scale": addressScale(recipientName, message || "a letter, with love") } as CSSVars}
+              style={{ "--address-scale": addressScale(recipientName) } as CSSVars}
             >
               <p className={styles.to}>To,</p>
               <p className={styles.name}>{recipientName}</p>
