@@ -153,7 +153,7 @@ function SceneCard({
   return (
     <div className="rounded-2xl border border-stone-200 bg-white p-5">
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-[0.15em] text-stone-400">Scene {index + 1}</span>
+        <span className="text-xs font-bold uppercase tracking-[0.15em] text-stone-400">Card {index + 1}</span>
         {canRemove && (
           <button type="button" onClick={onRemove} className="text-stone-400 hover:text-red-500" aria-label="Remove scene">
             <Trash2 size={15} />
