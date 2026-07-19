@@ -1,14 +1,38 @@
 import Link from "next/link";
-import { Heart, Mail, Mic, Music2, PartyPopper, Sparkles, Timer } from "lucide-react";
+import {
+  Building2,
+  CalendarHeart,
+  Gift,
+  GraduationCap,
+  Heart,
+  LifeBuoy,
+  Mail,
+  MessageCircleHeart,
+  Mic,
+  Music2,
+  PartyPopper,
+  Plane,
+  Sparkles,
+  Star,
+  Timer,
+} from "lucide-react";
 import { HeroPreview } from "@/components/marketing/HeroPreview";
 import { ENVELOPE_TEMPLATES } from "@/lib/envelope-templates";
 import { getSessionUser } from "@/lib/session";
 
 const USE_CASES = [
-  { icon: Heart, label: "Thank someone", copy: "For the person who always shows up and never asks for credit." },
-  { icon: PartyPopper, label: "Celebrate a milestone", copy: "A birthday, a promotion, a new home — mark it properly." },
-  { icon: Sparkles, label: "Appreciate quietly", copy: "The things you notice but rarely say out loud." },
-  { icon: Mail, label: "Acknowledge what's hard", copy: "For someone getting through something — let them know you see it." },
+  { icon: Heart, label: "Thank-you letter", copy: "For the person who always shows up and never asks for credit." },
+  { icon: Gift, label: "Surprise your partner", copy: "Skip the flowers everyone sends — give them something they actually open." },
+  { icon: Sparkles, label: "Appreciation", copy: "The things you notice but rarely say out loud." },
+  { icon: Plane, label: "Group trip recap", copy: "Turn a trip's worth of photos and inside jokes into one letter everyone gets to relive." },
+  { icon: PartyPopper, label: "Birthdays", copy: "More than a text, less than a party — the middle ground that actually lands." },
+  { icon: CalendarHeart, label: "Anniversaries", copy: "A year, five years, twenty — give it more than a card from the drugstore." },
+  { icon: Mail, label: "Invites", copy: "A wedding, a housewarming, a reunion — make the invite itself feel like the event starting." },
+  { icon: GraduationCap, label: "Milestones", copy: "A new job, a promotion, a diploma — mark it properly." },
+  { icon: LifeBuoy, label: "Acknowledge what's hard", copy: "For someone getting through something — let them know you see it." },
+  { icon: Building2, label: "Brands & customers", copy: "Loyalty emails get archived unread. A real letter gets opened — every time." },
+  { icon: MessageCircleHeart, label: "Long distance", copy: "For the people a text message never quite does justice to." },
+  { icon: Star, label: "Just because", copy: "No occasion required — sometimes the surprise is the whole point." },
 ];
 
 const STEPS = [
@@ -28,6 +52,9 @@ export default async function Home() {
         <nav className="hidden items-center gap-8 text-sm font-medium text-stone-600 sm:flex">
           <a href="#how-it-works" className="hover:text-[#2b2117]">
             How it works
+          </a>
+          <a href="#use-cases" className="hover:text-[#2b2117]">
+            Use cases
           </a>
           <a href="#templates" className="hover:text-[#2b2117]">
             Templates
@@ -51,8 +78,9 @@ export default async function Home() {
             Say it like you mean it.
           </h1>
           <p className="mt-6 max-w-md text-lg text-stone-600">
-            Letterbox turns a thank-you, a congratulations, or an overdue &ldquo;I see you&rdquo; into a letter someone
-            will actually want to open — scenes, a voice note, music, and a moment they can&apos;t skip past.
+            A thank-you, a birthday, a trip recap, an anniversary, a customer you want to keep — Letterbox turns it
+            into a letter someone will actually want to open. Scenes, a voice note, music, and a moment they can&apos;t
+            skip past.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
@@ -61,8 +89,8 @@ export default async function Home() {
             >
               Create a letter — it&apos;s free
             </Link>
-            <a href="#how-it-works" className="text-sm font-semibold text-stone-500 hover:text-[#2b2117]">
-              See how it works →
+            <a href="#use-cases" className="text-sm font-semibold text-stone-500 hover:text-[#2b2117]">
+              See what it&apos;s for →
             </a>
           </div>
         </div>
@@ -85,12 +113,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-white py-16">
+      <section id="use-cases" className="bg-white py-16">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-10 text-center font-serif text-3xl text-[#2b2117]">For every moment worth marking</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Everywhere a letter beats an email</h2>
+          <p className="mb-10 text-center text-stone-500">Personal or business, big occasion or none at all.</p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {USE_CASES.map((u) => (
-              <div key={u.label} className="rounded-2xl bg-[#fbf6ef] p-6">
+              <div key={u.label} className="rounded-2xl bg-[#fbf6ef] p-5">
                 <u.icon size={20} className="mb-3 text-[#a8455a]" />
                 <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{u.label}</p>
                 <p className="text-sm text-stone-500">{u.copy}</p>
