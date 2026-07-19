@@ -10,7 +10,7 @@ export type SceneDraft = {
   voiceUploading: boolean;
 };
 
-export const WIZARD_STEPS = ["recipient", "scenes", "envelope", "music", "schedule", "send"] as const;
+export const WIZARD_STEPS = ["envelope", "recipient", "scenes", "music", "schedule", "send"] as const;
 export type WizardStep = (typeof WIZARD_STEPS)[number];
 
 export const STEP_LABELS: Record<WizardStep, string> = {

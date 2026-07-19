@@ -29,7 +29,13 @@ function newScene(accentColor: string): SceneDraft {
   };
 }
 
-export function CreateWizard({ accountEmail }: { accountEmail: string }) {
+export function CreateWizard({
+  accountEmail,
+  initialTemplateId,
+}: {
+  accountEmail: string;
+  initialTemplateId?: string;
+}) {
   const [stepIndex, setStepIndex] = useState(0);
   const step = WIZARD_STEPS[stepIndex];
 
@@ -41,10 +47,10 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
   const [message, setMessage] = useState("");
   const [senderName, setSenderName] = useState("");
 
-  const [envelopeTemplateId, setEnvelopeTemplateId] = useState(ENVELOPE_TEMPLATES[0].id);
+  const [envelopeTemplateId, setEnvelopeTemplateId] = useState(initialTemplateId ?? ENVELOPE_TEMPLATES[0].id);
   const template = useMemo(() => getEnvelopeTemplate(envelopeTemplateId), [envelopeTemplateId]);
 
-  const [scenes, setScenes] = useState<SceneDraft[]>(() => [newScene(ENVELOPE_TEMPLATES[0].accentColors[0])]);
+  const [scenes, setScenes] = useState<SceneDraft[]>(() => [newScene(template.accentColors[0])]);
   const [musicTrackId, setMusicTrackId] = useState<string | null>(MUSIC_TRACKS[0].id);
 
   const [scheduled, setScheduled] = useState(false);
@@ -159,6 +165,9 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
       hideFooter={step === "send"}
       preview={preview}
     >
+      {step === "envelope" && (
+        <EnvelopeStep envelopeTemplateId={envelopeTemplateId} setEnvelopeTemplateId={setEnvelopeTemplateId} />
+      )}
       {step === "recipient" && (
         <RecipientStep
           recipientName={recipientName}
@@ -184,9 +193,6 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
           tone={tone}
           context={context}
         />
-      )}
-      {step === "envelope" && (
-        <EnvelopeStep envelopeTemplateId={envelopeTemplateId} setEnvelopeTemplateId={setEnvelopeTemplateId} />
       )}
       {step === "music" && <MusicStep musicTrackId={musicTrackId} setMusicTrackId={setMusicTrackId} />}
       {step === "schedule" && (

@@ -123,7 +123,7 @@ export default async function Home() {
           {ENVELOPE_TEMPLATES.map((t) => (
             <Link
               key={t.id}
-              href="/create"
+              href={`/create?template=${t.id}`}
               className="group rounded-2xl border border-stone-200 p-3 transition hover:border-[#a8455a]"
               style={{ background: t.colors.desk }}
             >
