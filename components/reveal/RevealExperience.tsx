@@ -158,8 +158,6 @@ export function templateVars(template: EnvelopeTemplate): CSSVars {
     "--seal-light": template.colors.sealLight,
     "--seal-dark": template.colors.sealDark,
     "--gold": template.colors.gold,
-    "--tape": template.colors.tape,
-    "--tape-2": template.colors.tape2,
   };
 }
 
@@ -603,12 +601,7 @@ export function RevealExperience({
           {template.decoration === "confetti" && (
             <div className={styles.decorConfetti} style={{ "--decoration-color": template.decorationColor } as CSSVars} />
           )}
-          <div className={styles.envTape} />
           <div className={cn(styles.envBody, styles.paperFiber)}>
-            <div className={styles.envStamp}>
-              <span className={styles.stampLabel}>{template.stampLabel}</span>
-              <span className={styles.stampValue}>✦</span>
-            </div>
             <div
               className={styles.envAddress}
               style={{ "--address-scale": addressScale(recipientName, message || "a letter, with love") } as CSSVars}
@@ -698,7 +691,7 @@ export function RevealExperience({
       )}
 
       <div className={cn(styles.gate, gateHidden && styles.hidden)}>
-        <p className={styles.gateCaption}>{template.tagline}</p>
+        <p className={styles.gateCaption}>Delivered to {recipientName}</p>
       </div>
 
       <div className={cn(styles.deckScene, deckActive && styles.active)}>

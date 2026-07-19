@@ -66,12 +66,7 @@ export function LockedCountdown({
           {template.decoration === "confetti" && (
             <div className={styles.decorConfetti} style={{ "--decoration-color": template.decorationColor } as CSSVars} />
           )}
-          <div className={`${styles.envTape}`} />
           <div className={`${styles.envBody} ${styles.paperFiber}`}>
-            <div className={styles.envStamp}>
-              <span className={styles.stampLabel}>{template.stampLabel}</span>
-              <span className={styles.stampValue}>✦</span>
-            </div>
             <div
               className={styles.envAddress}
               style={{ "--address-scale": addressScale(recipientName, "a letter is on its way") } as CSSVars}

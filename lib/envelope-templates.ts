@@ -4,8 +4,6 @@ export type EnvelopeTemplate = {
   id: string;
   name: string;
   description: string;
-  stampLabel: string;
-  tagline: string;
   tier: "free" | "premium";
   decoration: EnvelopeDecoration;
   /** Tints the decoration (mask-based, so any color works regardless of the source SVG). */
@@ -23,8 +21,8 @@ export type EnvelopeTemplate = {
     sealLight: string;
     sealDark: string;
     gold: string;
+    /** Used as a palette-preview swatch in the template picker. */
     tape: string;
-    tape2: string;
   };
   /** Scenes cycle through these accents in order; the last scene (the "peak" card) uses the final color. */
   accentColors: string[];
@@ -35,8 +33,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "warm-coral",
     name: "Warm Coral",
     description: "Sun-warmed paper, a green wax seal, a little gold tape. Tender and bright.",
-    stampLabel: "WITH LOVE",
-    tagline: "a letter, made with care",
     tier: "free",
     decoration: "none",
     decorationColor: "#d19a35",
@@ -54,7 +50,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#124a39",
       gold: "#d19a35",
       tape: "#eab53f",
-      tape2: "#f0c869",
     },
     accentColors: ["#d9724a", "#d99a2b", "#2a8f8f", "#d9527a", "#5561a8", "#8a4f96"],
   },
@@ -62,8 +57,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "sunlit-parchment",
     name: "Sunlit Parchment",
     description: "Tan parchment, a deep red seal. Steady, old-friend warmth.",
-    stampLabel: "FOR YOU",
-    tagline: "in your corner, always",
     tier: "free",
     decoration: "none",
     decorationColor: "#8a6a3c",
@@ -81,7 +74,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#591420",
       gold: "#8a6a3c",
       tape: "#d1a44c",
-      tape2: "#e0bd6e",
     },
     accentColors: ["#b5622f", "#8a6a3c", "#5f7a6a", "#a8455a", "#4d6a80", "#6b4f8a"],
   },
@@ -89,8 +81,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "midnight-airmail",
     name: "Midnight Airmail",
     description: "A dark desk, cream paper, red wax, airmail stripes. Quietly dramatic.",
-    stampLabel: "PAR AVION",
-    tagline: "sealed with a promise",
     tier: "free",
     decoration: "none",
     decorationColor: "#c9a05c",
@@ -108,7 +98,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#591420",
       gold: "#c9a05c",
       tape: "#c94f4f",
-      tape2: "#4f6fc9",
     },
     accentColors: ["#c9a05c", "#9c3344", "#4f6fc9", "#8a6a3c", "#cbb89e", "#7a1f2b"],
   },
@@ -116,8 +105,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "celebration",
     name: "Celebration",
     description: "Marigold paper, a berry-pink seal, teal tape. Confetti in envelope form.",
-    stampLabel: "CELEBRATE",
-    tagline: "a little party, just for you",
     tier: "free",
     decoration: "none",
     decorationColor: "#f2933f",
@@ -135,7 +122,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#8a2249",
       gold: "#f2933f",
       tape: "#6ec6c6",
-      tape2: "#8fd9d9",
     },
     accentColors: ["#f2933f", "#c23a6b", "#6ec6c6", "#8a5cc9", "#e0b23a", "#de5486"],
   },
@@ -143,8 +129,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "gratitude",
     name: "Gratitude",
     description: "Sage paper, a terracotta seal, cream tape. Grounded and grateful.",
-    stampLabel: "THANK YOU",
-    tagline: "gratitude, gathered here",
     tier: "free",
     decoration: "none",
     decorationColor: "#b5622f",
@@ -162,7 +146,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#7a3f1c",
       gold: "#b5622f",
       tape: "#e0c46a",
-      tape2: "#ecd68f",
     },
     accentColors: ["#6f8a5c", "#b5622f", "#7a8fa0", "#a8763f", "#8ba578", "#5c7a6a"],
   },
@@ -170,8 +153,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "encouragement",
     name: "Encouragement",
     description: "Sky-blue paper, a coral seal, sunflower tape. Bright and rooting for you.",
-    stampLabel: "YOU'VE GOT THIS",
-    tagline: "in your corner, cheering you on",
     tier: "free",
     decoration: "none",
     decorationColor: "#4f8cae",
@@ -189,7 +170,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#a8482a",
       gold: "#4f8cae",
       tape: "#f2c14e",
-      tape2: "#f7d47e",
     },
     accentColors: ["#4f8cae", "#e0724a", "#f2c14e", "#6b8f5c", "#8a6bae", "#3a6b8a"],
   },
@@ -197,8 +177,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "golden-filigree",
     name: "Golden Filigree",
     description: "Ink-black paper, gold foil flourishes, an ornate gold seal. Formal and unforgettable.",
-    stampLabel: "WITH HONOR",
-    tagline: "sealed in gold",
     tier: "premium",
     decoration: "filigree",
     decorationColor: "#d4af5a",
@@ -216,7 +194,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#8a6a24",
       gold: "#d4af5a",
       tape: "#d4af5a",
-      tape2: "#e6c874",
     },
     accentColors: ["#d4af5a", "#8a6a24", "#6b5a3c", "#a3906a", "#c9a34a", "#4a3f2e"],
   },
@@ -224,8 +201,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "blush-botanical",
     name: "Blush Botanical",
     description: "Ivory paper, hand-drawn botanical sprigs, a dusty-rose seal. Soft and romantic.",
-    stampLabel: "WITH LOVE",
-    tagline: "grown just for you",
     tier: "premium",
     decoration: "botanical",
     decorationColor: "#7a8f6a",
@@ -243,7 +218,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#7a3f4c",
       gold: "#c9a05c",
       tape: "#d9aca3",
-      tape2: "#e8c9c0",
     },
     accentColors: ["#b5677a", "#7a8f6a", "#c9a05c", "#a3746c", "#cc8494", "#5c6b4f"],
   },
@@ -251,8 +225,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "midnight-confetti",
     name: "Midnight Confetti",
     description: "Emerald paper scattered with gold and silver confetti, a bold coral seal. Pure celebration.",
-    stampLabel: "CELEBRATE",
-    tagline: "a party in an envelope",
     tier: "premium",
     decoration: "confetti",
     decorationColor: "#e6c874",
@@ -270,7 +242,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
       sealDark: "#a8482a",
       gold: "#e6c874",
       tape: "#e6c874",
-      tape2: "#f0dca0",
     },
     accentColors: ["#e0724a", "#e6c874", "#c9d9c4", "#4f8cae", "#8a5cc9", "#de5486"],
   },
