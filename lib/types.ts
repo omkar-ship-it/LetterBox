@@ -17,6 +17,10 @@ export type Card = {
   userId: string | null;
   senderName: string;
   recipientName: string;
+  /** Where the "you've received a letter" email got sent, if anywhere —
+   * purely a delivery mechanism, separate from recipientName (what shows on
+   * the envelope). Empty means the sender shared the link manually. */
+  recipientEmails: string[];
   tone: string;
   title: string;
   message: string;
@@ -40,6 +44,7 @@ export type NewCardInput = {
   userId: string | null;
   senderName: string;
   recipientName: string;
+  recipientEmails: string[];
   tone: string;
   title: string;
   message: string;

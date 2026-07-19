@@ -34,6 +34,7 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
   const step = WIZARD_STEPS[stepIndex];
 
   const [recipientName, setRecipientName] = useState("");
+  const [recipientEmails, setRecipientEmails] = useState<string[]>([]);
   const [tone, setTone] = useState("warm");
   const [context, setContext] = useState("");
   const [title, setTitle] = useState("");
@@ -104,6 +105,7 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
         body: JSON.stringify({
           senderName,
           recipientName,
+          recipientEmails,
           tone,
           title,
           message,
@@ -161,6 +163,8 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
         <RecipientStep
           recipientName={recipientName}
           setRecipientName={setRecipientName}
+          recipientEmails={recipientEmails}
+          setRecipientEmails={setRecipientEmails}
           tone={tone}
           setTone={setTone}
           context={context}
@@ -215,6 +219,7 @@ export function CreateWizard({ accountEmail }: { accountEmail: string }) {
           passcode={passcodeEnabled && passcode.trim() ? passcode.trim() : null}
           selfDestruct={selfDestruct}
           accountEmail={accountEmail}
+          recipientEmails={recipientEmails}
         />
       )}
     </WizardShell>

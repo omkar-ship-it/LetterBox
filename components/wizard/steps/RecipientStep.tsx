@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Loader2 } from "lucide-react";
-import { MESSAGE_MAX_LENGTH } from "@/lib/schemas";
+import { Sparkles, Loader2, Mail, X } from "lucide-react";
+import { MESSAGE_MAX_LENGTH, RECIPIENT_EMAILS_MAX } from "@/lib/schemas";
 
 const TONES = ["warm", "heartfelt", "playful", "proud", "encouraging", "nostalgic"];
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function RecipientStep({
   recipientName,
@@ -17,6 +18,8 @@ export function RecipientStep({
   setTitle,
   message,
   setMessage,
+  recipientEmails,
+  setRecipientEmails,
 }: {
   recipientName: string;
   setRecipientName: (v: string) => void;
@@ -28,9 +31,38 @@ export function RecipientStep({
   setTitle: (v: string) => void;
   message: string;
   setMessage: (v: string) => void;
+  recipientEmails: string[];
+  setRecipientEmails: (updater: (prev: string[]) => string[]) => void;
 }) {
   const [composing, setComposing] = useState(false);
   const [composeError, setComposeError] = useState<string | null>(null);
+  const [emailDraft, setEmailDraft] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  function addEmail() {
+    const candidate = emailDraft.trim().toLowerCase();
+    if (!candidate) return;
+    if (!EMAIL_PATTERN.test(candidate)) {
+      setEmailError("That doesn't look like a valid email.");
+      return;
+    }
+    if (recipientEmails.includes(candidate)) {
+      setEmailDraft("");
+      setEmailError(null);
+      return;
+    }
+    if (recipientEmails.length >= RECIPIENT_EMAILS_MAX) {
+      setEmailError(`Up to ${RECIPIENT_EMAILS_MAX} email addresses.`);
+      return;
+    }
+    setRecipientEmails((prev) => [...prev, candidate]);
+    setEmailDraft("");
+    setEmailError(null);
+  }
+
+  function removeEmail(email: string) {
+    setRecipientEmails((prev) => prev.filter((e) => e !== email));
+  }
 
   async function composeWithAI() {
     if (!recipientName.trim()) {
@@ -82,6 +114,64 @@ export function RecipientStep({
             ))}
           </select>
         </label>
+      </div>
+
+      <div>
+        <span className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.1em] text-stone-500">
+          <Mail size={13} /> Their email (optional)
+        </span>
+        <p className="mb-2 text-xs text-stone-500">
+          We&apos;ll email them the link when you send — or skip this and just copy the link yourself.
+        </p>
+        {recipientEmails.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-1.5">
+            {recipientEmails.map((email) => (
+              <span
+                key={email}
+                className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white py-1 pl-3 pr-1.5 text-xs text-stone-600"
+              >
+                {email}
+                <button
+                  type="button"
+                  onClick={() => removeEmail(email)}
+                  className="rounded-full p-0.5 text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+                  aria-label={`Remove ${email}`}
+                >
+                  <X size={11} />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        {recipientEmails.length < RECIPIENT_EMAILS_MAX && (
+          <div className="flex max-w-sm gap-2">
+            <input
+              type="email"
+              value={emailDraft}
+              onChange={(e) => {
+                setEmailDraft(e.target.value);
+                setEmailError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addEmail();
+                }
+              }}
+              placeholder="maya@example.com"
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm focus:border-[#a8455a] focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={addEmail}
+              disabled={!emailDraft.trim()}
+              className="shrink-0 rounded-xl border border-stone-300 px-4 py-2.5 text-sm font-semibold text-stone-600 hover:bg-stone-50 disabled:opacity-50"
+            >
+              Add
+            </button>
+          </div>
+        )}
+        {emailError && <p className="mt-1.5 text-xs text-red-500">{emailError}</p>}
       </div>
 
       <label className="block">

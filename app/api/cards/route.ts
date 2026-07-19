@@ -4,6 +4,7 @@ import { cardInputSchema } from "@/lib/schemas";
 import { isPurchasableTemplateBlocked } from "@/lib/envelope-templates";
 import { hashPasscode } from "@/lib/passcode";
 import { getSessionUser } from "@/lib/session";
+import { sendLetterNotificationEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   // The wizard UI is gated behind sign-in (app/create/page.tsx), but that's
@@ -32,6 +33,18 @@ export async function POST(req: Request) {
     passcodeHash: passcode ? hashPasscode(passcode) : null,
     userId: sessionUser.id,
   });
+
+  // Best-effort — a failed notification email shouldn't fail card creation,
+  // the link still works and the sender can always copy/share it manually.
+  // Only fires on the initial send, not on later edits.
+  if (card.recipientEmails.length > 0) {
+    const letterUrl = `${new URL(req.url).origin}/c/${card.slug}`;
+    await Promise.allSettled(
+      card.recipientEmails.map((to) =>
+        sendLetterNotificationEmail(to, { senderName: card.senderName, recipientName: card.recipientName, letterUrl })
+      )
+    );
+  }
 
   // The sender gets editToken back (needed to edit later) but never the hash.
   const { passcodeHash: _drop, ...senderCard } = card;

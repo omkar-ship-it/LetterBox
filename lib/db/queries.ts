@@ -17,6 +17,7 @@ function rowsToCard(cardRow: CardRow, sceneRows: SceneRow[]): Card {
     userId: cardRow.userId,
     senderName: cardRow.senderName,
     recipientName: cardRow.recipientName,
+    recipientEmails: cardRow.recipientEmails,
     tone: cardRow.tone,
     title: cardRow.title,
     message: cardRow.message,
@@ -75,6 +76,7 @@ export async function createCard(input: NewCardInput): Promise<Card> {
       userId: input.userId,
       senderName: input.senderName,
       recipientName: input.recipientName,
+      recipientEmails: input.recipientEmails,
       tone: input.tone,
       title: input.title,
       message: input.message,
@@ -117,6 +119,7 @@ export async function updateCardByEditToken(
     .set({
       senderName: input.senderName,
       recipientName: input.recipientName,
+      recipientEmails: input.recipientEmails,
       tone: input.tone,
       title: input.title,
       message: input.message,

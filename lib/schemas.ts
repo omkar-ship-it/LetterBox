@@ -38,9 +38,19 @@ export const PASSCODE_MAX_LENGTH = 30;
 // same reason the scene fields are.
 export const MESSAGE_MAX_LENGTH = 240;
 
+export const RECIPIENT_EMAILS_MAX = 5;
+
 export const cardInputSchema = z.object({
   senderName: z.string().min(1, "Your name is required."),
   recipientName: z.string().min(1, "Who is this for?"),
+  // Optional — a delivery mechanism, not identity. Duplicates are silently
+  // deduped (someone pasting the same address twice shouldn't get emailed
+  // twice) rather than rejected, since that's clearly not deliberate.
+  recipientEmails: z
+    .array(z.string().email("That doesn't look like a valid email."))
+    .max(RECIPIENT_EMAILS_MAX, `Up to ${RECIPIENT_EMAILS_MAX} email addresses.`)
+    .default([])
+    .transform((emails) => Array.from(new Set(emails.map((e) => e.trim().toLowerCase())))),
   tone: z.string().default("warm"),
   title: z.string().default(""),
   message: z.string().max(MESSAGE_MAX_LENGTH, `Keep it envelope-short — ${MESSAGE_MAX_LENGTH} characters max.`).default(""),

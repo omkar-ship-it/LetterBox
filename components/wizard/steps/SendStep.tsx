@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Crown, Flame, Loader2, Send, UserRound } from "lucide-react";
+import { Check, Copy, Crown, Flame, Loader2, Mail, Send, UserRound } from "lucide-react";
 
 export function SendStep({
   senderName,
@@ -18,6 +18,7 @@ export function SendStep({
   passcode,
   selfDestruct,
   accountEmail,
+  recipientEmails,
 }: {
   senderName: string;
   setSenderName: (v: string) => void;
@@ -35,6 +36,7 @@ export function SendStep({
   /** The wizard is only reachable while signed in (see app/create/page.tsx),
    * so this is always a real account — no signed-out branch needed here. */
   accountEmail: string;
+  recipientEmails: string[];
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -42,7 +44,19 @@ export function SendStep({
     return (
       <div className="space-y-5 rounded-2xl border border-stone-200 bg-white p-8 text-center">
         <p className="font-serif text-2xl text-[#2b2117]">It&apos;s ready.</p>
-        <p className="text-sm text-stone-500">Send this link to {recipientName || "them"} — no account needed on their end.</p>
+        <p className="text-sm text-stone-500">
+          {recipientEmails.length > 0
+            ? "No account needed on their end — they can open it straight from the email."
+            : `Send this link to ${recipientName || "them"} — no account needed on their end.`}
+        </p>
+        {recipientEmails.length > 0 && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-left">
+            <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-emerald-800">
+              <Mail size={13} /> Emailed to {recipientEmails.length} {recipientEmails.length === 1 ? "address" : "addresses"}
+            </p>
+            <p className="mt-1 text-sm text-emerald-700">{recipientEmails.join(", ")}</p>
+          </div>
+        )}
         <div className="flex items-center gap-2 rounded-full border border-stone-300 bg-stone-50 px-4 py-2">
           <span className="flex-1 truncate text-sm text-stone-600">{shareUrl}</span>
           <button

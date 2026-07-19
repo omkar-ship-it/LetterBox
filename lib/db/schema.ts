@@ -39,6 +39,11 @@ export const cards = pgTable("cards", {
   userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
   senderName: text("sender_name").notNull(),
   recipientName: text("recipient_name").notNull(),
+  // Optional — purely a delivery mechanism (who gets emailed the link at
+  // send time), separate from recipientName (what's shown on the envelope).
+  // Empty means the sender is sharing the link manually, same as before
+  // this existed.
+  recipientEmails: text("recipient_emails").array().notNull().default([]),
   tone: text("tone").notNull().default("warm"),
   title: text("title").notNull(),
   message: text("message").notNull().default(""),
