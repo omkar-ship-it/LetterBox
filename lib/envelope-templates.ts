@@ -85,7 +85,7 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     decoration: "none",
     decorationColor: "#c9a05c",
     colors: {
-      desk: "#2a2019",
+      desk: "#243a5e",
       ink: "#f0e6d8",
       inkSoft: "#cbb89e",
       inkFaint: "#9c8770",
@@ -181,7 +181,7 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     decoration: "filigree",
     decorationColor: "#d4af5a",
     colors: {
-      desk: "#171310",
+      desk: "#3d2f1a",
       ink: "#f3e6c8",
       inkSoft: "#d4c19a",
       inkFaint: "#a3906a",
@@ -229,7 +229,7 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     decoration: "confetti",
     decorationColor: "#e6c874",
     colors: {
-      desk: "#0f2a24",
+      desk: "#1c4d3e",
       ink: "#f3ede0",
       inkSoft: "#c9d9c4",
       inkFaint: "#8fa89c",
