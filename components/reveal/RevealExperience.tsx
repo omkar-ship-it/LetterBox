@@ -126,8 +126,10 @@ function playChime() {
 function contentScale(...text: string[]): number {
   const len = text.reduce((sum, t) => sum + t.length, 0);
   if (len <= 100) return 1;
-  if (len <= 180) return 0.94;
-  return 0.88;
+  if (len <= 180) return 0.96;
+  if (len <= 260) return 0.9;
+  if (len <= 340) return 0.84;
+  return 0.78;
 }
 
 /** The envelope's address block grows upward from a fixed bottom edge (it

@@ -6,9 +6,13 @@ import { z } from "zod";
 // card-growth both stopped looking like a postcard past a certain length).
 // Enforced here (server) and mirrored as `maxLength` in the wizard's
 // textareas (client) — both matter, not just the UI hint.
-export const SCENE_EYEBROW_MAX_LENGTH = 40;
-export const SCENE_QUOTE_MAX_LENGTH = 70;
-export const SCENE_DESCRIPTION_MAX_LENGTH = 160;
+// Raised from 40/70/160: the postcard layout (RevealExperience.module.css —
+// pcContent flex share, line-clamp counts, contentScale tiers) was widened
+// and retuned to match, verified against real max-length content at mobile
+// width before landing on these numbers, not just bumped blindly.
+export const SCENE_EYEBROW_MAX_LENGTH = 48;
+export const SCENE_QUOTE_MAX_LENGTH = 130;
+export const SCENE_DESCRIPTION_MAX_LENGTH = 280;
 
 export const sceneInputSchema = z.object({
   id: z.string().optional(),

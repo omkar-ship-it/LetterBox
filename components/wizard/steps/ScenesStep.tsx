@@ -175,7 +175,7 @@ function SceneCard({
               value={scene.quote}
               onChange={(e) => onChange({ quote: e.target.value.slice(0, SCENE_QUOTE_MAX_LENGTH) })}
               placeholder="The line that says it — a quote or moment."
-              rows={2}
+              rows={3}
               maxLength={SCENE_QUOTE_MAX_LENGTH}
               className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm italic focus:border-[#a8455a] focus:outline-none"
             />
@@ -188,7 +188,7 @@ function SceneCard({
               value={scene.description}
               onChange={(e) => onChange({ description: e.target.value.slice(0, SCENE_DESCRIPTION_MAX_LENGTH) })}
               placeholder="A little more detail (optional)."
-              rows={2}
+              rows={4}
               maxLength={SCENE_DESCRIPTION_MAX_LENGTH}
               className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-[#a8455a] focus:outline-none"
             />
