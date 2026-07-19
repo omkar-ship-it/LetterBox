@@ -57,8 +57,8 @@ const EMBER_PARTICLES: EmberParticle[] = (() => {
   });
 })();
 
-const SHATTER_COLS = 8;
-const SHATTER_ROWS = 5;
+const SHATTER_COLS = 17;
+const SHATTER_ROWS = 11;
 type ShatterTile = { col: number; row: number; tx: number; ty: number; rot: number; delay: number; duration: number };
 
 /** A seeded grid "explosion" — each tile drifts outward along the direction
