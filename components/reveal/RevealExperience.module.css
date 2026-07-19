@@ -104,9 +104,17 @@
   left: 50%;
   transform: translate(-50%, -50%);
   transition: top 1.15s cubic-bezier(0.4, 0, 0.2, 1), left 1.15s cubic-bezier(0.4, 0, 0.2, 1),
-    width 1.15s cubic-bezier(0.4, 0, 0.2, 1);
+    width 1.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 2.4s ease, filter 2.4s ease;
   perspective: 1600px;
   pointer-events: none;
+}
+/* The self-destruct dissolve: opacity/filter are independent of the `top`/
+   `left`/`width` transition above and of the envelopeIdle keyframe's
+   transform below, so this fades the envelope out for real while it keeps
+   floating — no animation/transition conflict. */
+.envelopeShell.dissolving {
+  opacity: 0;
+  filter: grayscale(1) blur(3px) brightness(1.15);
 }
 .root[data-variant="fullscreen"] .envelopeShell {
   /* width intentionally not redeclared here: percentages on a fixed-position
@@ -836,6 +844,13 @@
 .closingText.shown {
   opacity: 1;
 }
+/* Must be declared after `.shown` — equal specificity, later rule wins the
+   opacity tug-of-war once both classes are present together. */
+.closingText.dissolving {
+  transition: opacity 2s ease, filter 2s ease;
+  opacity: 0;
+  filter: blur(3px);
+}
 .closingLine {
   font-family: var(--font-hand);
   font-weight: 700;
@@ -875,6 +890,54 @@
   }
 }
 
+/* ================= SELF-DESTRUCT: EMBER DISSOLVE ================= */
+.emberField {
+  position: absolute;
+  z-index: 91;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.root[data-variant="fullscreen"] .emberField {
+  position: fixed;
+}
+.ember {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--ember-size);
+  height: var(--ember-size);
+  margin-left: calc(var(--ember-size) / -2);
+  margin-top: calc(var(--ember-size) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold), var(--seal) 60%, transparent 75%);
+  opacity: 0;
+  animation-name: emberDrift;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-duration: var(--ember-duration);
+  animation-delay: var(--ember-delay);
+}
+@keyframes emberDrift {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4) rotate(0deg);
+  }
+  18% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--ember-tx), var(--ember-ty)) scale(0.1) rotate(var(--ember-rot));
+  }
+}
+
+/* The envelope/closingText now actually fade themselves out (see
+   `.envelopeShell.dissolving` / `.closingText.dissolving` above), so this no
+   longer needs an opaque background to hide anything underneath — it's just
+   the calm message that's left once the ember burst has settled. */
 .fadeVeil {
   position: absolute;
   inset: 0;
@@ -886,7 +949,6 @@
   gap: 0.35rem;
   text-align: center;
   padding: 0 1.5rem;
-  background: var(--desk);
   opacity: 0;
   pointer-events: none;
   transition: opacity 1.8s ease;
@@ -930,7 +992,8 @@
   .envelopeShell,
   .envelope,
   .sealGlow,
-  .pcVoiceWave span {
+  .pcVoiceWave span,
+  .ember {
     animation: none !important;
   }
 }

@@ -22,6 +22,41 @@ const SLOT_CLASS: Record<Slot, string> = {
   "gather-in": styles.gatherInAnim,
 };
 
+function mulberry32(seed: number) {
+  return function random() {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+type EmberParticle = { tx: number; ty: number; size: number; delay: number; duration: number; rot: number };
+
+/** A fixed but visually varied burst — deterministic (seeded), computed once
+ * at module load, not per-render or per-play. Each particle drifts outward
+ * from the envelope's center (`tx`/`ty`, already resolved to px) with an
+ * upward bias so it reads as embers/dust rising, not confetti scattering. */
+const EMBER_PARTICLES: EmberParticle[] = (() => {
+  const count = 26;
+  const random = mulberry32(20260719);
+  return Array.from({ length: count }, (_, i) => {
+    const angle = (i / count) * 360 + (random() - 0.5) * 30;
+    const distance = 70 + random() * 160;
+    const upBias = 40 + random() * 90;
+    const rad = (angle * Math.PI) / 180;
+    return {
+      tx: Math.cos(rad) * distance,
+      ty: Math.sin(rad) * distance - upBias,
+      size: 3 + random() * 5,
+      delay: random() * 900,
+      duration: 1700 + random() * 1400,
+      rot: (random() - 0.5) * 260,
+    };
+  });
+})();
+
 function playChime() {
   try {
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -224,6 +259,7 @@ export function RevealExperience({
   const [gateHidden, setGateHidden] = useState(false);
   const [soundShown, setSoundShown] = useState(false);
   const [closingShown, setClosingShown] = useState(false);
+  const [dissolving, setDissolving] = useState(false);
   const [fadedAway, setFadedAway] = useState(false);
 
   const [musicStarted, setMusicStarted] = useState(false);
@@ -449,7 +485,11 @@ export function RevealExperience({
                 setClosingShown(true);
                 if (selfDestruct) {
                   onSelfDestruct?.();
-                  setTimeout(() => setFadedAway(true), reduced ? 400 : 3400);
+                  // Let them read the closing line for a couple seconds, then
+                  // the envelope dissolves into embers; the final message
+                  // only appears once that's fully settled.
+                  setTimeout(() => setDissolving(true), reduced ? 300 : 2200);
+                  setTimeout(() => setFadedAway(true), reduced ? 700 : 2200 + 2600);
                 }
               },
               reduced ? 100 : 950
@@ -500,7 +540,13 @@ export function RevealExperience({
 
       <div
         ref={envelopeRef}
-        className={cn(styles.envelopeShell, envCorner && styles.corner, envHideDetails && styles.hideDetails, receiving && styles.receiving)}
+        className={cn(
+          styles.envelopeShell,
+          envCorner && styles.corner,
+          envHideDetails && styles.hideDetails,
+          receiving && styles.receiving,
+          dissolving && styles.dissolving
+        )}
       >
         <div className={styles.envelope}>
           {(template.decoration === "filigree" || template.decoration === "botanical") && (
@@ -681,10 +727,31 @@ export function RevealExperience({
         </p>
       </div>
 
-      <div className={cn(styles.closingText, closingShown && styles.shown)}>
+      <div className={cn(styles.closingText, closingShown && styles.shown, dissolving && styles.dissolving)}>
         <p className={styles.closingLine}>{closingLine || "Thank you for being you."}</p>
         <p className={styles.closingSub}>{senderName ? `kept, for you — ${senderName}` : "kept, for you"}</p>
       </div>
+
+      {selfDestruct && dissolving && !reduced && (
+        <div className={styles.emberField}>
+          {EMBER_PARTICLES.map((p, i) => (
+            <span
+              key={i}
+              className={styles.ember}
+              style={
+                {
+                  "--ember-size": `${p.size}px`,
+                  "--ember-tx": `${p.tx}px`,
+                  "--ember-ty": `${p.ty}px`,
+                  "--ember-rot": `${p.rot}deg`,
+                  "--ember-delay": `${p.delay}ms`,
+                  "--ember-duration": `${p.duration}ms`,
+                } as CSSVars
+              }
+            />
+          ))}
+        </div>
+      )}
 
       {selfDestruct && (
         <div className={cn(styles.fadeVeil, fadedAway && styles.shown)}>
