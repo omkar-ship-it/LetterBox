@@ -1,4 +1,4 @@
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and, isNull } from "drizzle-orm";
 import { db, hasDb } from "./index";
 import { cards, scenes } from "./schema";
 import type { Card, NewCardInput } from "@/lib/types";
@@ -25,6 +25,8 @@ function rowsToCard(cardRow: CardRow, sceneRows: SceneRow[]): Card {
     passcodeHash: cardRow.passcodeHash,
     viewCount: cardRow.viewCount,
     createdAt: cardRow.createdAt.toISOString(),
+    selfDestruct: cardRow.selfDestruct,
+    readAt: cardRow.readAt ? cardRow.readAt.toISOString() : null,
     scenes: sceneRows
       .slice()
       .sort((a, b) => a.order - b.order)
@@ -78,6 +80,7 @@ export async function createCard(input: NewCardInput): Promise<Card> {
       musicTrackId: input.musicTrackId,
       unlockAt: input.unlockAt ? new Date(input.unlockAt) : null,
       passcodeHash: input.passcodeHash,
+      selfDestruct: input.selfDestruct,
     })
     .returning();
 
@@ -119,6 +122,7 @@ export async function updateCardByEditToken(
       musicTrackId: input.musicTrackId,
       unlockAt: input.unlockAt ? new Date(input.unlockAt) : null,
       passcodeHash: input.passcodeHash,
+      selfDestruct: input.selfDestruct,
     })
     .where(eq(cards.id, cardRow.id))
     .returning();
@@ -146,4 +150,19 @@ export async function verifyCardPasscode(slug: string, guess: string): Promise<C
   const card = await getCardBySlug(slug);
   if (!card || !card.passcodeHash) return null;
   return verifyPasscode(guess, card.passcodeHash) ? card : null;
+}
+
+/** Marks a self-destruct letter as fully read. Idempotent (only the first
+ * call sets `readAt`) so a retry or a duplicate client call can't matter —
+ * the "gone" state is triggered by `readAt` being non-null, not by how many
+ * times this ran. */
+export async function markCardRead(slug: string): Promise<void> {
+  if (!hasDb || !db) return mem.memMarkCardRead(slug);
+
+  const [cardRow] = await db.select({ id: cards.id }).from(cards).where(eq(cards.slug, slug)).limit(1);
+  if (!cardRow) return;
+  await db
+    .update(cards)
+    .set({ readAt: new Date() })
+    .where(and(eq(cards.id, cardRow.id), isNull(cards.readAt)));
 }

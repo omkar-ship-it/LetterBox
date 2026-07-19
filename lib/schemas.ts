@@ -42,5 +42,6 @@ export const cardInputSchema = z.object({
     .min(PASSCODE_MIN_LENGTH, `A passcode needs at least ${PASSCODE_MIN_LENGTH} characters.`)
     .max(PASSCODE_MAX_LENGTH, `Keep the passcode under ${PASSCODE_MAX_LENGTH} characters.`)
     .nullable(),
+  selfDestruct: z.boolean().default(false),
   scenes: z.array(sceneInputSchema).min(1, "Add at least one scene."),
 });

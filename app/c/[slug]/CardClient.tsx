@@ -14,6 +14,7 @@ export function CardClient({
   senderName,
   unlockAt,
   initialCard,
+  selfDestruct,
 }: {
   slug: string;
   template: EnvelopeTemplate;
@@ -23,6 +24,7 @@ export function CardClient({
   /** Null means the letter is passcode-protected and hasn't been verified
    * yet — scenes/message were never sent to the client in that case. */
   initialCard: Card | null;
+  selfDestruct: boolean;
 }) {
   const [card, setCard] = useState(initialCard);
   const [timeLocked, setTimeLocked] = useState(
@@ -52,6 +54,10 @@ export function CardClient({
       closingLine={card?.title}
       scenes={card?.scenes ?? []}
       musicUrl={track?.fileUrl ?? null}
+      selfDestruct={selfDestruct}
+      onSelfDestruct={() => {
+        fetch(`/api/cards/${slug}/mark-read`, { method: "POST" }).catch(() => {});
+      }}
       passcodeLocked={!card}
       onVerifyPasscode={
         card

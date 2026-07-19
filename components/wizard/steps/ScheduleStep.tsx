@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, KeyRound, Send } from "lucide-react";
+import { Clock, Flame, KeyRound, Send } from "lucide-react";
 import { PASSCODE_MIN_LENGTH, PASSCODE_MAX_LENGTH } from "@/lib/schemas";
 
 function minDateTimeLocal() {
@@ -19,6 +19,8 @@ export function ScheduleStep({
   setPasscodeEnabled,
   passcode,
   setPasscode,
+  selfDestruct,
+  setSelfDestruct,
 }: {
   scheduled: boolean;
   setScheduled: (v: boolean) => void;
@@ -28,6 +30,8 @@ export function ScheduleStep({
   setPasscodeEnabled: (v: boolean) => void;
   passcode: string;
   setPasscode: (v: string) => void;
+  selfDestruct: boolean;
+  setSelfDestruct: (v: boolean) => void;
 }) {
   const passcodeTooShort = passcodeEnabled && passcode.length > 0 && passcode.length < PASSCODE_MIN_LENGTH;
 
@@ -113,6 +117,26 @@ export function ScheduleStep({
             </p>
           </div>
         )}
+      </div>
+
+      <div className="border-t border-stone-200 pt-6">
+        <label className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            checked={selfDestruct}
+            onChange={(e) => setSelfDestruct(e.target.checked)}
+            className="mt-1 h-4 w-4 accent-[#a8455a]"
+          />
+          <div>
+            <p className="flex items-center gap-1.5 font-semibold text-[#2b2117]">
+              <Flame size={15} className="text-[#a8455a]" /> Self-destruct after reading
+            </p>
+            <p className="text-xs text-stone-500">
+              The letter fades away for good the moment they finish reading it — even you won&apos;t be able to open
+              the link again. There&apos;s no undo.
+            </p>
+          </div>
+        </label>
       </div>
     </div>
   );

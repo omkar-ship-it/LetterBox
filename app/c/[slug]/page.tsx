@@ -1,8 +1,23 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCardBySlug, incrementViewCount } from "@/lib/db/queries";
 import { getEnvelopeTemplate } from "@/lib/envelope-templates";
 import { CardClient } from "./CardClient";
+
+function FadedAway() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#fbf6ef] px-6 text-center">
+      <p className="font-serif text-2xl text-[#2b2117]">This letter has faded away.</p>
+      <p className="max-w-xs text-sm text-[#8a7367]">
+        It was written to be read once. Whoever it was for has already read it — that&apos;s where it lives now.
+      </p>
+      <Link href="/" className="mt-4 text-sm font-semibold underline underline-offset-4">
+        Back to Letterbox
+      </Link>
+    </div>
+  );
+}
 
 export async function generateMetadata({
   params,
@@ -12,6 +27,9 @@ export async function generateMetadata({
   const { slug } = await params;
   const card = await getCardBySlug(slug);
   if (!card) return { title: "Letterbox" };
+  if (card.selfDestruct && card.readAt) {
+    return { title: "This letter has faded away — Letterbox" };
+  }
   if (card.passcodeHash) {
     return { title: "A private letter — Letterbox", description: "This letter needs a passcode to open." };
   }
@@ -29,6 +47,12 @@ export default async function CardPage({
   const { slug } = await params;
   const card = await getCardBySlug(slug);
   if (!card) notFound();
+
+  // Self-destruct letters are gone for good once read — including for the
+  // sender re-visiting their own link. Show why, instead of a generic 404.
+  if (card.selfDestruct && card.readAt) {
+    return <FadedAway />;
+  }
 
   const template = getEnvelopeTemplate(card.envelopeTemplateId);
   const isPasscodeProtected = Boolean(card.passcodeHash);
@@ -48,6 +72,7 @@ export default async function CardPage({
       senderName={card.senderName}
       unlockAt={card.unlockAt}
       initialCard={isPasscodeProtected ? null : card}
+      selfDestruct={card.selfDestruct}
     />
   );
 }

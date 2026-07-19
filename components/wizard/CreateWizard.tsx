@@ -50,6 +50,7 @@ export function CreateWizard() {
   const [unlockAtLocal, setUnlockAtLocal] = useState("");
   const [passcodeEnabled, setPasscodeEnabled] = useState(false);
   const [passcode, setPasscode] = useState("");
+  const [selfDestruct, setSelfDestruct] = useState(false);
 
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
@@ -110,6 +111,7 @@ export function CreateWizard() {
           musicTrackId,
           unlockAt: scheduled && unlockAtLocal ? new Date(unlockAtLocal).toISOString() : null,
           passcode: passcodeEnabled && passcode.trim() ? passcode.trim() : null,
+          selfDestruct,
           scenes: cleanScenes.map((s) => ({
             eyebrow: s.eyebrow,
             quote: s.quote,
@@ -169,7 +171,16 @@ export function CreateWizard() {
           setMessage={setMessage}
         />
       )}
-      {step === "scenes" && <ScenesStep scenes={scenes} setScenes={setScenes} accentColors={template.accentColors} />}
+      {step === "scenes" && (
+        <ScenesStep
+          scenes={scenes}
+          setScenes={setScenes}
+          accentColors={template.accentColors}
+          recipientName={recipientName}
+          tone={tone}
+          context={context}
+        />
+      )}
       {step === "envelope" && (
         <EnvelopeStep envelopeTemplateId={envelopeTemplateId} setEnvelopeTemplateId={setEnvelopeTemplateId} />
       )}
@@ -184,6 +195,8 @@ export function CreateWizard() {
           setPasscodeEnabled={setPasscodeEnabled}
           passcode={passcode}
           setPasscode={setPasscode}
+          selfDestruct={selfDestruct}
+          setSelfDestruct={setSelfDestruct}
         />
       )}
       {step === "send" && (
@@ -200,6 +213,7 @@ export function CreateWizard() {
           templateName={template.name}
           onEditEnvelope={() => goToStep("envelope")}
           passcode={passcodeEnabled && passcode.trim() ? passcode.trim() : null}
+          selfDestruct={selfDestruct}
         />
       )}
     </WizardShell>

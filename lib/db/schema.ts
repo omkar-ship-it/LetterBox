@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, uuid, boolean } from "drizzle-orm/pg-core";
 
 export const cards = pgTable("cards", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -16,6 +16,10 @@ export const cards = pgTable("cards", {
   passcodeHash: text("passcode_hash"),
   viewCount: integer("view_count").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  // Sender's choice at send time — irreversible once readAt is set (see lib/db/queries.ts's markCardRead).
+  selfDestruct: boolean("self_destruct").notNull().default(false),
+  // Set once the recipient reaches the end of the closing ritual. Null means "not fully read yet".
+  readAt: timestamp("read_at", { withTimezone: true }),
 });
 
 export const scenes = pgTable("scenes", {

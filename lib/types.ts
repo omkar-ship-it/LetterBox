@@ -25,6 +25,10 @@ export type Card = {
   passcodeHash: string | null;
   viewCount: number;
   createdAt: string;
+  /** If true, the letter is destroyed (see `readAt`) once the recipient finishes reading it. */
+  selfDestruct: boolean;
+  /** Set once the recipient reaches the end of the closing ritual. Null means "not fully read yet". */
+  readAt: string | null;
   scenes: Scene[];
 };
 
@@ -40,6 +44,7 @@ export type NewCardInput = {
   musicTrackId: string | null;
   unlockAt: string | null;
   passcodeHash: string | null;
+  selfDestruct: boolean;
   scenes: NewSceneInput[];
 };
 

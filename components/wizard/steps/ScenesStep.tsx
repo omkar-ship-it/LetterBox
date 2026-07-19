@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Check, ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { VoiceRecorder } from "@/components/wizard/VoiceRecorder";
-import { moodPalette } from "@/lib/mood-palette";
 import { LIGHT_PALETTE } from "@/lib/light-palette";
 import { uploadFile } from "@/lib/upload-client";
 import { SCENE_EYEBROW_MAX_LENGTH, SCENE_QUOTE_MAX_LENGTH, SCENE_DESCRIPTION_MAX_LENGTH } from "@/lib/schemas";
@@ -13,10 +12,16 @@ export function ScenesStep({
   scenes,
   setScenes,
   accentColors,
+  recipientName,
+  tone,
+  context,
 }: {
   scenes: SceneDraft[];
   setScenes: (updater: (prev: SceneDraft[]) => SceneDraft[]) => void;
   accentColors: string[];
+  recipientName: string;
+  tone: string;
+  context: string;
 }) {
   function updateScene(id: string, patch: Partial<SceneDraft>) {
     setScenes((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)));
@@ -70,7 +75,9 @@ export function ScenesStep({
           key={scene.id}
           index={i}
           scene={scene}
-          accentColors={accentColors}
+          recipientName={recipientName}
+          tone={tone}
+          context={context}
           canRemove={scenes.length > 1}
           onChange={(patch) => updateScene(scene.id, patch)}
           onRemove={() => removeScene(scene.id)}
@@ -94,7 +101,9 @@ export function ScenesStep({
 function SceneCard({
   index,
   scene,
-  accentColors,
+  recipientName,
+  tone,
+  context,
   canRemove,
   onChange,
   onRemove,
@@ -104,7 +113,9 @@ function SceneCard({
 }: {
   index: number;
   scene: SceneDraft;
-  accentColors: string[];
+  recipientName: string;
+  tone: string;
+  context: string;
   canRemove: boolean;
   onChange: (patch: Partial<SceneDraft>) => void;
   onRemove: () => void;
@@ -113,10 +124,30 @@ function SceneCard({
   onVoiceRemove: () => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [composing, setComposing] = useState(false);
+  const [composeError, setComposeError] = useState<string | null>(null);
 
-  function paintMood() {
-    const seed = `${scene.quote}${scene.description}` || `scene-${index}`;
-    onChange({ accentColor: moodPalette(seed, accentColors) });
+  async function composeScene() {
+    if (!recipientName.trim()) {
+      setComposeError("Add their name on the first step — the muse needs someone to write to.");
+      return;
+    }
+    setComposing(true);
+    setComposeError(null);
+    try {
+      const res = await fetch("/api/compose-scene", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recipientName, tone, context, eyebrow: scene.eyebrow }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error ?? "Couldn't compose right now.");
+      onChange({ quote: data.quote, description: data.description });
+    } catch (err) {
+      setComposeError(err instanceof Error ? err.message : "Couldn't compose right now.");
+    } finally {
+      setComposing(false);
+    }
   }
 
   return (
@@ -189,10 +220,12 @@ function SceneCard({
             </button>
             <button
               type="button"
-              onClick={paintMood}
-              className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-50"
+              onClick={composeScene}
+              disabled={composing}
+              className="inline-flex items-center gap-1.5 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-600 hover:bg-stone-50 disabled:opacity-60"
             >
-              <Sparkles size={13} /> AI paint
+              {composing ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+              {composing ? "Composing…" : "Compose with AI"}
             </button>
             <VoiceRecorder
               voiceNoteUrl={scene.voiceNoteUrl}
@@ -201,6 +234,7 @@ function SceneCard({
               onRemove={onVoiceRemove}
             />
           </div>
+          {composeError && <p className="text-[11px] text-red-500">{composeError}</p>}
 
           <div>
             <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.1em] text-stone-400">Card color</span>

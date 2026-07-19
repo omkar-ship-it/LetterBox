@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Crown, Loader2, Send } from "lucide-react";
+import { Check, Copy, Crown, Flame, Loader2, Send } from "lucide-react";
 
 export function SendStep({
   senderName,
@@ -16,6 +16,7 @@ export function SendStep({
   templateName,
   onEditEnvelope,
   passcode,
+  selfDestruct,
 }: {
   senderName: string;
   setSenderName: (v: string) => void;
@@ -29,6 +30,7 @@ export function SendStep({
   templateName: string;
   onEditEnvelope: () => void;
   passcode: string | null;
+  selfDestruct: boolean;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -60,6 +62,17 @@ export function SendStep({
               This letter needs <span className="font-mono font-semibold">{passcode}</span> to open — the link alone
               isn&apos;t enough. Share it with {recipientName || "them"} separately (a text, a call — not the same
               message as the link).
+            </p>
+          </div>
+        )}
+        {selfDestruct && (
+          <div className="rounded-xl border border-stone-300 bg-stone-50 p-4 text-left">
+            <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-stone-700">
+              <Flame size={13} /> This letter will self-destruct
+            </p>
+            <p className="mt-1 text-sm text-stone-600">
+              Once {recipientName || "they"} finish{recipientName ? "es" : ""} reading it, it&apos;s gone for good —
+              this link won&apos;t open again, not even for you.
             </p>
           </div>
         )}

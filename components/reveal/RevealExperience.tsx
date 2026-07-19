@@ -148,6 +148,8 @@ export function RevealExperience({
   passcodeLocked,
   onVerifyPasscode,
   onUnlocked,
+  selfDestruct,
+  onSelfDestruct,
 }: {
   variant: "fullscreen" | "contained";
   template: EnvelopeTemplate;
@@ -166,6 +168,11 @@ export function RevealExperience({
   /** Fired with the real card the moment a guess is verified, so the parent
    * can swap in real scenes/message/music before the open animation plays. */
   onUnlocked?: (card: Card) => void;
+  /** True if this letter should be destroyed once the recipient finishes it. */
+  selfDestruct?: boolean;
+  /** Fired once, the moment the closing ritual completes on a self-destruct
+   * letter — the parent's cue to mark the letter as read server-side. */
+  onSelfDestruct?: () => void;
 }) {
   const envelopeRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -217,6 +224,7 @@ export function RevealExperience({
   const [gateHidden, setGateHidden] = useState(false);
   const [soundShown, setSoundShown] = useState(false);
   const [closingShown, setClosingShown] = useState(false);
+  const [fadedAway, setFadedAway] = useState(false);
 
   const [musicStarted, setMusicStarted] = useState(false);
   const [musicOn, setMusicOn] = useState(false);
@@ -439,6 +447,10 @@ export function RevealExperience({
                 setSealCracked(false);
                 playChime();
                 setClosingShown(true);
+                if (selfDestruct) {
+                  onSelfDestruct?.();
+                  setTimeout(() => setFadedAway(true), reduced ? 400 : 3400);
+                }
               },
               reduced ? 100 : 950
             );
@@ -673,6 +685,13 @@ export function RevealExperience({
         <p className={styles.closingLine}>{closingLine || "Thank you for being you."}</p>
         <p className={styles.closingSub}>{senderName ? `kept, for you — ${senderName}` : "kept, for you"}</p>
       </div>
+
+      {selfDestruct && (
+        <div className={cn(styles.fadeVeil, fadedAway && styles.shown)}>
+          <p className={styles.fadeLine}>This letter has faded away.</p>
+          <p className={styles.fadeSub}>kept safe in memory, not on a server</p>
+        </div>
+      )}
 
       <audio ref={bgAudioRef} src={musicUrl ?? undefined} loop />
       <audio ref={voiceAudioRef} />

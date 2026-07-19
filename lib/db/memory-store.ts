@@ -62,6 +62,8 @@ export async function memCreateCard(input: NewCardInput): Promise<Card> {
     passcodeHash: input.passcodeHash,
     viewCount: 0,
     createdAt: new Date().toISOString(),
+    selfDestruct: input.selfDestruct,
+    readAt: null,
     scenes: toScenes(input.scenes),
   };
 
@@ -95,6 +97,7 @@ export async function memUpdateCardByEditToken(
     musicTrackId: input.musicTrackId,
     unlockAt: input.unlockAt,
     passcodeHash: input.passcodeHash,
+    selfDestruct: input.selfDestruct,
     scenes: toScenes(input.scenes),
   };
 
@@ -108,5 +111,13 @@ export async function memIncrementViewCount(slug: string): Promise<void> {
   const card = all[slug];
   if (!card) return;
   card.viewCount += 1;
+  await writeAll(all);
+}
+
+export async function memMarkCardRead(slug: string): Promise<void> {
+  const all = await readAll();
+  const card = all[slug];
+  if (!card || card.readAt) return;
+  card.readAt = new Date().toISOString();
   await writeAll(all);
 }
