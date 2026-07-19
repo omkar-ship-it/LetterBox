@@ -17,6 +17,7 @@ import {
   Timer,
 } from "lucide-react";
 import { HeroPreview } from "@/components/marketing/HeroPreview";
+import { EnvelopeSwatch } from "@/components/marketing/EnvelopeSwatch";
 import { ENVELOPE_TEMPLATES } from "@/lib/envelope-templates";
 import { getSessionUser } from "@/lib/session";
 
@@ -131,7 +132,9 @@ export default async function Home() {
 
       <section id="templates" className="mx-auto max-w-6xl px-6 py-16">
         <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Choose your envelope</h2>
-        <p className="mb-10 text-center text-stone-500">Six colors, six moods — every letter starts with a seal to crack open.</p>
+        <p className="mb-10 text-center text-stone-500">
+          Nine colors, nine moods — every letter starts with a seal to crack open.
+        </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {ENVELOPE_TEMPLATES.map((t) => (
             <Link
@@ -140,10 +143,9 @@ export default async function Home() {
               className="group rounded-2xl border border-stone-200 p-3 transition hover:border-[#a8455a]"
               style={{ background: t.colors.desk }}
             >
-              <div
-                className="mb-3 h-16 w-full rounded-lg transition group-hover:scale-105"
-                style={{ background: `linear-gradient(155deg, ${t.colors.envPaper}, ${t.colors.envPaper2} 55%, ${t.colors.envPaper3})` }}
-              />
+              <div className="mb-3 transition group-hover:scale-105">
+                <EnvelopeSwatch template={t} />
+              </div>
               <p className="text-sm font-semibold" style={{ color: t.colors.ink }}>
                 {t.name}
               </p>
