@@ -739,6 +739,11 @@
     radial-gradient(circle at 75% 80%, color-mix(in srgb, var(--gold) 45%, transparent), transparent 55%),
     linear-gradient(160deg, var(--scene), var(--seal-dark));
 }
+.pcPeak .pcEyebrow {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+}
 .pcPeak .pcQuote {
   color: #fff;
   font-size: calc(clamp(1.3rem, 4.4vw, 1.7rem) * var(--content-scale, 1));

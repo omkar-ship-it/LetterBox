@@ -731,6 +731,7 @@ export function RevealExperience({
               >
                 {isPeak ? (
                   <div className={styles.pcPeak}>
+                    {scene.eyebrow && <p className={styles.pcEyebrow}>{scene.eyebrow}</p>}
                     <p className={styles.pcQuote}>{scene.quote}</p>
                     {scene.voiceNoteUrl && (
                       <VoiceButton scene={scene} active={activeVoiceId === scene.id} onToggle={() => toggleVoice(scene)} />
