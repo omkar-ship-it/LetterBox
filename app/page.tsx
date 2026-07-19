@@ -54,11 +54,11 @@ export default async function Home() {
           <a href="#how-it-works" className="hover:text-[#2b2117]">
             How it works
           </a>
-          <a href="#use-cases" className="hover:text-[#2b2117]">
-            Use cases
-          </a>
           <a href="#templates" className="hover:text-[#2b2117]">
             Templates
+          </a>
+          <a href="#use-cases" className="hover:text-[#2b2117]">
+            Use cases
           </a>
           <Link href={user ? "/letters" : "/login"} className="hover:text-[#2b2117]">
             {user ? "My letters" : "Sign in"}
@@ -114,26 +114,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="use-cases" className="bg-white py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Everywhere a letter beats an email</h2>
-          <p className="mb-10 text-center text-stone-500">Personal or business, big occasion or none at all.</p>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {USE_CASES.map((u) => (
-              <div key={u.label} className="rounded-2xl bg-[#fbf6ef] p-5">
-                <u.icon size={20} className="mb-3 text-[#a8455a]" />
-                <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{u.label}</p>
-                <p className="text-sm text-stone-500">{u.copy}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="templates" className="mx-auto max-w-6xl px-6 py-16">
         <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Choose your envelope</h2>
         <p className="mb-10 text-center text-stone-500">
-          Nine colors, nine moods — every letter starts with a seal to crack open.
+          Twelve colors, twelve moods — every letter starts with a seal to crack open.
         </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {ENVELOPE_TEMPLATES.map((t) => (
@@ -151,6 +135,22 @@ export default async function Home() {
               </p>
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section id="use-cases" className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Everywhere a letter beats an email</h2>
+          <p className="mb-10 text-center text-stone-500">Personal or business, big occasion or none at all.</p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {USE_CASES.map((u) => (
+              <div key={u.label} className="rounded-2xl bg-[#fbf6ef] p-5">
+                <u.icon size={20} className="mb-3 text-[#a8455a]" />
+                <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{u.label}</p>
+                <p className="text-sm text-stone-500">{u.copy}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
