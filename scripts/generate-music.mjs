@@ -103,25 +103,46 @@ function renderTrack(cfg) {
   return wet;
 }
 
-const D = [293.66, 369.99, 440.0, 587.33];
-const Bm = [246.94, 293.66, 369.99, 493.88];
-const G = [196.0, 246.94, 293.66, 392.0];
-const A = [220.0, 277.18, 329.63, 440.0];
-const Dlow = D.map((f) => f / 2);
-const Bmlow = Bm.map((f) => f / 2);
-const Glow = G.map((f) => f / 2);
-const Alow = A.map((f) => f / 2);
-const Emin = [164.81, 196.0, 246.94, 329.63];
-const C = [261.63, 329.63, 392.0, 523.25];
+// Note-name-labeled chord voicings (root, third, fifth, octave-up) — equal
+// temperament, standard concert pitch. Kept as named constants (not derived
+// symbolically) so each track's harmony is easy to eyeball and reuse.
+const D = [293.66, 369.99, 440.0, 587.33]; // D major
+const A = [220.0, 277.18, 329.63, 440.0]; // A major
+const Bm = [246.94, 293.66, 369.99, 493.88]; // B minor
+const G = [196.0, 246.94, 293.66, 392.0]; // G major
+const C = [261.63, 329.63, 392.0, 523.25]; // C major
+const Emin = [164.81, 196.0, 246.94, 329.63]; // E minor
+const F = [174.61, 220.0, 261.63, 349.23]; // F major
+const Am = [220.0, 261.63, 329.63, 440.0]; // A minor
+const Dm = [293.66, 349.23, 440.0, 587.33]; // D minor
+const Bb = [233.08, 293.66, 349.23, 466.16]; // Bb major
+const Gm = [196.0, 233.08, 293.66, 392.0]; // G minor
+const FSm = [185.0, 220.0, 277.18, 369.99]; // F# minor
+const E = [329.63, 415.3, 493.88, 659.25]; // E major
+const low = (chord) => chord.map((f) => f / 2);
 
 const TRACKS = [
-  { file: "warm-embrace", chords: [D, Bm, G, A], chordDur: 4.5, waveform: "mix", gain: 1.0, delaySec: 0.32, feedback: 0.32 },
-  { file: "sunlit-window", chords: [G, D, Emin, C], chordDur: 3.2, waveform: "triangle", gain: 0.95, delaySec: 0.22, feedback: 0.24, arpeggiate: true },
-  { file: "quiet-letter", chords: [Dlow, Bmlow, Glow, Alow], chordDur: 6, waveform: "sine", gain: 1.05, delaySec: 0.45, feedback: 0.42 },
-  { file: "golden-hour", chords: [Glow, Emin, C, D.map((f) => f / 2)], chordDur: 5.5, waveform: "sine", gain: 1.0, delaySec: 0.4, feedback: 0.38 },
-  { file: "bright-days", chords: [C, G, A, D], chordDur: 2.6, waveform: "triangle", gain: 0.9, delaySec: 0.18, feedback: 0.2, arpeggiate: true },
-  { file: "gentle-gratitude", chords: [Bmlow, Glow, Dlow, Emin.map((f) => f / 2)], chordDur: 6.5, waveform: "mix", gain: 0.95, delaySec: 0.5, feedback: 0.35 },
+  { file: "first-light", chords: [D, A, Bm, G], chordDur: 4.2, waveform: "sine", gain: 1.0, delaySec: 0.28, feedback: 0.3 },
+  { file: "paper-airplanes", chords: [C, G, Am, F], chordDur: 1.7, waveform: "triangle", gain: 0.85, delaySec: 0.12, feedback: 0.15, arpeggiate: true },
+  { file: "thank-you-truly", chords: [G, D, Emin, C], chordDur: 5.0, waveform: "mix", gain: 0.95, delaySec: 0.4, feedback: 0.35 },
+  { file: "confetti-sky", chords: [C, F, G, Am], chordDur: 1.4, waveform: "triangle", gain: 0.9, delaySec: 0.1, feedback: 0.12, arpeggiate: true },
+  { file: "held-close", chords: [FSm, D, A, Bm], chordDur: 6.2, waveform: "sine", gain: 1.05, delaySec: 0.5, feedback: 0.42 },
+  { file: "morning-windows", chords: [G, D, C, G], chordDur: 2.8, waveform: "triangle", gain: 0.95, delaySec: 0.2, feedback: 0.22, arpeggiate: true },
+  { file: "quiet-company", chords: [low(D), low(Bm), low(G), low(A)], chordDur: 7.0, waveform: "sine", gain: 1.0, delaySec: 0.55, feedback: 0.45 },
+  { file: "homecoming", chords: [F, Dm, Bb, C], chordDur: 4.6, waveform: "mix", gain: 1.0, delaySec: 0.35, feedback: 0.32 },
+  { file: "open-road", chords: [A, E, FSm, D], chordDur: 2.2, waveform: "triangle", gain: 0.9, delaySec: 0.16, feedback: 0.18, arpeggiate: true },
+  { file: "still-water", chords: [low(G), low(Emin), low(C), low(D)], chordDur: 7.5, waveform: "sine", gain: 0.9, delaySec: 0.6, feedback: 0.48 },
+  { file: "new-chapter", chords: [F, C, G, Am], chordDur: 4.0, waveform: "sine", gain: 1.0, delaySec: 0.3, feedback: 0.28 },
+  { file: "well-earned", chords: [C, G, F, C], chordDur: 2.0, waveform: "mix", gain: 1.1, delaySec: 0.2, feedback: 0.2, arpeggiate: true },
+  { file: "fireside", chords: [F, Dm, Gm, C], chordDur: 5.5, waveform: "sine", gain: 1.0, delaySec: 0.42, feedback: 0.36 },
+  { file: "one-more-chapter", chords: [low(Bm), low(G), low(FSm), low(Emin)], chordDur: 6.0, waveform: "mix", gain: 0.95, delaySec: 0.48, feedback: 0.4 },
 ];
+
+// Wipe any previously generated tracks so stale files never linger after a
+// library rewrite (id changes would otherwise leave orphaned .wav files).
+for (const existing of fs.readdirSync(OUT_DIR)) {
+  if (existing.endsWith(".wav")) fs.unlinkSync(path.join(OUT_DIR, existing));
+}
 
 for (const t of TRACKS) {
   const samples = renderTrack(t);
