@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { RevealExperience } from "@/components/reveal/RevealExperience";
 import { LockedCountdown } from "@/components/reveal/LockedCountdown";
-import { PasscodeGate } from "@/components/reveal/PasscodeGate";
 import { getMusicTrack } from "@/lib/music";
 import type { Card } from "@/lib/types";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
@@ -41,30 +40,34 @@ export function CardClient({
     );
   }
 
-  if (!card) {
-    return (
-      <PasscodeGate
-        slug={slug}
-        template={template}
-        recipientName={recipientName}
-        senderName={senderName}
-        onUnlocked={(unlockedCard) => setCard(unlockedCard)}
-      />
-    );
-  }
-
-  const track = getMusicTrack(card.musicTrackId);
+  const track = card ? getMusicTrack(card.musicTrackId) : null;
 
   return (
     <RevealExperience
       variant="fullscreen"
       template={template}
-      senderName={card.senderName}
-      recipientName={card.recipientName}
-      message={card.message}
-      closingLine={card.title}
-      scenes={card.scenes}
+      senderName={card?.senderName ?? senderName}
+      recipientName={card?.recipientName ?? recipientName}
+      message={card?.message}
+      closingLine={card?.title}
+      scenes={card?.scenes ?? []}
       musicUrl={track?.fileUrl ?? null}
+      passcodeLocked={!card}
+      onVerifyPasscode={
+        card
+          ? undefined
+          : async (guess) => {
+              const res = await fetch(`/api/cards/${slug}/verify-passcode`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ passcode: guess }),
+              });
+              const data = await res.json();
+              if (!res.ok) return { ok: false, error: data?.error ?? "That's not the right passcode." };
+              return { ok: true, card: data.card as Card };
+            }
+      }
+      onUnlocked={(unlockedCard) => setCard(unlockedCard)}
     />
   );
 }

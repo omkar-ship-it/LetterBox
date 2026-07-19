@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type TouchEvent as ReactTouchEvent, type MouseEvent as ReactMouseEvent } from "react";
-import { Heart, Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent, type TouchEvent as ReactTouchEvent, type MouseEvent as ReactMouseEvent } from "react";
+import { Heart, Loader2, Lock, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
-import type { Scene } from "@/lib/types";
+import type { Card, Scene } from "@/lib/types";
 import type { CSSVars } from "@/lib/css-vars";
 import { cn } from "@/lib/cn";
 import styles from "./RevealExperience.module.css";
+
+type VerifyPasscodeResult = { ok: true; card: Card } | { ok: false; error: string };
 
 type Slot = "front" | "peek1" | "peek2" | "peek2-enter" | "gather-out" | "gather-in";
 type StackEntry = { key: number; sceneIndex: number; slot: Slot };
@@ -143,6 +145,9 @@ export function RevealExperience({
   scenes,
   musicUrl,
   onOpened,
+  passcodeLocked,
+  onVerifyPasscode,
+  onUnlocked,
 }: {
   variant: "fullscreen" | "contained";
   template: EnvelopeTemplate;
@@ -153,6 +158,14 @@ export function RevealExperience({
   scenes: Scene[];
   musicUrl?: string | null;
   onOpened?: () => void;
+  /** True while the letter is passcode-protected and not yet verified —
+   * `scenes` is expected to be [] in that state (the server never sent the
+   * real content). Tapping the seal shows a popup instead of opening. */
+  passcodeLocked?: boolean;
+  onVerifyPasscode?: (guess: string) => Promise<VerifyPasscodeResult>;
+  /** Fired with the real card the moment a guess is verified, so the parent
+   * can swap in real scenes/message/music before the open animation plays. */
+  onUnlocked?: (card: Card) => void;
 }) {
   const envelopeRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -173,6 +186,28 @@ export function RevealExperience({
   );
   const [flyVars, setFlyVars] = useState<Record<number, { tx: number; ty: number }>>({});
   const [receiving, setReceiving] = useState(false);
+
+  // While passcode-locked, `scenes` starts as [] (real content withheld
+  // server-side) so `visibleCards` initializes empty too. Once a correct
+  // guess swaps in the real `scenes` prop, resync the stack from it — but
+  // only if it's still empty, so this can't clobber in-progress navigation.
+  // Adjusted during render (React's own recommended pattern for "derive
+  // state from a prop change"), not in an effect — an effect here would
+  // commit an extra throwaway render every time.
+  const [lastSeenScenes, setLastSeenScenes] = useState(scenes);
+  if (scenes !== lastSeenScenes) {
+    setLastSeenScenes(scenes);
+    if (scenes.length > 0 && visibleCards.length === 0) {
+      setVisibleCards(
+        scenes.slice(0, 3).map((_, i) => ({ key: i, sceneIndex: i, slot: (i === 0 ? "front" : i === 1 ? "peek1" : "peek2") as Slot }))
+      );
+    }
+  }
+
+  const [showPasscodeModal, setShowPasscodeModal] = useState(false);
+  const [passcodeGuess, setPasscodeGuess] = useState("");
+  const [passcodeChecking, setPasscodeChecking] = useState(false);
+  const [passcodeError, setPasscodeError] = useState<string | null>(null);
 
   const [sealCracked, setSealCracked] = useState(false);
   const [flapOpen, setFlapOpen] = useState(false);
@@ -285,6 +320,38 @@ export function RevealExperience({
       reduced ? 300 : 2100
     );
     onOpened?.();
+  }
+
+  function handleSealTap() {
+    if (passcodeLocked) {
+      setShowPasscodeModal(true);
+      return;
+    }
+    openEnvelope();
+  }
+
+  async function submitPasscode(e: FormEvent) {
+    e.preventDefault();
+    if (!passcodeGuess.trim() || passcodeChecking || !onVerifyPasscode) return;
+    setPasscodeChecking(true);
+    setPasscodeError(null);
+    try {
+      const result = await onVerifyPasscode(passcodeGuess.trim());
+      if (!result.ok) {
+        setPasscodeError(result.error);
+        setPasscodeChecking(false);
+        return;
+      }
+      onUnlocked?.(result.card);
+      setShowPasscodeModal(false);
+      setPasscodeChecking(false);
+      // The user already tapped intending to open — finish that now instead
+      // of making them tap a second time after getting the passcode right.
+      openEnvelope();
+    } catch {
+      setPasscodeError("Something went wrong — try again?");
+      setPasscodeChecking(false);
+    }
   }
 
   function goNext() {
@@ -456,12 +523,12 @@ export function RevealExperience({
             className={cn(styles.envSealWrap, sealCracked && styles.cracked)}
             role="button"
             tabIndex={0}
-            aria-label="Break the wax seal and open the letter"
-            onClick={openEnvelope}
+            aria-label={passcodeLocked ? "This letter needs a passcode" : "Break the wax seal and open the letter"}
+            onClick={handleSealTap}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                openEnvelope();
+                handleSealTap();
               }
             }}
           >
@@ -473,11 +540,62 @@ export function RevealExperience({
             <span className={cn(styles.sealHalf, styles.l)} />
             <span className={cn(styles.sealHalf, styles.r)} />
             <span className={styles.envSealMark}>
-              <Heart size={24} fill="currentColor" />
+              {passcodeLocked ? <Lock size={20} /> : <Heart size={24} fill="currentColor" />}
             </span>
           </div>
         </div>
       </div>
+
+      {showPasscodeModal && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 px-6"
+          onClick={() => !passcodeChecking && setShowPasscodeModal(false)}
+        >
+          <form
+            onSubmit={submitPasscode}
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-xs rounded-2xl bg-white p-6 text-center shadow-2xl"
+          >
+            <button
+              type="button"
+              onClick={() => setShowPasscodeModal(false)}
+              disabled={passcodeChecking}
+              className="absolute right-4 top-4 text-stone-400 hover:text-stone-600"
+              aria-label="Close"
+            >
+              <X size={16} />
+            </button>
+            <Lock size={20} className="mx-auto mb-2 text-stone-400" />
+            <p className="mb-3 font-serif text-lg text-[#2b2117]">This letter needs a passcode</p>
+            <input
+              type="text"
+              inputMode="text"
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              autoFocus
+              value={passcodeGuess}
+              onChange={(e) => {
+                setPasscodeGuess(e.target.value);
+                setPasscodeError(null);
+              }}
+              placeholder="Enter passcode"
+              className={`w-full rounded-xl border px-4 py-3 text-center text-sm focus:outline-none ${
+                passcodeError ? "border-red-400" : "border-stone-300"
+              }`}
+            />
+            {passcodeError && <p className="mt-2 text-xs font-semibold text-red-500">{passcodeError}</p>}
+            <button
+              type="submit"
+              disabled={!passcodeGuess.trim() || passcodeChecking}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#2b2117] px-6 py-2.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {passcodeChecking ? <Loader2 size={15} className="animate-spin" /> : null}
+              {passcodeChecking ? "Checking…" : "Unlock"}
+            </button>
+          </form>
+        </div>
+      )}
 
       <div className={cn(styles.gate, gateHidden && styles.hidden)}>
         <p className={styles.gateCaption}>{template.tagline}</p>
