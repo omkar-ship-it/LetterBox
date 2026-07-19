@@ -1,7 +1,8 @@
 "use client";
 
-import { Check, Crown } from "lucide-react";
+import { Check } from "lucide-react";
 import { ENVELOPE_TEMPLATES, type EnvelopeTemplate } from "@/lib/envelope-templates";
+import { EnvelopeSwatch } from "@/components/marketing/EnvelopeSwatch";
 
 function TemplateCard({
   t,
@@ -21,26 +22,14 @@ function TemplateCard({
       }`}
       style={{ background: t.colors.desk }}
     >
-      {t.tier === "premium" && (
-        <span
-          className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide text-white"
-          style={{ background: "rgba(0,0,0,0.55)" }}
-        >
-          <Crown size={10} /> Premium
-        </span>
-      )}
       {selected && (
-        <span className="absolute right-3 top-3 rounded-full bg-[#a8455a] p-1 text-white">
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-[#a8455a] p-1 text-white">
           <Check size={12} />
         </span>
       )}
-      <div
-        className="mb-3 h-20 w-full rounded-lg"
-        style={{
-          background: `linear-gradient(155deg, ${t.colors.envPaper}, ${t.colors.envPaper2} 55%, ${t.colors.envPaper3})`,
-          boxShadow: `inset 0 0 0 2px ${t.colors.seal}33`,
-        }}
-      />
+      <div className="mb-3">
+        <EnvelopeSwatch template={t} />
+      </div>
       <p className="font-serif text-lg" style={{ color: t.colors.ink }}>
         {t.name}
       </p>
