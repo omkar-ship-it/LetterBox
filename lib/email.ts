@@ -62,10 +62,16 @@ export async function sendOtpEmail(to: string, code: string): Promise<SendResult
 /** Sent once, at publish time, to each email address the sender optionally
  * added — a delivery mechanism alongside (not instead of) the copy-link
  * flow. Needs its own MSG91 template (MSG91_LETTER_TEMPLATE_ID) distinct
- * from the OTP one — different content, different variables. Confirm the
- * exact variable names against the real template before assuming these
- * three ({{SENDER_NAME}}, {{RECIPIENT_NAME}}, {{LETTER_URL}}) are right;
- * they're a reasonable guess, not verified against a live template yet. */
+ * from the OTP one — different content, different variables. Confirmed
+ * against a real template preview: it's `{{sender_name}}` (lowercase) and
+ * `{{Receiver_Name}}` (mixed case, different word than "recipient") — MSG91
+ * merge-tag names are literally whatever text was typed when the tag was
+ * inserted in the editor, not a fixed convention, so don't assume casing
+ * carries over between templates (the OTP one uses `{{OTP_CODE}}`, all
+ * caps). The template's "View Your Letter" button isn't bound to any merge
+ * tag as of 2026-07-20 (no third `{{...}}` appears anywhere in the preview,
+ * body or subject) — it needs to be wired to a URL variable in the MSG91
+ * editor before `letter_url` here does anything. */
 export async function sendLetterNotificationEmail(
   to: string,
   opts: { senderName: string; recipientName: string; letterUrl: string }
@@ -74,9 +80,9 @@ export async function sendLetterNotificationEmail(
     to,
     templateId: process.env.MSG91_LETTER_TEMPLATE_ID,
     variables: {
-      SENDER_NAME: opts.senderName,
-      RECIPIENT_NAME: opts.recipientName,
-      LETTER_URL: opts.letterUrl,
+      sender_name: opts.senderName,
+      Receiver_Name: opts.recipientName,
+      letter_url: opts.letterUrl,
     },
     logLabel: "letter",
     devFallbackMessage: `would email ${to} — "${opts.senderName} sent ${opts.recipientName} a letter" -> ${opts.letterUrl}`,
