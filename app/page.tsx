@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   Building2,
   CalendarHeart,
+  Flame,
   Gift,
   GraduationCap,
   Heart,
@@ -31,7 +32,7 @@ const USE_CASES = [
   { icon: Mail, label: "Invites", copy: "A wedding, a housewarming, a reunion — make the invite itself feel like the event starting." },
   { icon: GraduationCap, label: "Milestones", copy: "A new job, a promotion, a diploma — mark it properly." },
   { icon: LifeBuoy, label: "Acknowledge what's hard", copy: "For someone getting through something — let them know you see it." },
-  { icon: Building2, label: "Brands & customers", copy: "Loyalty emails get archived unread. A real letter gets opened — every time." },
+  { icon: Building2, label: "Brands & customers", copy: "Skip the loyalty-program feel. A real letter makes a customer feel chosen, not marketed to." },
   { icon: MessageCircleHeart, label: "Long distance", copy: "For the people a text message never quite does justice to." },
   { icon: Star, label: "Just because", copy: "No occasion required — sometimes the surprise is the whole point." },
 ];
@@ -56,6 +57,9 @@ export default async function Home() {
           </a>
           <a href="#templates" className="hover:text-[#2b2117]">
             Templates
+          </a>
+          <a href="#ritual" className="hover:text-[#2b2117]">
+            The ritual
           </a>
           <a href="#use-cases" className="hover:text-[#2b2117]">
             Use cases
@@ -138,9 +142,63 @@ export default async function Home() {
         </div>
       </section>
 
+      <section id="ritual" className="bg-[#2b2117] py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#fbf6ef]">Every letter is a moment, not a message.</h2>
+          <p className="mb-12 text-center text-stone-400">Built for the ritual, not the reflex.</p>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-[#3a2018] p-8">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#e0724a]/15 text-[#e0724a]">
+                <Flame size={20} />
+              </div>
+              <h3 className="mb-2 font-serif text-2xl text-[#fbf6ef]">Some letters aren&apos;t meant to last</h3>
+              <p className="mb-6 text-sm leading-relaxed text-stone-400">
+                Turn on self-destruct and it disappears the second they finish reading — no screenshots, no
+                re-opening, not even by you. Felt once, the way it should be.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "A confession you're only brave enough to say once",
+                  "An apology that doesn't need saving",
+                  "A secret just for the two of you",
+                  "Something raw you'd never post",
+                ].map((c) => (
+                  <span key={c} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-[#1c2a3f] p-8">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#c9a05c]/15 text-[#c9a05c]">
+                <Timer size={20} />
+              </div>
+              <h3 className="mb-2 font-serif text-2xl text-[#fbf6ef]">Or make them wait for it</h3>
+              <p className="mb-6 text-sm leading-relaxed text-stone-400">
+                Set the exact moment it unlocks — midnight on their birthday, the second your anniversary countdown
+                hits zero, the morning of the wedding. Until then, just a sealed envelope and a ticking clock.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "Unlocks the morning of the wedding",
+                  "Opens the second they turn thirty",
+                  "Waits until the diploma's in hand",
+                  "A time capsule for five years from now",
+                ].map((c) => (
+                  <span key={c} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="use-cases" className="bg-white py-16">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Everywhere a letter beats an email</h2>
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Every reason to send one</h2>
           <p className="mb-10 text-center text-stone-500">Personal or business, big occasion or none at all.</p>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {USE_CASES.map((u) => (
