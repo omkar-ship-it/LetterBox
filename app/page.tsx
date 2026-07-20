@@ -52,17 +52,17 @@ export default async function Home() {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <span className="font-serif text-xl text-[#2b2117]">Letterbox</span>
         <nav className="hidden items-center gap-8 text-sm font-medium text-stone-600 sm:flex">
+          <a href="#use-cases" className="hover:text-[#2b2117]">
+            Use cases
+          </a>
+          <a href="#ritual" className="hover:text-[#2b2117]">
+            The ritual
+          </a>
           <a href="#how-it-works" className="hover:text-[#2b2117]">
             How it works
           </a>
           <a href="#templates" className="hover:text-[#2b2117]">
             Templates
-          </a>
-          <a href="#ritual" className="hover:text-[#2b2117]">
-            The ritual
-          </a>
-          <a href="#use-cases" className="hover:text-[#2b2117]">
-            Use cases
           </a>
           <Link href={user ? "/letters" : "/login"} className="hover:text-[#2b2117]">
             {user ? "My letters" : "Sign in"}
@@ -102,43 +102,19 @@ export default async function Home() {
         <HeroPreview />
       </section>
 
-      <section id="how-it-works" className="mx-auto max-w-6xl px-6 py-16">
-        <h2 className="mb-10 text-center font-serif text-3xl text-[#2b2117]">Four steps. Free to send.</h2>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((s, i) => (
-            <div key={s.title} className="rounded-2xl border border-stone-200 bg-white p-6">
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#fdf1ee] text-[#a8455a]">
-                <s.icon size={18} />
+      <section id="use-cases" className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Every reason to send one</h2>
+          <p className="mb-10 text-center text-stone-500">Personal or business, big occasion or none at all.</p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {USE_CASES.map((u) => (
+              <div key={u.label} className="rounded-2xl bg-[#fbf6ef] p-5">
+                <u.icon size={20} className="mb-3 text-[#a8455a]" />
+                <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{u.label}</p>
+                <p className="text-sm text-stone-500">{u.copy}</p>
               </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-stone-400">Step {i + 1}</p>
-              <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{s.title}</p>
-              <p className="text-sm text-stone-500">{s.copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="templates" className="mx-auto max-w-6xl px-6 py-16">
-        <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Choose your envelope</h2>
-        <p className="mb-10 text-center text-stone-500">
-          Twelve colors, twelve moods — every letter starts with a seal to crack open.
-        </p>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {ENVELOPE_TEMPLATES.map((t) => (
-            <Link
-              key={t.id}
-              href={`/create?template=${t.id}`}
-              className="group rounded-2xl border border-stone-200 p-3 transition hover:border-[#a8455a]"
-              style={{ background: t.colors.desk }}
-            >
-              <div className="mb-3 transition group-hover:scale-105">
-                <EnvelopeSwatch template={t} />
-              </div>
-              <p className="text-sm font-semibold" style={{ color: t.colors.ink }}>
-                {t.name}
-              </p>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
@@ -196,17 +172,43 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="use-cases" className="bg-white py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Every reason to send one</h2>
-          <p className="mb-10 text-center text-stone-500">Personal or business, big occasion or none at all.</p>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {USE_CASES.map((u) => (
-              <div key={u.label} className="rounded-2xl bg-[#fbf6ef] p-5">
-                <u.icon size={20} className="mb-3 text-[#a8455a]" />
-                <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{u.label}</p>
-                <p className="text-sm text-stone-500">{u.copy}</p>
+      <section id="how-it-works" className="mx-auto max-w-6xl px-6 py-16">
+        <h2 className="mb-10 text-center font-serif text-3xl text-[#2b2117]">Four steps. Free to send.</h2>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((s, i) => (
+            <div key={s.title} className="rounded-2xl border border-stone-200 bg-white p-6">
+              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#fdf1ee] text-[#a8455a]">
+                <s.icon size={18} />
               </div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-stone-400">Step {i + 1}</p>
+              <p className="mb-1.5 font-serif text-lg text-[#2b2117]">{s.title}</p>
+              <p className="text-sm text-stone-500">{s.copy}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="templates" className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Choose your envelope</h2>
+          <p className="mb-10 text-center text-stone-500">
+            Twelve colors, twelve moods — every letter starts with a seal to crack open.
+          </p>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            {ENVELOPE_TEMPLATES.map((t) => (
+              <Link
+                key={t.id}
+                href={`/create?template=${t.id}`}
+                className="group rounded-2xl border border-stone-200 p-3 transition hover:border-[#a8455a]"
+                style={{ background: t.colors.desk }}
+              >
+                <div className="mb-3 transition group-hover:scale-105">
+                  <EnvelopeSwatch template={t} />
+                </div>
+                <p className="text-sm font-semibold" style={{ color: t.colors.ink }}>
+                  {t.name}
+                </p>
+              </Link>
             ))}
           </div>
         </div>

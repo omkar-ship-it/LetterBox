@@ -247,6 +247,8 @@
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  word-break: break-word;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 6;
