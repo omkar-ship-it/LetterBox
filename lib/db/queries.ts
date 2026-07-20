@@ -1,4 +1,4 @@
-import { eq, asc, and, isNull, desc } from "drizzle-orm";
+import { eq, asc, and, or, isNull, ne, desc, arrayContains } from "drizzle-orm";
 import { db, hasDb } from "./index";
 import { cards, scenes } from "./schema";
 import type { Card, NewCardInput } from "@/lib/types";
@@ -165,6 +165,34 @@ export async function getCardsByUserId(userId: string): Promise<Omit<Card, "scen
   if (!hasDb || !db) return [];
 
   const rows = await db.select().from(cards).where(eq(cards.userId, userId)).orderBy(desc(cards.createdAt));
+  return rows.map((cardRow) => {
+    const { scenes: _scenes, ...rest } = rowsToCard(cardRow, []);
+    void _scenes;
+    return rest;
+  });
+}
+
+/** Letters someone else sent *to* this account — matched by the account's own
+ * email appearing in `recipientEmails` (the sender-supplied delivery list),
+ * not by any real "this account received this" link, since recipients never
+ * need to be signed in to open a letter. Excludes letters this same account
+ * authored (a sender who lists their own email as a recipient, e.g. while
+ * testing, would otherwise see the same letter in both the sent and received
+ * lists). Scenes aren't needed for a list view, matching `getCardsByUserId`. */
+export async function getCardsReceivedByEmail(email: string, ownUserId: string): Promise<Omit<Card, "scenes">[]> {
+  if (!hasDb || !db) return [];
+
+  const rows = await db
+    .select()
+    .from(cards)
+    .where(
+      and(
+        arrayContains(cards.recipientEmails, [email]),
+        or(isNull(cards.userId), ne(cards.userId, ownUserId))
+      )
+    )
+    .orderBy(desc(cards.createdAt));
+
   return rows.map((cardRow) => {
     const { scenes: _scenes, ...rest } = rowsToCard(cardRow, []);
     void _scenes;
