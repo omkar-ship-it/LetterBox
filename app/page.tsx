@@ -127,6 +127,7 @@ export default async function Home() {
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#c9a05c]/15 text-[#8a6a3c]">
                 <Timer size={20} />
               </div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-[#8a6a3c]">Scheduled</p>
               <h3 className="mb-2 font-serif text-2xl text-[#2b2117]">Or make them wait for it</h3>
               <p className="mb-6 text-sm leading-relaxed text-stone-500">
                 Set the exact moment it unlocks — midnight on their birthday, the second your anniversary countdown
@@ -150,6 +151,7 @@ export default async function Home() {
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#e0724a]/15 text-[#c0532e]">
                 <Flame size={20} />
               </div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-[#c0532e]">Self-Destruct</p>
               <h3 className="mb-2 font-serif text-2xl text-[#2b2117]">Some letters aren&apos;t meant to last</h3>
               <p className="mb-6 text-sm leading-relaxed text-stone-500">
                 Turn on self-destruct and it disappears the second they finish reading — no screenshots, no
