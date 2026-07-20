@@ -142,40 +142,17 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="ritual" className="bg-[#2b2117] py-20">
+      <section id="ritual" className="bg-[#fdf1ee] py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-2 text-center font-serif text-3xl text-[#fbf6ef]">Every letter is a moment, not a message.</h2>
-          <p className="mb-12 text-center text-stone-400">Built for the ritual, not the reflex.</p>
+          <h2 className="mb-2 text-center font-serif text-3xl text-[#2b2117]">Every letter is a moment, not a message.</h2>
+          <p className="mb-12 text-center text-stone-500">Built for the ritual, not the reflex.</p>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <div className="rounded-3xl border border-white/10 bg-[#3a2018] p-8">
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#e0724a]/15 text-[#e0724a]">
-                <Flame size={20} />
-              </div>
-              <h3 className="mb-2 font-serif text-2xl text-[#fbf6ef]">Some letters aren&apos;t meant to last</h3>
-              <p className="mb-6 text-sm leading-relaxed text-stone-400">
-                Turn on self-destruct and it disappears the second they finish reading — no screenshots, no
-                re-opening, not even by you. Felt once, the way it should be.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  "A confession you're only brave enough to say once",
-                  "An apology that doesn't need saving",
-                  "A secret just for the two of you",
-                  "Something raw you'd never post",
-                ].map((c) => (
-                  <span key={c} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
-                    {c}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-[#1c2a3f] p-8">
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#c9a05c]/15 text-[#c9a05c]">
+            <div className="rounded-3xl border border-stone-200 bg-white p-8">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#c9a05c]/15 text-[#8a6a3c]">
                 <Timer size={20} />
               </div>
-              <h3 className="mb-2 font-serif text-2xl text-[#fbf6ef]">Or make them wait for it</h3>
-              <p className="mb-6 text-sm leading-relaxed text-stone-400">
+              <h3 className="mb-2 font-serif text-2xl text-[#2b2117]">Or make them wait for it</h3>
+              <p className="mb-6 text-sm leading-relaxed text-stone-500">
                 Set the exact moment it unlocks — midnight on their birthday, the second your anniversary countdown
                 hits zero, the morning of the wedding. Until then, just a sealed envelope and a ticking clock.
               </p>
@@ -186,7 +163,30 @@ export default async function Home() {
                   "Waits until the diploma's in hand",
                   "A time capsule for five years from now",
                 ].map((c) => (
-                  <span key={c} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-stone-300">
+                  <span key={c} className="rounded-full border border-[#e8d9b0] bg-[#f7f0df] px-3 py-1.5 text-xs text-[#8a6a3c]">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-stone-200 bg-white p-8">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#e0724a]/15 text-[#c0532e]">
+                <Flame size={20} />
+              </div>
+              <h3 className="mb-2 font-serif text-2xl text-[#2b2117]">Some letters aren&apos;t meant to last</h3>
+              <p className="mb-6 text-sm leading-relaxed text-stone-500">
+                Turn on self-destruct and it disappears the second they finish reading — no screenshots, no
+                re-opening, not even by you. Felt once, the way it should be.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "A confession you're only brave enough to say once",
+                  "An apology that doesn't need saving",
+                  "A secret just for the two of you",
+                  "Something raw you'd never post",
+                ].map((c) => (
+                  <span key={c} className="rounded-full border border-[#f0c9b8] bg-[#fbe8e0] px-3 py-1.5 text-xs text-[#a8482a]">
                     {c}
                   </span>
                 ))}
@@ -212,8 +212,8 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-[#2b2117] py-20 text-center">
-        <p className="mx-auto max-w-lg px-6 font-serif text-3xl text-[#fbf6ef] sm:text-4xl">Nothing left unsaid.</p>
+      <section className="bg-[#fdf1ee] py-20 text-center">
+        <p className="mx-auto max-w-lg px-6 font-serif text-3xl text-[#2b2117] sm:text-4xl">Nothing left unsaid.</p>
         <Link
           href="/create"
           className="mt-8 inline-block rounded-full bg-[#a8455a] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#c15266]"
