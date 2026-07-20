@@ -63,15 +63,14 @@ export async function sendOtpEmail(to: string, code: string): Promise<SendResult
  * added — a delivery mechanism alongside (not instead of) the copy-link
  * flow. Needs its own MSG91 template (MSG91_LETTER_TEMPLATE_ID) distinct
  * from the OTP one — different content, different variables. Confirmed
- * against a real template preview: it's `{{sender_name}}` (lowercase) and
- * `{{Receiver_Name}}` (mixed case, different word than "recipient") — MSG91
- * merge-tag names are literally whatever text was typed when the tag was
- * inserted in the editor, not a fixed convention, so don't assume casing
- * carries over between templates (the OTP one uses `{{OTP_CODE}}`, all
- * caps). The template's "View Your Letter" button isn't bound to any merge
- * tag as of 2026-07-20 (no third `{{...}}` appears anywhere in the preview,
- * body or subject) — it needs to be wired to a URL variable in the MSG91
- * editor before `letter_url` here does anything. */
+ * against a real template preview/editor: `{{sender_name}}` (lowercase),
+ * `{{Receiver_Name}}` (mixed case, different word than "recipient"), and
+ * the "View Your Letter" button's href is bound to `{{view_your_letter}}`
+ * (not a body-text variable, so it never showed up in preview screenshots —
+ * had to ask for it directly). MSG91 merge-tag names are literally whatever
+ * text was typed when the tag was inserted in that template's editor, not a
+ * fixed convention — don't assume casing/naming carries over between
+ * templates (the OTP one uses `{{OTP_CODE}}`, all caps). */
 export async function sendLetterNotificationEmail(
   to: string,
   opts: { senderName: string; recipientName: string; letterUrl: string }
@@ -82,7 +81,7 @@ export async function sendLetterNotificationEmail(
     variables: {
       sender_name: opts.senderName,
       Receiver_Name: opts.recipientName,
-      letter_url: opts.letterUrl,
+      view_your_letter: opts.letterUrl,
     },
     logLabel: "letter",
     devFallbackMessage: `would email ${to} — "${opts.senderName} sent ${opts.recipientName} a letter" -> ${opts.letterUrl}`,
