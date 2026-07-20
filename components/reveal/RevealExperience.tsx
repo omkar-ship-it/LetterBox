@@ -159,7 +159,7 @@ function pcQuoteCompactRem(len: number): number {
   if (len <= 100) return 0.78;
   if (len <= 150) return 0.58;
   if (len <= 200) return 0.48;
-  return 0.34;
+  return 0.3;
 }
 
 /** Sizes just the "To, {name}" line — the message preview below it has its
