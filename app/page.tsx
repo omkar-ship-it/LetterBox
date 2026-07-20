@@ -80,12 +80,12 @@ export default async function Home() {
         <div>
           <p className="mb-4 font-hand text-2xl text-[#a8455a]">no fuss — just say it</p>
           <h1 className="font-serif text-4xl leading-[1.1] text-[#2b2117] sm:text-5xl lg:text-6xl">
-            Say it like you mean it.
+            Leave nothing unsaid and say it like you mean it!
           </h1>
           <p className="mt-6 max-w-md text-lg text-stone-600">
             A thank-you, a birthday, a trip recap, an anniversary, a customer you want to keep — Letterbox turns it
-            into a letter someone will actually want to open. Scenes, a voice note, music, and a moment they can&apos;t
-            skip past.
+            into a letter someone will actually want to open and delivers your message in style. Create a highly
+            engaging letter with cards, a voice note, music, and a surprise moment that they cherish forever!
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
@@ -127,7 +127,7 @@ export default async function Home() {
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#c9a05c]/15 text-[#8a6a3c]">
                 <Timer size={20} />
               </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-[#8a6a3c]">Scheduled</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-[#8a6a3c]">Lock it until a future date!</p>
               <h3 className="mb-2 font-serif text-2xl text-[#2b2117]">Or make them wait for it</h3>
               <p className="mb-6 text-sm leading-relaxed text-stone-500">
                 Set the exact moment it unlocks — midnight on their birthday, the second your anniversary countdown
@@ -151,7 +151,7 @@ export default async function Home() {
               <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-full bg-[#e0724a]/15 text-[#c0532e]">
                 <Flame size={20} />
               </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-[#c0532e]">Self-Destruct</p>
+              <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-[#c0532e]">Auto-Faded</p>
               <h3 className="mb-2 font-serif text-2xl text-[#2b2117]">Some letters aren&apos;t meant to last</h3>
               <p className="mb-6 text-sm leading-relaxed text-stone-500">
                 Turn on self-destruct and it disappears the second they finish reading — no screenshots, no
