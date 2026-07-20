@@ -78,7 +78,7 @@ export default async function Home() {
 
       <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-12 lg:grid-cols-2 lg:py-20">
         <div>
-          <p className="mb-4 font-hand text-2xl text-[#a8455a]">no fuss — just say it</p>
+          <p className="mb-4 font-hand text-2xl text-[#a8455a]">Say it in style!</p>
           <h1 className="font-serif text-4xl leading-[1.1] text-[#2b2117] sm:text-5xl lg:text-6xl">
             Leave nothing unsaid and say it like you mean it!
           </h1>
@@ -217,7 +217,9 @@ export default async function Home() {
       </section>
 
       <section className="bg-[#fdf1ee] py-20 text-center">
-        <p className="mx-auto max-w-lg px-6 font-serif text-3xl text-[#2b2117] sm:text-4xl">Nothing left unsaid.</p>
+        <p className="mx-auto max-w-lg px-6 font-serif text-3xl text-[#2b2117] sm:text-4xl">
+          Nothing left unsaid &amp; said it in style!
+        </p>
         <Link
           href="/create"
           className="mt-8 inline-block rounded-full bg-[#a8455a] px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-[#c15266]"
