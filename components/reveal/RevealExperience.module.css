@@ -464,6 +464,33 @@
   pointer-events: none;
 }
 
+/* Optional second line under .gateCaption — same anchor formula, offset
+   further down by the caption's own line height so it never needs the
+   two to be measured against each other at runtime. */
+.gateSubcaption {
+  position: absolute;
+  z-index: 44;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(50% - (min(460px, 90%) / 3) - 2.9rem + 1.4rem);
+  width: max-content;
+  max-width: 220px;
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: var(--ink-soft);
+  text-align: center;
+  transition: opacity 1s ease, visibility 1s;
+}
+.root[data-variant="fullscreen"] .gateSubcaption {
+  position: fixed;
+  top: calc(50% - (min(460px, 90vw) / 3) - 2.9rem + 1.4rem);
+}
+.gate.hidden .gateSubcaption {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* ================= DECK SCENE ================= */
 .deckScene {
   position: absolute;
@@ -874,6 +901,9 @@
   .root[data-variant="fullscreen"] .gateCaption {
     top: calc(38% - (min(460px, 90vw) / 3) - 2.9rem);
   }
+  .root[data-variant="fullscreen"] .gateSubcaption {
+    top: calc(38% - (min(460px, 90vw) / 3) - 2.9rem + 1.4rem);
+  }
   .root[data-variant="fullscreen"] .deckScene {
     justify-content: flex-start;
     padding-top: 16vh;
@@ -1027,6 +1057,7 @@
   .sealHalf,
   .envelopeShell,
   .gateCaption,
+  .gateSubcaption,
   .closingText,
   .fadeVeil {
     transition: none !important;

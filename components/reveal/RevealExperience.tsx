@@ -214,6 +214,8 @@ export function RevealExperience({
   onUnlocked,
   selfDestruct,
   onSelfDestruct,
+  showAddress = true,
+  gateSubcaption,
 }: {
   variant: "fullscreen" | "contained";
   template: EnvelopeTemplate;
@@ -224,6 +226,14 @@ export function RevealExperience({
   scenes: Scene[];
   musicUrl?: string | null;
   onOpened?: () => void;
+  /** Hides the "To, {name} / {message}" box on the envelope itself — for
+   * marketing mockups too small to fit it without clipping, not the real
+   * reveal experience (defaults on there). */
+  showAddress?: boolean;
+  /** Optional second line under "Delivered to {name}" on the gate — the
+   * marketing hero mockup uses this to still show its sample message once
+   * showAddress hides the on-envelope box. */
+  gateSubcaption?: string;
   /** True while the letter is passcode-protected and not yet verified —
    * `scenes` is expected to be [] in that state (the server never sent the
    * real content). Tapping the seal shows a popup instead of opening. */
@@ -602,14 +612,16 @@ export function RevealExperience({
             <div className={styles.decorConfetti} style={{ "--decoration-color": template.decorationColor } as CSSVars} />
           )}
           <div className={cn(styles.envBody, styles.paperFiber)}>
-            <div
-              className={styles.envAddress}
-              style={{ "--address-scale": addressScale(recipientName) } as CSSVars}
-            >
-              <p className={styles.to}>To,</p>
-              <p className={styles.name}>{recipientName}</p>
-              <p className={styles.sub}>{message || "a letter, with love"}</p>
-            </div>
+            {showAddress && (
+              <div
+                className={styles.envAddress}
+                style={{ "--address-scale": addressScale(recipientName) } as CSSVars}
+              >
+                <p className={styles.to}>To,</p>
+                <p className={styles.name}>{recipientName}</p>
+                <p className={styles.sub}>{message || "a letter, with love"}</p>
+              </div>
+            )}
           </div>
           <div className={cn(styles.envFlap, styles.paperFiber, flapOpen && styles.open)} />
           <div
@@ -692,6 +704,7 @@ export function RevealExperience({
 
       <div className={cn(styles.gate, gateHidden && styles.hidden)}>
         <p className={styles.gateCaption}>Delivered to {recipientName}</p>
+        {gateSubcaption && <p className={styles.gateSubcaption}>{gateSubcaption}</p>}
       </div>
 
       <div className={cn(styles.deckScene, deckActive && styles.active)}>
