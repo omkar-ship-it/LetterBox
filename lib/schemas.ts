@@ -11,7 +11,13 @@ import { z } from "zod";
 // and retuned to match, verified against real max-length content at mobile
 // width before landing on these numbers, not just bumped blindly.
 export const SCENE_EYEBROW_MAX_LENGTH = 48;
-export const SCENE_QUOTE_MAX_LENGTH = 130;
+// The wizard dropped its separate "a little more detail" box (one field per
+// scene now, not two) — raised from 130 so a single quote can carry what
+// used to be split across quote+description. contentScale() in
+// RevealExperience.tsx already shrinks the postcard font as combined length
+// grows, so this doesn't need new CSS, just a real-content check that it
+// still reads cleanly at the top of that range.
+export const SCENE_QUOTE_MAX_LENGTH = 260;
 export const SCENE_DESCRIPTION_MAX_LENGTH = 280;
 
 export const sceneInputSchema = z.object({

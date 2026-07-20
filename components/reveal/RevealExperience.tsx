@@ -132,6 +132,36 @@ function contentScale(...text: string[]): number {
   return 0.78;
 }
 
+/** contentScale() above is deliberately a *mild* safety net (see the block
+ * comment on it) because the real fullscreen card is a big, viewport-scaled
+ * box where a capped-length quote already fits at full size. The wizard/hero
+ * mockup's postcard is a fixed ~300px CSS-pixel box regardless of the page's
+ * own viewport — a mild multiplier on an already-large base isn't enough
+ * range to take a short quote (should look full-size and confident) down to
+ * a max-length one (must shrink hard just to physically fit). This produces
+ * a direct rem value for that box specifically, verified against zero
+ * scrollHeight-vs-clientHeight overflow at real max-length content, not
+ * derived from the fullscreen formula. */
+function peakQuoteCompactRem(len: number): number {
+  if (len <= 60) return 1.3;
+  if (len <= 100) return 1.05;
+  if (len <= 150) return 0.88;
+  if (len <= 200) return 0.76;
+  return 0.66;
+}
+
+/** Same reasoning as peakQuoteCompactRem, for the narrower with-photo
+ * column (photo takes half the card width, so this needs to run smaller
+ * than the peak version at the same length) — also verified against zero
+ * overflow at real max-length content in the contained mockup. */
+function pcQuoteCompactRem(len: number): number {
+  if (len <= 60) return 1.05;
+  if (len <= 100) return 0.78;
+  if (len <= 150) return 0.58;
+  if (len <= 200) return 0.48;
+  return 0.34;
+}
+
 /** Sizes just the "To, {name}" line — the message preview below it has its
  * own fixed size + line-clamp (see .envAddress .sub in the CSS module) so a
  * long message no longer also shrinks the name down with it. Only the name
@@ -724,6 +754,11 @@ export function RevealExperience({
               "--scene": scene.accentColor,
               // inherited by .pcQuote/.pcDesc below — set once here rather than per-element
               "--content-scale": contentScale(scene.quote, isPeak ? "" : scene.description),
+              // only consumed by the contained-variant peak/with-photo quote CSS
+              // overrides — see peakQuoteCompactRem's comment for why these need
+              // their own scale instead of the shared mild contentScale().
+              "--peak-quote-compact-size": `${peakQuoteCompactRem(scene.quote.length)}rem`,
+              "--pcquote-compact-size": `${pcQuoteCompactRem(scene.quote.length)}rem`,
               ...(vars ? { "--tx": `${vars.tx}px`, "--ty": `${vars.ty}px` } : {}),
             };
             return (

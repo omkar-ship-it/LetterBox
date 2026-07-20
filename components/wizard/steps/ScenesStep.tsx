@@ -5,7 +5,7 @@ import { Check, ImagePlus, Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { VoiceRecorder } from "@/components/wizard/VoiceRecorder";
 import { LIGHT_PALETTE } from "@/lib/light-palette";
 import { uploadFile } from "@/lib/upload-client";
-import { SCENE_EYEBROW_MAX_LENGTH, SCENE_QUOTE_MAX_LENGTH, SCENE_DESCRIPTION_MAX_LENGTH } from "@/lib/schemas";
+import { SCENE_EYEBROW_MAX_LENGTH, SCENE_QUOTE_MAX_LENGTH } from "@/lib/schemas";
 import type { SceneDraft } from "@/components/wizard/types";
 
 export function ScenesStep({
@@ -142,7 +142,7 @@ function SceneCard({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error ?? "Couldn't compose right now.");
-      onChange({ quote: data.quote, description: data.description });
+      onChange({ quote: data.quote });
     } catch (err) {
       setComposeError(err instanceof Error ? err.message : "Couldn't compose right now.");
     } finally {
@@ -175,25 +175,12 @@ function SceneCard({
               value={scene.quote}
               onChange={(e) => onChange({ quote: e.target.value.slice(0, SCENE_QUOTE_MAX_LENGTH) })}
               placeholder="The line that says it — a quote or moment."
-              rows={3}
+              rows={6}
               maxLength={SCENE_QUOTE_MAX_LENGTH}
               className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm italic focus:border-[#a8455a] focus:outline-none"
             />
             <p className="mt-1 text-right text-[10px] text-stone-400">
               {scene.quote.length}/{SCENE_QUOTE_MAX_LENGTH}
-            </p>
-          </div>
-          <div>
-            <textarea
-              value={scene.description}
-              onChange={(e) => onChange({ description: e.target.value.slice(0, SCENE_DESCRIPTION_MAX_LENGTH) })}
-              placeholder="A little more detail (optional)."
-              rows={4}
-              maxLength={SCENE_DESCRIPTION_MAX_LENGTH}
-              className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm focus:border-[#a8455a] focus:outline-none"
-            />
-            <p className="mt-1 text-right text-[10px] text-stone-400">
-              {scene.description.length}/{SCENE_DESCRIPTION_MAX_LENGTH}
             </p>
           </div>
 
