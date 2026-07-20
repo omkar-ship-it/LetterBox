@@ -28,15 +28,15 @@ export function WizardShell({
 
   return (
     <div className="min-h-screen bg-[#fbf6ef]">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <header className="mx-auto grid max-w-6xl grid-cols-3 items-center px-6 py-5">
         <Link href="/" className="font-serif text-lg text-[#2b2117]">
           Letterbox
         </Link>
-        <div className="hidden items-center gap-1.5 sm:flex">
+        <div className="hidden items-center justify-center gap-1.5 sm:flex">
           {WIZARD_STEPS.map((s, i) => (
             <div
               key={s}
-              className={`h-1.5 w-8 rounded-full transition-colors ${i <= index ? "bg-[#a8455a]" : "bg-stone-200"}`}
+              className={`h-1.5 w-8 rounded-full transition-colors ${i <= index ? "bg-[#1c6b52]" : "bg-stone-200"}`}
             />
           ))}
         </div>
