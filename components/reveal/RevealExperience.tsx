@@ -269,7 +269,7 @@ export function RevealExperience({
    * marketing mockups too small to fit it without clipping, not the real
    * reveal experience (defaults on there). */
   showAddress?: boolean;
-  /** Optional second line under "Delivered to {name}" on the gate — the
+  /** Optional second line under "Received from {name}" on the gate — the
    * marketing hero mockup uses this to still show its sample message once
    * showAddress hides the on-envelope box. */
   gateSubcaption?: string;
@@ -758,7 +758,7 @@ export function RevealExperience({
       )}
 
       <div className={cn(styles.gate, gateHidden && styles.hidden)}>
-        <p className={styles.gateCaption}>Delivered to {recipientName}</p>
+        <p className={styles.gateCaption}>Received from {senderName}</p>
         {gateSubcaption && <p className={styles.gateSubcaption}>{gateSubcaption}</p>}
       </div>
 

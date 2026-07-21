@@ -11,7 +11,7 @@ export function HeroPreview() {
         <RevealExperience
           variant="contained"
           template={SAMPLE_TEMPLATE}
-          senderName="Someone who appreciates you"
+          senderName="Maya"
           recipientName="You"
           showAddress={false}
           gateSubcaption="a little something, just because"
