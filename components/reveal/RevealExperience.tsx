@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent, type TouchEvent as ReactTouchEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { Heart, Loader2, Lock, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
-import type { Card, Scene } from "@/lib/types";
+import type { Card, Scene, SealType } from "@/lib/types";
 import type { CSSVars } from "@/lib/css-vars";
 import { cn } from "@/lib/cn";
 import styles from "./RevealExperience.module.css";
@@ -246,6 +246,9 @@ export function RevealExperience({
   onSelfDestruct,
   showAddress = true,
   gateSubcaption,
+  sealType,
+  sealText,
+  sealLogoUrl,
 }: {
   variant: "fullscreen" | "contained";
   template: EnvelopeTemplate;
@@ -256,6 +259,12 @@ export function RevealExperience({
   scenes: Scene[];
   musicUrl?: string | null;
   onOpened?: () => void;
+  /** Personalizes the wax seal — "letters" renders sealText, "logo" renders
+   * sealLogoUrl as an embossed silhouette. Undefined/null falls back to the
+   * template's default mark (Heart, or Lock while passcode-locked). */
+  sealType?: SealType | null;
+  sealText?: string | null;
+  sealLogoUrl?: string | null;
   /** Hides the "To, {name} / {message}" box on the envelope itself — for
    * marketing mockups too small to fit it without clipping, not the real
    * reveal experience (defaults on there). */
@@ -675,7 +684,19 @@ export function RevealExperience({
             <span className={cn(styles.sealHalf, styles.l)} />
             <span className={cn(styles.sealHalf, styles.r)} />
             <span className={styles.envSealMark}>
-              {passcodeLocked ? <Lock size={20} /> : <Heart size={24} fill="currentColor" />}
+              {passcodeLocked ? (
+                <Lock size={20} />
+              ) : sealType === "letters" && sealText ? (
+                <span className={styles.envSealText}>{sealText}</span>
+              ) : sealType === "logo" && sealLogoUrl ? (
+                <span className={styles.envSealLogo}>
+                  <span className={cn(styles.envSealLogoLayer, styles.shadow)} style={{ "--seal-logo-url": `url(${JSON.stringify(sealLogoUrl)})` } as CSSVars} />
+                  <span className={cn(styles.envSealLogoLayer, styles.highlight)} style={{ "--seal-logo-url": `url(${JSON.stringify(sealLogoUrl)})` } as CSSVars} />
+                  <span className={cn(styles.envSealLogoLayer, styles.base)} style={{ "--seal-logo-url": `url(${JSON.stringify(sealLogoUrl)})` } as CSSVars} />
+                </span>
+              ) : (
+                <Heart size={24} fill="currentColor" />
+              )}
             </span>
           </div>
         </div>

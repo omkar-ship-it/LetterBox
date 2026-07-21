@@ -392,6 +392,53 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+/* Personalized seal — monogram text, engraved via a dark-below/light-above
+   text-shadow so it reads as pressed into the wax rather than printed on it. */
+.envSealText {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4), 0 -1px 0 rgba(255, 255, 255, 0.22);
+  line-height: 1;
+  user-select: none;
+}
+
+/* Personalized seal — uploaded logo, rendered as a monochrome silhouette
+   (CSS mask, same tinting trick as .decorCorner above) with a dark/light
+   pair offset a hair in opposite directions underneath the main fill, so it
+   reads as stamped into the wax instead of a flat logo pasted on a circle. */
+.envSealLogo {
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+.envSealLogoLayer {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: var(--seal-logo-url);
+  mask-image: var(--seal-logo-url);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.envSealLogoLayer.shadow {
+  background: rgba(0, 0, 0, 0.4);
+  transform: translate(1.5px, 2px);
+}
+.envSealLogoLayer.highlight {
+  background: rgba(255, 255, 255, 0.55);
+  transform: translate(-1px, -1.5px);
+}
+.envSealLogoLayer.base {
+  background: rgba(255, 255, 255, 0.92);
+}
+
 /* ================= PREMIUM ENVELOPE DECORATION ================= */
 /* Mask-based (not a colored SVG) so the same two motifs can be tinted per
    template via --decoration-color, rather than baking one fixed color into

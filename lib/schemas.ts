@@ -46,6 +46,11 @@ export const MESSAGE_MAX_LENGTH = 240;
 
 export const RECIPIENT_EMAILS_MAX = 5;
 
+// Short on purpose — this sits inside a 66px wax seal (see .envSealText in
+// RevealExperience.module.css), not a text field. 3 characters is enough
+// for initials like "A&J" without the font shrinking past legible.
+export const SEAL_TEXT_MAX_LENGTH = 3;
+
 export const cardInputSchema = z.object({
   senderName: z.string().min(1, "Your name is required."),
   recipientName: z.string().min(1, "Who is this for?"),
@@ -65,6 +70,13 @@ export const cardInputSchema = z.object({
   // A sender-uploaded track (from /api/upload), as an alternative to musicTrackId.
   musicUrl: z.string().nullable(),
   musicName: z.string().nullable(),
+  // Personalizes the wax seal — "letters" needs sealText, "logo" needs
+  // sealLogoUrl (from /api/upload). Not cross-validated against each other
+  // here since a sender switching between them client-side may transiently
+  // have both/neither set; the wizard only ever submits one meaningfully.
+  sealType: z.enum(["letters", "logo"]).nullable(),
+  sealText: z.string().max(SEAL_TEXT_MAX_LENGTH, `Keep it seal-short — ${SEAL_TEXT_MAX_LENGTH} characters max.`).nullable(),
+  sealLogoUrl: z.string().nullable(),
   unlockAt: z.string().nullable(),
   // Plaintext, submitted once at create/update time only — the API route
   // hashes it before it ever reaches the database (see lib/passcode.ts).

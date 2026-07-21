@@ -53,6 +53,13 @@ export const cards = pgTable("cards", {
   // When set, this wins over musicTrackId (see getCardMusicUrl in lib/music.ts).
   musicUrl: text("music_url"),
   musicName: text("music_name"),
+  // Personalizes the wax seal on the envelope — "letters" renders sealText
+  // (initials/monogram) inside the seal, "logo" renders sealLogoUrl as a
+  // monochrome embossed silhouette (see .envSealLogoLayer in
+  // RevealExperience.module.css). Null means the template's default mark.
+  sealType: text("seal_type"),
+  sealText: text("seal_text"),
+  sealLogoUrl: text("seal_logo_url"),
   unlockAt: timestamp("unlock_at", { withTimezone: true }),
   // Salted scrypt hash ("salt:hash"), never the plaintext passcode — see lib/passcode.ts.
   passcodeHash: text("passcode_hash"),

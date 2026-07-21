@@ -13,7 +13,7 @@ import { WIZARD_STEPS, type SceneDraft } from "./types";
 import { ENVELOPE_TEMPLATES, getEnvelopeTemplate } from "@/lib/envelope-templates";
 import { MUSIC_TRACKS } from "@/lib/music";
 import { PASSCODE_MIN_LENGTH } from "@/lib/schemas";
-import type { Scene } from "@/lib/types";
+import type { Scene, SealType } from "@/lib/types";
 
 function newScene(accentColor: string): SceneDraft {
   return {
@@ -54,6 +54,10 @@ export function CreateWizard({
   const [musicTrackId, setMusicTrackId] = useState<string | null>(MUSIC_TRACKS[0].id);
   const [musicUrl, setMusicUrl] = useState<string | null>(null);
   const [musicName, setMusicName] = useState<string | null>(null);
+
+  const [sealType, setSealType] = useState<SealType | null>(null);
+  const [sealText, setSealText] = useState("");
+  const [sealLogoUrl, setSealLogoUrl] = useState<string | null>(null);
 
   const [scheduled, setScheduled] = useState(false);
   const [unlockAtLocal, setUnlockAtLocal] = useState("");
@@ -107,6 +111,11 @@ export function CreateWizard({
     setPublishError(null);
     try {
       const cleanScenes = scenes.filter((s) => s.quote.trim().length > 0);
+      // Only send a seal customization if it's actually complete — picking
+      // "Initials" but leaving the field blank, or "Logo" mid-upload,
+      // should fall back to the template's default mark, not a half-set state.
+      const effectiveSealType: SealType | null =
+        sealType === "letters" && sealText.trim() ? "letters" : sealType === "logo" && sealLogoUrl ? "logo" : null;
       const res = await fetch("/api/cards", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -121,6 +130,9 @@ export function CreateWizard({
           musicTrackId,
           musicUrl,
           musicName,
+          sealType: effectiveSealType,
+          sealText: effectiveSealType === "letters" ? sealText.trim() : null,
+          sealLogoUrl: effectiveSealType === "logo" ? sealLogoUrl : null,
           unlockAt: scheduled && unlockAtLocal ? new Date(unlockAtLocal).toISOString() : null,
           passcode: passcodeEnabled && passcode.trim() ? passcode.trim() : null,
           selfDestruct,
@@ -157,6 +169,9 @@ export function CreateWizard({
       message={message}
       closingLine={title}
       scenes={previewScenes}
+      sealType={sealType}
+      sealText={sealText}
+      sealLogoUrl={sealLogoUrl}
     />
   );
 
@@ -170,7 +185,16 @@ export function CreateWizard({
       preview={preview}
     >
       {step === "envelope" && (
-        <EnvelopeStep envelopeTemplateId={envelopeTemplateId} setEnvelopeTemplateId={setEnvelopeTemplateId} />
+        <EnvelopeStep
+          envelopeTemplateId={envelopeTemplateId}
+          setEnvelopeTemplateId={setEnvelopeTemplateId}
+          sealType={sealType}
+          setSealType={setSealType}
+          sealText={sealText}
+          setSealText={setSealText}
+          sealLogoUrl={sealLogoUrl}
+          setSealLogoUrl={setSealLogoUrl}
+        />
       )}
       {step === "recipient" && (
         <RecipientStep

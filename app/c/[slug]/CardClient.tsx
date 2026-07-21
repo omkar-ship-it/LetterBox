@@ -54,6 +54,9 @@ export function CardClient({
       closingLine={card?.title}
       scenes={card?.scenes ?? []}
       musicUrl={musicUrl}
+      sealType={card?.sealType}
+      sealText={card?.sealText}
+      sealLogoUrl={card?.sealLogoUrl}
       selfDestruct={selfDestruct}
       onSelfDestruct={() => {
         fetch(`/api/cards/${slug}/mark-read`, { method: "POST" }).catch(() => {});

@@ -1,7 +1,7 @@
 import { eq, asc, and, or, isNull, ne, desc, arrayContains } from "drizzle-orm";
 import { db, hasDb } from "./index";
 import { cards, scenes } from "./schema";
-import type { Card, NewCardInput } from "@/lib/types";
+import type { Card, NewCardInput, SealType } from "@/lib/types";
 import { generateSlug, generateEditToken } from "@/lib/slug";
 import { verifyPasscode } from "@/lib/passcode";
 import * as mem from "./memory-store";
@@ -25,6 +25,9 @@ function rowsToCard(cardRow: CardRow, sceneRows: SceneRow[]): Card {
     musicTrackId: cardRow.musicTrackId,
     musicUrl: cardRow.musicUrl,
     musicName: cardRow.musicName,
+    sealType: cardRow.sealType as SealType | null,
+    sealText: cardRow.sealText,
+    sealLogoUrl: cardRow.sealLogoUrl,
     unlockAt: cardRow.unlockAt ? cardRow.unlockAt.toISOString() : null,
     passcodeHash: cardRow.passcodeHash,
     viewCount: cardRow.viewCount,
@@ -86,6 +89,9 @@ export async function createCard(input: NewCardInput): Promise<Card> {
       musicTrackId: input.musicTrackId,
       musicUrl: input.musicUrl,
       musicName: input.musicName,
+      sealType: input.sealType,
+      sealText: input.sealText,
+      sealLogoUrl: input.sealLogoUrl,
       unlockAt: input.unlockAt ? new Date(input.unlockAt) : null,
       passcodeHash: input.passcodeHash,
       selfDestruct: input.selfDestruct,
@@ -131,6 +137,9 @@ export async function updateCardByEditToken(
       musicTrackId: input.musicTrackId,
       musicUrl: input.musicUrl,
       musicName: input.musicName,
+      sealType: input.sealType,
+      sealText: input.sealText,
+      sealLogoUrl: input.sealLogoUrl,
       unlockAt: input.unlockAt ? new Date(input.unlockAt) : null,
       passcodeHash: input.passcodeHash,
       selfDestruct: input.selfDestruct,

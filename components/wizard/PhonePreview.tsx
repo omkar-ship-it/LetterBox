@@ -2,7 +2,7 @@
 
 import { RevealExperience } from "@/components/reveal/RevealExperience";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
-import type { Scene } from "@/lib/types";
+import type { Scene, SealType } from "@/lib/types";
 
 export function PhonePreview({
   template,
@@ -11,6 +11,9 @@ export function PhonePreview({
   message,
   closingLine,
   scenes,
+  sealType,
+  sealText,
+  sealLogoUrl,
 }: {
   template: EnvelopeTemplate;
   senderName: string;
@@ -18,6 +21,9 @@ export function PhonePreview({
   message: string;
   closingLine: string;
   scenes: Scene[];
+  sealType?: SealType | null;
+  sealText?: string | null;
+  sealLogoUrl?: string | null;
 }) {
   return (
     <div className="sticky top-8 hidden lg:block">
@@ -33,6 +39,9 @@ export function PhonePreview({
             message={message}
             closingLine={closingLine}
             scenes={scenes}
+            sealType={sealType}
+            sealText={sealText}
+            sealLogoUrl={sealLogoUrl}
           />
         </div>
       </div>

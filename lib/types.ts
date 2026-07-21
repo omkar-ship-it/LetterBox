@@ -1,3 +1,5 @@
+export type SealType = "letters" | "logo";
+
 export type Scene = {
   id: string;
   order: number;
@@ -30,6 +32,12 @@ export type Card = {
   musicUrl: string | null;
   /** Original filename of the uploaded track, for display in the wizard/dashboard. Null unless musicUrl is set. */
   musicName: string | null;
+  /** Personalizes the wax seal — "letters" shows sealText, "logo" shows sealLogoUrl embossed. Null uses the template's default mark. */
+  sealType: SealType | null;
+  /** Monogram/initials shown inside the seal. Only used when sealType is "letters". */
+  sealText: string | null;
+  /** Uploaded logo, rendered as a monochrome embossed silhouette. Only used when sealType is "logo". */
+  sealLogoUrl: string | null;
   unlockAt: string | null;
   /** Salted scrypt hash ("salt:hash"), or null if the letter has no passcode. Never sent to the client. */
   passcodeHash: string | null;
@@ -56,6 +64,9 @@ export type NewCardInput = {
   musicTrackId: string | null;
   musicUrl: string | null;
   musicName: string | null;
+  sealType: SealType | null;
+  sealText: string | null;
+  sealLogoUrl: string | null;
   unlockAt: string | null;
   passcodeHash: string | null;
   selfDestruct: boolean;
