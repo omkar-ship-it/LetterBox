@@ -50,8 +50,8 @@ const EMBER_PARTICLES: EmberParticle[] = (() => {
       tx: Math.cos(rad) * distance,
       ty: Math.sin(rad) * distance - upBias,
       size: 3 + random() * 5,
-      delay: random() * 900,
-      duration: 1700 + random() * 1400,
+      delay: random() * 1300,
+      duration: 2600 + random() * 2200,
       rot: (random() - 0.5) * 260,
     };
   });
@@ -80,8 +80,8 @@ const SHATTER_TILES: ShatterTile[] = (() => {
         tx: (u / mag) * distance + (random() - 0.5) * 40,
         ty: (v / mag) * distance * 0.7 - (40 + random() * 70),
         rot: (random() - 0.5) * 200,
-        delay: random() * 500,
-        duration: 1400 + random() * 1000,
+        delay: random() * 900,
+        duration: 2000 + random() * 1600,
       });
     }
   }
@@ -471,9 +471,9 @@ export function RevealExperience({
       onUnlocked?.(result.card);
       setShowPasscodeModal(false);
       setPasscodeChecking(false);
-      // The user already tapped intending to open — finish that now instead
-      // of making them tap a second time after getting the passcode right.
-      openEnvelope();
+      // Close the modal and leave the seal for them to tap themselves — a
+      // correct passcode should unlock the seal, not skip the ritual of
+      // cracking it open (that's the same experience every other letter gets).
     } catch {
       setPasscodeError("Something went wrong — try again?");
       setPasscodeChecking(false);
@@ -567,18 +567,22 @@ export function RevealExperience({
                 setClosingShown(true);
                 if (selfDestruct) {
                   onSelfDestruct?.();
-                  // Let them read the closing line for a couple seconds, then
-                  // the envelope shatters into tiles + embers; the final
-                  // message only appears once that's fully settled.
+                  // Let them sit with the closing line a moment, then the
+                  // envelope shatters into tiles + embers — slow and lingering
+                  // (matches SHATTER_TILES/EMBER_PARTICLES' longer delay+duration
+                  // ranges above) rather than a quick blink-and-it's-gone. The
+                  // final message only appears once that's fully settled —
+                  // this gap is deliberately a hair past the slowest possible
+                  // ember (max delay + duration, see EMBER_PARTICLES).
                   setTimeout(
                     () => {
                       const rect = envelopeRef.current?.getBoundingClientRect();
                       if (rect) setShatterSize({ w: rect.width, h: rect.height });
                       setDissolving(true);
                     },
-                    reduced ? 300 : 2200
+                    reduced ? 300 : 2800
                   );
-                  setTimeout(() => setFadedAway(true), reduced ? 700 : 2200 + 2600);
+                  setTimeout(() => setFadedAway(true), reduced ? 700 : 2800 + 6200);
                 }
               },
               reduced ? 100 : 950

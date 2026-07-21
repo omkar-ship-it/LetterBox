@@ -1097,7 +1097,7 @@
   padding: 0 1.5rem;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 1.8s ease;
+  transition: opacity 2.8s ease;
 }
 .root[data-variant="fullscreen"] .fadeVeil {
   position: fixed;
