@@ -871,7 +871,7 @@ export function RevealExperience({
       {selfDestruct && (
         <div className={cn(styles.fadeVeil, fadedAway && styles.shown)}>
           <p className={styles.fadeLine}>This letter has faded away.</p>
-          <p className={styles.fadeSub}>kept safe in memory, not on a server</p>
+          <p className={styles.fadeSub}>Meant to stay in your memory, not on server!</p>
         </div>
       )}
 
