@@ -5,25 +5,25 @@ export type MusicTrack = {
   fileUrl: string;
 };
 
-// Mood is "Emotion · Texture" — the emotion word is what a sender actually
-// scans for when picking a track, texture is the tiebreaker. Kept to a
-// fixed emotion vocabulary on purpose so it reads as a deliberate set, not
-// a grab-bag of adjectives.
+// Mood is "Emotion · Occasion" — the emotion word is what a sender actually
+// scans for when picking a track, occasion is the tiebreaker.
 export const MUSIC_TRACKS: MusicTrack[] = [
-  { id: "first-light", name: "First Light", mood: "Warm · Piano", fileUrl: "/music/first-light.wav" },
-  { id: "paper-airplanes", name: "Paper Airplanes", mood: "Playful · Pizzicato", fileUrl: "/music/paper-airplanes.wav" },
-  { id: "thank-you-truly", name: "Thank You, Truly", mood: "Gratitude · Strings", fileUrl: "/music/thank-you-truly.wav" },
-  { id: "confetti-sky", name: "Confetti Sky", mood: "Enthusiastic · Marimba", fileUrl: "/music/confetti-sky.wav" },
-  { id: "held-close", name: "Held Close", mood: "Tender · Piano", fileUrl: "/music/held-close.wav" },
-  { id: "morning-windows", name: "Morning Windows", mood: "Uplifting · Acoustic", fileUrl: "/music/morning-windows.wav" },
-  { id: "quiet-company", name: "Quiet Company", mood: "Reflective · Ambient", fileUrl: "/music/quiet-company.wav" },
-  { id: "homecoming", name: "Homecoming", mood: "Nostalgic · Warm Pad", fileUrl: "/music/homecoming.wav" },
-  { id: "open-road", name: "Open Road", mood: "Joyful · Guitar", fileUrl: "/music/open-road.wav" },
-  { id: "still-water", name: "Still Water", mood: "Serene · Ambient", fileUrl: "/music/still-water.wav" },
-  { id: "new-chapter", name: "New Chapter", mood: "Hopeful · Piano", fileUrl: "/music/new-chapter.wav" },
-  { id: "well-earned", name: "Well Earned", mood: "Triumphant · Bright", fileUrl: "/music/well-earned.wav" },
-  { id: "fireside", name: "Fireside", mood: "Cozy · Warm Pad", fileUrl: "/music/fireside.wav" },
-  { id: "one-more-chapter", name: "One More Chapter", mood: "Wistful · Strings", fileUrl: "/music/one-more-chapter.wav" },
+  { id: "thank-you", name: "Thank You", mood: "Grateful · Sincere", fileUrl: "/music/lesiakower-thank-you-21604.mp3" },
+  { id: "gift-of-giving", name: "The Gift of Giving", mood: "Grateful · Warm", fileUrl: "/music/geoffharvey-the-gift-of-giving-178473.mp3" },
+  { id: "kindness-is-magical", name: "Your Kindness Is Magical", mood: "Kind · Magical", fileUrl: "/music/nadiacripps-your-kindness-is-magical-181497.mp3" },
+  { id: "culture", name: "Culture", mood: "Reflective · Worldly", fileUrl: "/music/melodigne-culture-313413.mp3" },
+  { id: "wedding-waltz", name: "Wedding Waltz", mood: "Romantic · Wedding", fileUrl: "/music/andriig-wedding-wedding-music-568195.mp3" },
+  { id: "wedding-day", name: "Wedding Day", mood: "Romantic · Elegant", fileUrl: "/music/paulyudin-wedding-485932.mp3" },
+  { id: "wedding-invitation", name: "Wedding Invitation", mood: "Joyful · Wedding", fileUrl: "/music/sahilmadan-wedding-invitation-421393.mp3" },
+  { id: "wedding-anniversary", name: "Wedding Anniversary", mood: "Nostalgic · Anniversary", fileUrl: "/music/starostin-wedding-wedding-anniversary-music-263144.mp3" },
+  { id: "romantic-love", name: "Romantic Love", mood: "Romantic · Tender", fileUrl: "/music/hitslab-romantic-love-romantics-music-459475.mp3" },
+  { id: "gentle-romance", name: "Gentle Romance", mood: "Romantic · Gentle", fileUrl: "/music/paulyudin-romantic-romantic-music-493488.mp3" },
+  { id: "valentines-day", name: "Valentine's Day", mood: "Romantic · Sweet", fileUrl: "/music/maksymmalko-romantics-love-valentines-day-481993.mp3" },
+  { id: "bright-celebration", name: "Bright Celebration", mood: "Joyful · Festive", fileUrl: "/music/hitslab-celebration-celebration-celebrate-music-374949.mp3" },
+  { id: "celebration", name: "Celebration", mood: "Joyful · Uplifting", fileUrl: "/music/nastelbom-celebration-437422.mp3" },
+  { id: "party-celebration", name: "Party Celebration", mood: "Festive · Upbeat", fileUrl: "/music/mfcc-event-party-celebration-music-244587.mp3" },
+  { id: "birthday", name: "Birthday", mood: "Playful · Birthday", fileUrl: "/music/the_mountain-birthday-490600.mp3" },
+  { id: "happy-birthday", name: "Happy Birthday", mood: "Joyful · Birthday", fileUrl: "/music/the_mountain-happy-birthday-513146.mp3" },
 ];
 
 export function getMusicTrack(id: string | null): MusicTrack | null {
