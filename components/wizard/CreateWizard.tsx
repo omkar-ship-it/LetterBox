@@ -52,6 +52,8 @@ export function CreateWizard({
 
   const [scenes, setScenes] = useState<SceneDraft[]>(() => [newScene(template.accentColors[0])]);
   const [musicTrackId, setMusicTrackId] = useState<string | null>(MUSIC_TRACKS[0].id);
+  const [musicUrl, setMusicUrl] = useState<string | null>(null);
+  const [musicName, setMusicName] = useState<string | null>(null);
 
   const [scheduled, setScheduled] = useState(false);
   const [unlockAtLocal, setUnlockAtLocal] = useState("");
@@ -117,6 +119,8 @@ export function CreateWizard({
           message,
           envelopeTemplateId,
           musicTrackId,
+          musicUrl,
+          musicName,
           unlockAt: scheduled && unlockAtLocal ? new Date(unlockAtLocal).toISOString() : null,
           passcode: passcodeEnabled && passcode.trim() ? passcode.trim() : null,
           selfDestruct,
@@ -194,7 +198,16 @@ export function CreateWizard({
           context={context}
         />
       )}
-      {step === "music" && <MusicStep musicTrackId={musicTrackId} setMusicTrackId={setMusicTrackId} />}
+      {step === "music" && (
+        <MusicStep
+          musicTrackId={musicTrackId}
+          setMusicTrackId={setMusicTrackId}
+          musicUrl={musicUrl}
+          musicName={musicName}
+          setMusicUrl={setMusicUrl}
+          setMusicName={setMusicName}
+        />
+      )}
       {step === "schedule" && (
         <ScheduleStep
           scheduled={scheduled}

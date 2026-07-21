@@ -62,6 +62,9 @@ export const cardInputSchema = z.object({
   message: z.string().max(MESSAGE_MAX_LENGTH, `Keep it envelope-short — ${MESSAGE_MAX_LENGTH} characters max.`).default(""),
   envelopeTemplateId: z.string().min(1),
   musicTrackId: z.string().nullable(),
+  // A sender-uploaded track (from /api/upload), as an alternative to musicTrackId.
+  musicUrl: z.string().nullable(),
+  musicName: z.string().nullable(),
   unlockAt: z.string().nullable(),
   // Plaintext, submitted once at create/update time only — the API route
   // hashes it before it ever reaches the database (see lib/passcode.ts).

@@ -49,6 +49,10 @@ export const cards = pgTable("cards", {
   message: text("message").notNull().default(""),
   envelopeTemplateId: text("envelope_template_id").notNull(),
   musicTrackId: text("music_track_id"),
+  // A sender-uploaded track, as an alternative to picking from MUSIC_TRACKS.
+  // When set, this wins over musicTrackId (see getCardMusicUrl in lib/music.ts).
+  musicUrl: text("music_url"),
+  musicName: text("music_name"),
   unlockAt: timestamp("unlock_at", { withTimezone: true }),
   // Salted scrypt hash ("salt:hash"), never the plaintext passcode — see lib/passcode.ts.
   passcodeHash: text("passcode_hash"),

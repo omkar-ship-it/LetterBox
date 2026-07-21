@@ -30,3 +30,9 @@ export function getMusicTrack(id: string | null): MusicTrack | null {
   if (!id) return null;
   return MUSIC_TRACKS.find((t) => t.id === id) ?? null;
 }
+
+/** A sender-uploaded track always wins over a preset pick — see the
+ * musicUrl column comment in lib/db/schema.ts. */
+export function getCardMusicUrl(card: { musicTrackId: string | null; musicUrl: string | null }): string | null {
+  return card.musicUrl ?? getMusicTrack(card.musicTrackId)?.fileUrl ?? null;
+}

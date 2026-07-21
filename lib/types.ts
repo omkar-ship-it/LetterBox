@@ -26,6 +26,10 @@ export type Card = {
   message: string;
   envelopeTemplateId: string;
   musicTrackId: string | null;
+  /** A sender-uploaded track's URL — takes precedence over musicTrackId when set. */
+  musicUrl: string | null;
+  /** Original filename of the uploaded track, for display in the wizard/dashboard. Null unless musicUrl is set. */
+  musicName: string | null;
   unlockAt: string | null;
   /** Salted scrypt hash ("salt:hash"), or null if the letter has no passcode. Never sent to the client. */
   passcodeHash: string | null;
@@ -50,6 +54,8 @@ export type NewCardInput = {
   message: string;
   envelopeTemplateId: string;
   musicTrackId: string | null;
+  musicUrl: string | null;
+  musicName: string | null;
   unlockAt: string | null;
   passcodeHash: string | null;
   selfDestruct: boolean;

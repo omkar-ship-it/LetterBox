@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { RevealExperience } from "@/components/reveal/RevealExperience";
 import { LockedCountdown } from "@/components/reveal/LockedCountdown";
-import { getMusicTrack } from "@/lib/music";
+import { getCardMusicUrl } from "@/lib/music";
 import type { Card } from "@/lib/types";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
 
@@ -42,7 +42,7 @@ export function CardClient({
     );
   }
 
-  const track = card ? getMusicTrack(card.musicTrackId) : null;
+  const musicUrl = card ? getCardMusicUrl(card) : null;
 
   return (
     <RevealExperience
@@ -53,7 +53,7 @@ export function CardClient({
       message={card?.message}
       closingLine={card?.title}
       scenes={card?.scenes ?? []}
-      musicUrl={track?.fileUrl ?? null}
+      musicUrl={musicUrl}
       selfDestruct={selfDestruct}
       onSelfDestruct={() => {
         fetch(`/api/cards/${slug}/mark-read`, { method: "POST" }).catch(() => {});
