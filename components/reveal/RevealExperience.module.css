@@ -759,9 +759,9 @@
      render before landing on 0.68rem, not just eyeballed. Desktop/tablet
      widths are unaffected — the preferred value already exceeds this floor
      there, so the clamp's ceiling logic still governs same as before.
-     Raised to 0.78rem for mobile readability — re-verified a max-length
+     Raised to 0.85rem for mobile readability — re-verified a max-length
      quote still fits within the line-clamp below without overflow. */
-  font-size: calc(clamp(0.78rem, 3.2vw, 1.3rem) * var(--content-scale, 1));
+  font-size: calc(clamp(0.85rem, 3.2vw, 1.3rem) * var(--content-scale, 1));
   line-height: 1.26;
   color: var(--ink);
   margin: 0 0 0.35rem;
@@ -883,7 +883,7 @@
      below its own line-clamp by the fixed-height flex container before this
      — freeing padding gives it real room instead of shrinking the text box
      (confirmed via scrollHeight vs clientHeight at real max-length content). */
-  padding: 1.7rem 1.8rem;
+  padding: 1.4rem 1.8rem;
   text-align: center;
   background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--scene) 55%, transparent), transparent 55%),
     radial-gradient(circle at 75% 80%, color-mix(in srgb, var(--gold) 45%, transparent), transparent 55%),
@@ -900,7 +900,7 @@
      max-length quote still fits within the line-clamp below without
      overflow (this card has no photo competing for width, so there's
      more headroom here than the with-photo .pcQuote above). */
-  font-size: calc(clamp(1.45rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
+  font-size: calc(clamp(1.55rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
   line-height: 1.4;
   margin: 0;
   overflow: hidden;
