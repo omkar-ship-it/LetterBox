@@ -60,7 +60,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#fbf6ef] px-6">
       <div className="w-full max-w-sm rounded-2xl border border-stone-200 bg-white p-8">
         <Link href="/" className="mb-6 block font-serif text-xl text-[#2b2117]">
-          Letterbox
+          LetterMail
         </Link>
 
         {step === "email" ? (

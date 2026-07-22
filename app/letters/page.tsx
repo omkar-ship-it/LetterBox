@@ -89,7 +89,7 @@ export default async function LettersPage() {
     <div className="min-h-screen bg-[#fbf6ef]">
       <header className="mx-auto flex max-w-4xl items-center justify-between px-6 py-6">
         <Link href="/" className="font-serif text-xl text-[#2b2117]">
-          Letterbox
+          LetterMail
         </Link>
         <div className="flex items-center gap-5">
           <span className="text-sm text-stone-500">{user.email}</span>

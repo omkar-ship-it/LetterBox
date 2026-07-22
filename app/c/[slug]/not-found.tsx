@@ -8,7 +8,7 @@ export default function CardNotFound() {
         The link might be mistyped, or the letter has already found its way home.
       </p>
       <Link href="/" className="mt-4 text-sm font-semibold underline underline-offset-4">
-        Back to Letterbox
+        Back to LetterMail
       </Link>
     </div>
   );

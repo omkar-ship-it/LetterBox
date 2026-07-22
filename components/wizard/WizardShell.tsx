@@ -30,7 +30,7 @@ export function WizardShell({
     <div className="min-h-screen bg-[#fbf6ef]">
       <header className="mx-auto grid max-w-6xl grid-cols-3 items-center px-6 py-5">
         <Link href="/" className="font-serif text-lg text-[#2b2117]">
-          Letterbox
+          LetterMail
         </Link>
         <div className="hidden items-center justify-center gap-1.5 sm:flex">
           {WIZARD_STEPS.map((s, i) => (

@@ -38,7 +38,7 @@ const USE_CASES = [
 ];
 
 const STEPS = [
-  { icon: Sparkles, title: "Say the thing", copy: "Write it yourself, or let Letterbox help you find the words." },
+  { icon: Sparkles, title: "Say the thing", copy: "Write it yourself, or let LetterMail help you find the words." },
   { icon: Mic, title: "Add scenes & a voice note", copy: "Photos, quotes, little moments — and your actual voice, if you want." },
   { icon: Music2, title: "Choose an envelope & soundtrack", copy: "Pick a color, a seal, a song. Every detail sets the mood." },
   { icon: Timer, title: "Share the link", copy: "Send it now, or schedule it to unlock at the exact right moment." },
@@ -50,7 +50,7 @@ export default async function Home() {
   return (
     <div className="bg-[#fbf6ef]">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <span className="font-serif text-xl text-[#2b2117]">Letterbox</span>
+        <span className="font-serif text-xl text-[#2b2117]">LetterMail</span>
         <nav className="hidden items-center gap-8 text-sm font-medium text-stone-600 sm:flex">
           <a href="#use-cases" className="hover:text-[#2b2117]">
             Use cases
@@ -83,7 +83,7 @@ export default async function Home() {
             Leave nothing unsaid and say it like you mean it!
           </h1>
           <p className="mt-6 max-w-md text-lg text-stone-600">
-            A thank-you, a birthday, a trip recap, an anniversary, a customer you want to keep — Letterbox turns it
+            A thank-you, a birthday, a trip recap, an anniversary, a customer you want to keep — LetterMail turns it
             into a letter someone will actually want to open and delivers your message in style. Create a highly
             engaging letter with cards, a voice note, music, and a surprise moment that they cherish forever!
           </p>
@@ -229,7 +229,7 @@ export default async function Home() {
       </section>
 
       <footer className="mx-auto max-w-6xl px-6 py-8 text-center text-xs text-stone-400">
-        Letterbox — no tracking, just a letter worth opening.
+        LetterMail — no tracking, just a letter worth opening.
       </footer>
     </div>
   );

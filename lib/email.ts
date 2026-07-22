@@ -29,7 +29,7 @@ async function sendMsg91TemplateEmail(opts: {
       headers: { authkey: authKey, "Content-Type": "application/json" },
       body: JSON.stringify({
         recipients: [{ to: [{ email: opts.to }], variables: opts.variables }],
-        from: { email: fromEmail, name: process.env.MSG91_FROM_NAME || "Letterbox" },
+        from: { email: fromEmail, name: process.env.MSG91_FROM_NAME || "LetterMail" },
         domain,
         template_id: opts.templateId,
       }),

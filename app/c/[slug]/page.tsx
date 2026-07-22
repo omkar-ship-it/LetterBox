@@ -13,7 +13,7 @@ function FadedAway() {
         It was written to be read once. Whoever it was for has already read it — that&apos;s where it lives now.
       </p>
       <Link href="/" className="mt-4 text-sm font-semibold underline underline-offset-4">
-        Back to Letterbox
+        Back to LetterMail
       </Link>
     </div>
   );
@@ -26,15 +26,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const card = await getCardBySlug(slug);
-  if (!card) return { title: "Letterbox" };
+  if (!card) return { title: "LetterMail" };
   if (card.selfDestruct && card.readAt) {
-    return { title: "This letter has faded away — Letterbox" };
+    return { title: "This letter has faded away — LetterMail" };
   }
   if (card.passcodeHash) {
-    return { title: "A private letter — Letterbox", description: "This letter needs a passcode to open." };
+    return { title: "A private letter — LetterMail", description: "This letter needs a passcode to open." };
   }
   return {
-    title: `${card.title || "A letter"} — Letterbox`,
+    title: `${card.title || "A letter"} — LetterMail`,
     description: card.message || `${card.senderName} sent ${card.recipientName} a letter.`,
   };
 }

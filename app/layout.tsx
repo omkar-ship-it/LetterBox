@@ -21,7 +21,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "Letterbox — say it, beautifully",
+  title: "LetterMail — say it, beautifully",
   description:
     "Send a thank-you, an appreciation, a celebration — as a letter someone will actually want to open.",
 };

@@ -5,7 +5,7 @@ import { getSessionUser } from "@/lib/session";
 import { ENVELOPE_TEMPLATES } from "@/lib/envelope-templates";
 
 export const metadata: Metadata = {
-  title: "Create a letter — Letterbox",
+  title: "Create a letter — LetterMail",
 };
 
 export default async function CreatePage({

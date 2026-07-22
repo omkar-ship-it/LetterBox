@@ -896,10 +896,13 @@
 }
 .pcPeak .pcQuote {
   color: #fff;
-  /* Floor raised from 1.3rem for mobile readability — re-verified a
-     max-length quote still fits within the line-clamp below without
-     overflow (this card has no photo competing for width, so there's
-     more headroom here than the with-photo .pcQuote above). */
+  /* Floor raised from 1.3rem for mobile readability. NOTE: 4.4vw only
+     exceeds a 1.55rem floor above a ~564px viewport — every phone width is
+     actually governed by the flat floor, not the vw term, so a single floor
+     can't serve a 360px phone and a 428px phone equally: verified a
+     max-length quote overflows the line-clamp at 360-375px (common Android
+     widths) even though it fit fine at 390px+ (see the narrower-viewport
+     override below). */
   font-size: calc(clamp(1.55rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
   line-height: 1.4;
   margin: 0;
@@ -912,6 +915,17 @@
      larger floor size (confirmed via scrollHeight vs clientHeight). */
   -webkit-line-clamp: 9;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+/* Common Android widths (360-375px) are narrow enough that the mobile-
+   readability floor above wraps a max-length quote into more lines than
+   360px+ phones need, overflowing the line-clamp — confirmed via
+   scrollHeight vs clientHeight at 360/375px specifically (390px+ was fine).
+   A smaller floor just for this narrower band, rather than one flat value
+   forced to serve 360px and 428px phones equally. */
+@media (max-width: 380px) {
+  .pcPeak .pcQuote {
+    font-size: calc(clamp(1.3rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
+  }
 }
 /* The `vw` units above measure the page's viewport, not the ~300px mockup
    box .pcQuote actually sits in for the wizard/hero preview (that box is a
