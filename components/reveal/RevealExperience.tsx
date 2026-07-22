@@ -776,11 +776,6 @@ export function RevealExperience({
             const scene = scenes[entry.sceneIndex];
             if (!scene) return null;
             const isPeak = !scene.imageUrl;
-            // A quote (plus description, for the with-photo layout) long enough to
-            // fill the card should flow top-to-bottom like a normal paragraph —
-            // centering it (the default, right for short content) would push its
-            // start down and risk clipping the top under the fixed-height column.
-            const isLongContent = scene.quote.length + (isPeak ? 0 : scene.description.length) > 150;
             const vars = flyVars[entry.key];
             const style: CSSVars = {
               "--scene": scene.accentColor,
@@ -808,7 +803,7 @@ export function RevealExperience({
                 }}
               >
                 {isPeak ? (
-                  <div className={cn(styles.pcPeak, isLongContent && styles.pcTopAligned)}>
+                  <div className={styles.pcPeak}>
                     {scene.eyebrow && <p className={styles.pcEyebrow}>{scene.eyebrow}</p>}
                     <p className={styles.pcQuote}>{scene.quote}</p>
                     {scene.voiceNoteUrl && (
@@ -824,7 +819,7 @@ export function RevealExperience({
                       )}
                     </div>
                     <div className={styles.pcAccent} />
-                    <div className={cn(styles.pcContent, isLongContent && styles.pcTopAligned)}>
+                    <div className={styles.pcContent}>
                       {scene.eyebrow && <p className={styles.pcEyebrow}>{scene.eyebrow}</p>}
                       <p className={styles.pcQuote}>{scene.quote}</p>
                       {scene.description && <p className={styles.pcDesc}>{scene.description}</p>}

@@ -714,18 +714,15 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* `safe` falls back to start-alignment only when centering would actually
+     overflow/clip — native equivalent of "top-align if full, else center"
+     that adapts to the real rendered size instead of guessing from a
+     character-count threshold, which broke down badly on wide desktop
+     viewports (the postcard box there is far bigger than on mobile, so the
+     same character count reads as "barely fills it" there but "nearly
+     overflowing" on mobile — no fixed threshold covers both correctly). */
+  justify-content: safe center;
   overflow: hidden;
-}
-/* A quote long enough to fill the card flows top-to-bottom like a normal
-   paragraph instead of centering (which would push its start down and risk
-   clipping the top of a full-height block) — see isLongContent in
-   RevealExperience.tsx. Applies to both the with-photo (.pcContent) and
-   no-photo (.pcPeak) layouts, both of which are flex columns using
-   justify-content for vertical position. */
-.pcContent.pcTopAligned,
-.pcPeak.pcTopAligned {
-  justify-content: flex-start;
 }
 @media (max-width: 560px) {
   .postcard {
@@ -876,7 +873,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* See .pcContent's comment — same "safe" fallback-to-start reasoning. */
+  justify-content: safe center;
   gap: 1.1rem;
   padding: 2.2rem 1.8rem;
   text-align: center;
