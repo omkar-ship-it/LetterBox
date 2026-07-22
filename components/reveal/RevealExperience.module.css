@@ -200,8 +200,8 @@
   /* Capped well clear of the seal's left edge (seal is centered, 66px wide
      — on a small phone's ~338px envelope that's ~40% from the left) at
      every envelope size, not just the one this was eyeballed against. */
-  width: min(200px, 28%);
-  max-height: 62%;
+  width: min(220px, 32%);
+  max-height: 78%;
   padding: 0.5rem 0.65rem;
   border-radius: 9px;
   background: rgba(10, 8, 8, 0.6);
@@ -251,7 +251,7 @@
   word-break: break-word;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 8;
 }
 
 .envFlap {
@@ -758,8 +758,10 @@
      --content-scale pushed it down. Confirmed on a real /c/[slug] mobile
      render before landing on 0.68rem, not just eyeballed. Desktop/tablet
      widths are unaffected — the preferred value already exceeds this floor
-     there, so the clamp's ceiling logic still governs same as before. */
-  font-size: calc(clamp(0.68rem, 3.2vw, 1.3rem) * var(--content-scale, 1));
+     there, so the clamp's ceiling logic still governs same as before.
+     Raised to 0.78rem for mobile readability — re-verified a max-length
+     quote still fits within the line-clamp below without overflow. */
+  font-size: calc(clamp(0.78rem, 3.2vw, 1.3rem) * var(--content-scale, 1));
   line-height: 1.26;
   color: var(--ink);
   margin: 0 0 0.35rem;
@@ -876,7 +878,12 @@
   /* See .pcContent's comment — same "safe" fallback-to-start reasoning. */
   justify-content: safe center;
   gap: 1.1rem;
-  padding: 2.2rem 1.8rem;
+  /* Vertical padding trimmed from 2.2rem: at the larger mobile-readability
+     quote-font floor, a max-length quote's flex item was being compressed
+     below its own line-clamp by the fixed-height flex container before this
+     — freeing padding gives it real room instead of shrinking the text box
+     (confirmed via scrollHeight vs clientHeight at real max-length content). */
+  padding: 1.7rem 1.8rem;
   text-align: center;
   background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--scene) 55%, transparent), transparent 55%),
     radial-gradient(circle at 75% 80%, color-mix(in srgb, var(--gold) 45%, transparent), transparent 55%),
@@ -889,14 +896,21 @@
 }
 .pcPeak .pcQuote {
   color: #fff;
-  font-size: calc(clamp(1.3rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
+  /* Floor raised from 1.3rem for mobile readability — re-verified a
+     max-length quote still fits within the line-clamp below without
+     overflow (this card has no photo competing for width, so there's
+     more headroom here than the with-photo .pcQuote above). */
+  font-size: calc(clamp(1.45rem, 4.4vw, 1.7rem) * var(--content-scale, 1));
   line-height: 1.4;
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
+  /* Raised from 8 alongside the floor increase above — a max-length quote's
+     real rendered height started exceeding the old clamp at the new,
+     larger floor size (confirmed via scrollHeight vs clientHeight). */
+  -webkit-line-clamp: 9;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 /* The `vw` units above measure the page's viewport, not the ~300px mockup
