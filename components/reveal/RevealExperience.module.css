@@ -717,6 +717,16 @@
   justify-content: center;
   overflow: hidden;
 }
+/* A quote long enough to fill the card flows top-to-bottom like a normal
+   paragraph instead of centering (which would push its start down and risk
+   clipping the top of a full-height block) — see isLongContent in
+   RevealExperience.tsx. Applies to both the with-photo (.pcContent) and
+   no-photo (.pcPeak) layouts, both of which are flex columns using
+   justify-content for vertical position. */
+.pcContent.pcTopAligned,
+.pcPeak.pcTopAligned {
+  justify-content: flex-start;
+}
 @media (max-width: 560px) {
   .postcard {
     padding: 0.8rem 0.85rem;
@@ -760,7 +770,14 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6;
+  /* Raised from 6: at the smaller compact-size tiers a long quote's real
+     rendered height exceeded the line clamp before the with-photo column
+     ran out of actual room (confirmed via scrollHeight vs clientHeight on a
+     real mobile render, both the fullscreen card and the smaller contained
+     wizard-preview box) — this was clipping the tail of long quotes even
+     though .pcContent had space left to show it. A max line count doesn't
+     force shorter quotes to grow, so this is safe to raise generously. */
+  -webkit-line-clamp: 9;
 }
 .pcDesc {
   font-family: var(--font-body);

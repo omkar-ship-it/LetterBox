@@ -147,7 +147,8 @@ function peakQuoteCompactRem(len: number): number {
   if (len <= 100) return 1.05;
   if (len <= 150) return 0.88;
   if (len <= 200) return 0.76;
-  return 0.66;
+  if (len <= 260) return 0.68;
+  return 0.62;
 }
 
 /** Same reasoning as peakQuoteCompactRem, for the narrower with-photo
@@ -157,9 +158,10 @@ function peakQuoteCompactRem(len: number): number {
 function pcQuoteCompactRem(len: number): number {
   if (len <= 60) return 1.05;
   if (len <= 100) return 0.78;
-  if (len <= 150) return 0.58;
-  if (len <= 200) return 0.48;
-  return 0.3;
+  if (len <= 150) return 0.6;
+  if (len <= 200) return 0.5;
+  if (len <= 260) return 0.42;
+  return 0.36;
 }
 
 /** Sizes just the "To, {name}" line — the message preview below it has its
@@ -774,6 +776,11 @@ export function RevealExperience({
             const scene = scenes[entry.sceneIndex];
             if (!scene) return null;
             const isPeak = !scene.imageUrl;
+            // A quote (plus description, for the with-photo layout) long enough to
+            // fill the card should flow top-to-bottom like a normal paragraph —
+            // centering it (the default, right for short content) would push its
+            // start down and risk clipping the top under the fixed-height column.
+            const isLongContent = scene.quote.length + (isPeak ? 0 : scene.description.length) > 150;
             const vars = flyVars[entry.key];
             const style: CSSVars = {
               "--scene": scene.accentColor,
@@ -801,7 +808,7 @@ export function RevealExperience({
                 }}
               >
                 {isPeak ? (
-                  <div className={styles.pcPeak}>
+                  <div className={cn(styles.pcPeak, isLongContent && styles.pcTopAligned)}>
                     {scene.eyebrow && <p className={styles.pcEyebrow}>{scene.eyebrow}</p>}
                     <p className={styles.pcQuote}>{scene.quote}</p>
                     {scene.voiceNoteUrl && (
@@ -817,7 +824,7 @@ export function RevealExperience({
                       )}
                     </div>
                     <div className={styles.pcAccent} />
-                    <div className={styles.pcContent}>
+                    <div className={cn(styles.pcContent, isLongContent && styles.pcTopAligned)}>
                       {scene.eyebrow && <p className={styles.pcEyebrow}>{scene.eyebrow}</p>}
                       <p className={styles.pcQuote}>{scene.quote}</p>
                       {scene.description && <p className={styles.pcDesc}>{scene.description}</p>}

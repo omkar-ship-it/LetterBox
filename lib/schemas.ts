@@ -17,7 +17,11 @@ export const SCENE_EYEBROW_MAX_LENGTH = 48;
 // RevealExperience.tsx already shrinks the postcard font as combined length
 // grows, so this doesn't need new CSS, just a real-content check that it
 // still reads cleanly at the top of that range.
-export const SCENE_QUOTE_MAX_LENGTH = 260;
+// Raised from 260: mobile testing at the old cap showed real leftover space
+// in the card even at max length, because pcQuoteCompactRem/peakQuoteCompactRem
+// (RevealExperience.tsx) shrank the font more conservatively than the fixed
+// postcard box actually needed. Retuned alongside this — see those functions.
+export const SCENE_QUOTE_MAX_LENGTH = 320;
 export const SCENE_DESCRIPTION_MAX_LENGTH = 280;
 
 export const sceneInputSchema = z.object({

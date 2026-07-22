@@ -34,7 +34,7 @@ export function PhonePreview({
           <RevealExperience
             variant="contained"
             template={template}
-            senderName={senderName || "Someone who cares"}
+            senderName={senderName || "a friend"}
             recipientName={recipientName || "You"}
             message={message}
             closingLine={closingLine}
