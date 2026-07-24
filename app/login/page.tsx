@@ -72,6 +72,7 @@ export default function LoginPage() {
             <input
               type="email"
               autoFocus
+              autoComplete="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -79,7 +80,7 @@ export default function LoginPage() {
               }}
               onKeyDown={(e) => e.key === "Enter" && sendCode()}
               placeholder="you@example.com"
-              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
             />
             {error && <p className="mt-2 text-xs font-semibold text-red-500">{error}</p>}
             <button

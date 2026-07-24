@@ -168,7 +168,7 @@ function SceneCard({
             onChange={(e) => onChange({ eyebrow: e.target.value.slice(0, SCENE_EYEBROW_MAX_LENGTH) })}
             placeholder="Label (optional) — e.g. Steady"
             maxLength={SCENE_EYEBROW_MAX_LENGTH}
-            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide text-stone-500 focus:border-[#a8455a] focus:outline-none"
+            className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-base font-semibold uppercase tracking-wide text-stone-500 focus:border-[#a8455a] focus:outline-none"
           />
           <div>
             <textarea
@@ -177,7 +177,7 @@ function SceneCard({
               placeholder="The line that says it — a quote or moment."
               rows={6}
               maxLength={SCENE_QUOTE_MAX_LENGTH}
-              className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm italic focus:border-[#a8455a] focus:outline-none"
+              className="w-full resize-none rounded-lg border border-stone-300 bg-white px-3 py-2 text-base italic focus:border-[#a8455a] focus:outline-none"
             />
             <p className="mt-1 text-right text-[10px] text-stone-400">
               {scene.quote.length}/{SCENE_QUOTE_MAX_LENGTH}

@@ -742,7 +742,7 @@ export function RevealExperience({
                 setPasscodeError(null);
               }}
               placeholder="Enter passcode"
-              className={`w-full rounded-xl border px-4 py-3 text-center text-sm focus:outline-none ${
+              className={`w-full rounded-xl border px-4 py-3 text-center text-base focus:outline-none ${
                 passcodeError ? "border-red-400" : "border-stone-300"
               }`}
             />

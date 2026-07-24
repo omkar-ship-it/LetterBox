@@ -97,7 +97,7 @@ export function RecipientStep({
             value={recipientName}
             onChange={(e) => setRecipientName(e.target.value)}
             placeholder="e.g. Maya"
-            className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+            className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
           />
         </label>
         <label className="block">
@@ -105,7 +105,7 @@ export function RecipientStep({
           <select
             value={tone}
             onChange={(e) => setTone(e.target.value)}
-            className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm capitalize focus:border-[#a8455a] focus:outline-none"
+            className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base capitalize focus:border-[#a8455a] focus:outline-none"
           >
             {TONES.map((t) => (
               <option key={t} value={t}>
@@ -159,7 +159,7 @@ export function RecipientStep({
                 }
               }}
               placeholder="maya@example.com"
-              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm focus:border-[#a8455a] focus:outline-none"
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-base focus:border-[#a8455a] focus:outline-none"
             />
             <button
               type="button"
@@ -183,7 +183,7 @@ export function RecipientStep({
           onChange={(e) => setContext(e.target.value)}
           placeholder="They stayed up late helping me with the pitch."
           rows={2}
-          className="w-full resize-none rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+          className="w-full resize-none rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
         />
       </label>
 
@@ -206,7 +206,7 @@ export function RecipientStep({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="A short poetic title"
-          className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+          className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
         />
       </label>
 
@@ -218,7 +218,7 @@ export function RecipientStep({
           placeholder="Say the thing. It doesn't have to be perfect — it has to be true."
           rows={5}
           maxLength={MESSAGE_MAX_LENGTH}
-          className="w-full resize-none rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm italic focus:border-[#a8455a] focus:outline-none"
+          className="w-full resize-none rounded-xl border border-stone-300 bg-white px-4 py-3 text-base italic focus:border-[#a8455a] focus:outline-none"
         />
         <p className="mt-1 text-right text-[10px] text-stone-400">
           {message.length}/{MESSAGE_MAX_LENGTH} — this is what shows on the envelope face, keep it a preview

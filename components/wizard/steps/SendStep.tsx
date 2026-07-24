@@ -120,7 +120,7 @@ export function SendStep({
           value={senderName}
           onChange={(e) => setSenderName(e.target.value)}
           placeholder="How should they know it's from you?"
-          className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+          className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
         />
       </label>
 

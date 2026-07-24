@@ -75,7 +75,7 @@ export function ScheduleStep({
               value={unlockAtLocal}
               min={minDateTimeLocal()}
               onChange={(e) => setUnlockAtLocal(e.target.value)}
-              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
             />
           </label>
         )}
@@ -108,7 +108,7 @@ export function ScheduleStep({
               onChange={(e) => setPasscode(e.target.value.slice(0, PASSCODE_MAX_LENGTH))}
               placeholder="e.g. our-song-2019"
               maxLength={PASSCODE_MAX_LENGTH}
-              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-sm focus:border-[#a8455a] focus:outline-none"
+              className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-base focus:border-[#a8455a] focus:outline-none"
             />
             <p className={`mt-1.5 text-xs ${passcodeTooShort ? "text-red-500" : "text-stone-400"}`}>
               {passcodeTooShort
