@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 import type { Card, NewCardInput } from "@/lib/types";
-import { generateSlug, generateEditToken } from "@/lib/slug";
+import { generateReadableSlug, generateEditToken } from "@/lib/slug";
 
 // Local-dev fallback used whenever POSTGRES_URL isn't set, so the full
 // create -> share -> view flow is testable before real credentials exist.
@@ -44,8 +44,8 @@ function toScenes(input: NewCardInput["scenes"]) {
 
 export async function memCreateCard(input: NewCardInput): Promise<Card> {
   const all = await readAll();
-  let slug = generateSlug();
-  while (all[slug]) slug = generateSlug();
+  let slug = generateReadableSlug(input.senderName, input.recipientName, input.tone);
+  while (all[slug]) slug = generateReadableSlug(input.senderName, input.recipientName, input.tone);
 
   const card: Card = {
     id: randomUUID(),

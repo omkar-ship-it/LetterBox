@@ -2,7 +2,7 @@ import { eq, asc, and, or, isNull, ne, desc, arrayContains } from "drizzle-orm";
 import { db, hasDb } from "./index";
 import { cards, scenes } from "./schema";
 import type { Card, NewCardInput, SealType } from "@/lib/types";
-import { generateSlug, generateEditToken } from "@/lib/slug";
+import { generateReadableSlug, generateEditToken } from "@/lib/slug";
 import { verifyPasscode } from "@/lib/passcode";
 import * as mem from "./memory-store";
 
@@ -66,11 +66,11 @@ function sceneValues(cardId: string, input: NewCardInput["scenes"]) {
 export async function createCard(input: NewCardInput): Promise<Card> {
   if (!hasDb || !db) return mem.memCreateCard(input);
 
-  let slug = generateSlug();
+  let slug = generateReadableSlug(input.senderName, input.recipientName, input.tone);
   for (let attempt = 0; attempt < 5; attempt++) {
     const existing = await db.select({ id: cards.id }).from(cards).where(eq(cards.slug, slug)).limit(1);
     if (existing.length === 0) break;
-    slug = generateSlug();
+    slug = generateReadableSlug(input.senderName, input.recipientName, input.tone);
   }
 
   const [cardRow] = await db
