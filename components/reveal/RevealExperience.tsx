@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent, type TouchEvent as ReactTouchEvent, type MouseEvent as ReactMouseEvent } from "react";
-import { Heart, Loader2, Lock, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
+import { ArrowRight, Heart, Loader2, Lock, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
+import Link from "next/link";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
 import type { Card, Scene, SealType } from "@/lib/types";
 import type { CSSVars } from "@/lib/css-vars";
@@ -841,6 +842,16 @@ export function RevealExperience({
       <div className={cn(styles.closingText, closingShown && styles.shown, dissolving && styles.dissolving)}>
         <p className={styles.closingLine}>{closingLine || "Thank you for being you."}</p>
         <p className={styles.closingSub}>{senderName ? `kept, for you — ${senderName}` : "kept, for you"}</p>
+        {/* Recipient-only growth loop — the sender's own wizard preview
+            (variant="contained") doesn't need "make your own" pointed at
+            itself. Fades in a beat after the main line (see .closingCta's
+            transition-delay) so it reads as a quiet next thought, not a
+            competing headline. */}
+        {variant === "fullscreen" && (
+          <Link href="/create" className={styles.closingCta}>
+            Send one of your own <ArrowRight size={12} />
+          </Link>
+        )}
       </div>
 
       {selfDestruct && dissolving && !reduced && (

@@ -1011,6 +1011,45 @@
   color: var(--ink-faint);
   margin: 0;
 }
+/* Growth-loop CTA — deliberately understated (a small text link, not a
+   button) so it reads as a quiet afterthought rather than competing with
+   the closing line. --seal ties its color to this specific letter's own
+   template instead of a fixed brand color, so it feels like part of the
+   letter rather than an ad bolted onto it. Its own opacity/delay (nested
+   inside .closingText's already-shown state) makes it fade in ~1.4s after
+   the main text, not simultaneously — same "quiet second beat" reasoning
+   as the rest of the closing sequence. */
+.closingCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--seal);
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease, gap 0.2s ease, color 0.2s ease;
+}
+.closingCta svg {
+  transition: transform 0.2s ease;
+}
+.closingCta:hover {
+  gap: 0.5rem;
+  color: color-mix(in srgb, var(--seal) 70%, black);
+}
+.closingCta:hover svg {
+  transform: translateX(2px);
+}
+.closingText.shown .closingCta {
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 1.4s;
+}
 
 /* On tall/narrow phone screens, 50%-centering everything leaves a large dead
    zone above the content (confirmed on a real device). Shift the anchor up.
