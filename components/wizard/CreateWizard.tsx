@@ -86,10 +86,6 @@ export function CreateWizard({
   function goNext() {
     setStepIndex((i) => Math.min(WIZARD_STEPS.length - 1, i + 1));
   }
-  function goToStep(target: (typeof WIZARD_STEPS)[number]) {
-    const i = WIZARD_STEPS.indexOf(target);
-    if (i >= 0) setStepIndex(i);
-  }
 
   const canContinue = (() => {
     if (step === "recipient") return recipientName.trim().length > 0;
@@ -103,10 +99,6 @@ export function CreateWizard({
   })();
 
   async function handlePublish() {
-    if (template.tier === "premium") {
-      setPublishError("Premium envelopes aren't available to purchase yet — pick a free template to send this letter.");
-      return;
-    }
     setPublishing(true);
     setPublishError(null);
     try {
@@ -256,9 +248,6 @@ export function CreateWizard({
           publishing={publishing}
           publishError={publishError}
           shareUrl={shareUrl}
-          isPremiumTemplate={template.tier === "premium"}
-          templateName={template.name}
-          onEditEnvelope={() => goToStep("envelope")}
           passcode={passcodeEnabled && passcode.trim() ? passcode.trim() : null}
           selfDestruct={selfDestruct}
           accountEmail={accountEmail}

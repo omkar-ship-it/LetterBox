@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Crown, Flame, Loader2, Mail, Send, UserRound } from "lucide-react";
+import { Check, Copy, Flame, Loader2, Mail, Send, UserRound } from "lucide-react";
 
 export function SendStep({
   senderName,
@@ -12,9 +12,6 @@ export function SendStep({
   publishing,
   publishError,
   shareUrl,
-  isPremiumTemplate,
-  templateName,
-  onEditEnvelope,
   passcode,
   selfDestruct,
   accountEmail,
@@ -28,9 +25,6 @@ export function SendStep({
   publishing: boolean;
   publishError: string | null;
   shareUrl: string | null;
-  isPremiumTemplate: boolean;
-  templateName: string;
-  onEditEnvelope: () => void;
   passcode: string | null;
   selfDestruct: boolean;
   /** The wizard is only reachable while signed in (see app/create/page.tsx),
@@ -129,34 +123,15 @@ export function SendStep({
         saved to your letters.
       </p>
 
-      {isPremiumTemplate ? (
-        <div className="max-w-md rounded-xl border border-amber-200 bg-amber-50 p-4">
-          <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-800">
-            <Crown size={15} /> {templateName} is a premium envelope
-          </p>
-          <p className="mt-1 text-sm text-amber-700">
-            Purchasing premium envelopes isn&apos;t available yet, so this letter can&apos;t be sent with it selected. Pick a free
-            template to send now.
-          </p>
-          <button
-            type="button"
-            onClick={onEditEnvelope}
-            className="mt-3 rounded-full bg-amber-800 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-900"
-          >
-            Choose a free envelope
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={onPublish}
-          disabled={publishing || !senderName.trim()}
-          className="inline-flex items-center gap-2 rounded-full bg-[#a8455a] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#8f3a4c] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {publishing ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-          {publishing ? "Sealing it up…" : "Send letter"}
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={onPublish}
+        disabled={publishing || !senderName.trim()}
+        className="inline-flex items-center gap-2 rounded-full bg-[#a8455a] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#8f3a4c] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {publishing ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+        {publishing ? "Sealing it up…" : "Send letter"}
+      </button>
       {publishError && <p className="text-sm text-red-500">{publishError}</p>}
 
       <div>

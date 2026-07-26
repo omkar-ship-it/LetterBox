@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCardBySlug, updateCardByEditToken } from "@/lib/db/queries";
 import { cardInputSchema } from "@/lib/schemas";
-import { isPurchasableTemplateBlocked } from "@/lib/envelope-templates";
 import { hashPasscode } from "@/lib/passcode";
 import type { LockedCardPreview } from "@/lib/types";
 
@@ -49,10 +48,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ slug: 
   const parsed = cardInputSchema.safeParse(rest);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  }
-
-  if (isPurchasableTemplateBlocked(parsed.data.envelopeTemplateId)) {
-    return NextResponse.json({ error: "This envelope template requires a purchase, which isn't available yet." }, { status: 402 });
   }
 
   const { passcode, ...updateRest } = parsed.data;

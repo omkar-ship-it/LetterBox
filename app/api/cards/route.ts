@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createCard } from "@/lib/db/queries";
 import { cardInputSchema } from "@/lib/schemas";
-import { isPurchasableTemplateBlocked } from "@/lib/envelope-templates";
 import { hashPasscode } from "@/lib/passcode";
 import { getSessionUser } from "@/lib/session";
 import { sendLetterNotificationEmail } from "@/lib/email";
@@ -21,10 +20,6 @@ export async function POST(req: Request) {
   const parsed = cardInputSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  }
-
-  if (isPurchasableTemplateBlocked(parsed.data.envelopeTemplateId)) {
-    return NextResponse.json({ error: "This envelope template requires a purchase, which isn't available yet." }, { status: 402 });
   }
 
   const { passcode, ...rest } = parsed.data;

@@ -206,30 +206,12 @@ export function EnvelopeStep({
   sealLogoUrl: string | null;
   setSealLogoUrl: (v: string | null) => void;
 }) {
-  const free = ENVELOPE_TEMPLATES.filter((t) => t.tier === "free");
-  const premium = ENVELOPE_TEMPLATES.filter((t) => t.tier === "premium");
-
   return (
     <div className="space-y-8">
-      <div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {free.map((t) => (
-            <TemplateCard key={t.id} t={t} selected={t.id === envelopeTemplateId} onSelect={() => setEnvelopeTemplateId(t.id)} />
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-stone-400">Premium</p>
-        <p className="mb-4 text-xs text-stone-400">
-          Richer templates with hand-drawn detail. Preview them here — purchasing is coming soon, so letters can&apos;t be sent
-          with one selected just yet.
-        </p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {premium.map((t) => (
-            <TemplateCard key={t.id} t={t} selected={t.id === envelopeTemplateId} onSelect={() => setEnvelopeTemplateId(t.id)} />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {ENVELOPE_TEMPLATES.map((t) => (
+          <TemplateCard key={t.id} t={t} selected={t.id === envelopeTemplateId} onSelect={() => setEnvelopeTemplateId(t.id)} />
+        ))}
       </div>
 
       <SealPersonalizer

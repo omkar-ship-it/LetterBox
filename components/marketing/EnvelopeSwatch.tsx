@@ -1,4 +1,3 @@
-import { Crown } from "lucide-react";
 import type { EnvelopeTemplate } from "@/lib/envelope-templates";
 
 const FILIGREE_MASK =
@@ -8,8 +7,8 @@ const BOTANICAL_MASK =
 
 /** A small static echo of the real envelope shape (RevealExperience's
  * .envelope/.envFlap/.envSealWrap) — same paper gradient, same triangular
- * flap via clip-path, same wax-seal dot, and (for premium templates) the
- * same mask-based filigree/botanical/confetti motifs as the real reveal
+ * flap via clip-path, same wax-seal dot, and (for templates with a decoration)
+ * the same mask-based filigree/botanical/confetti motifs as the real reveal
  * engine — so the landing page's template picker actually looks like the
  * thing you're picking, not just a color swatch. Deliberately skips tape
  * (removed from the real envelope earlier) to stay a fast, simple preview
@@ -22,14 +21,6 @@ export function EnvelopeSwatch({ template }: { template: EnvelopeTemplate }) {
         background: `linear-gradient(155deg, ${template.colors.envPaper} 0%, ${template.colors.envPaper2} 55%, ${template.colors.envPaper3} 100%)`,
       }}
     >
-      {template.tier === "premium" && (
-        <span
-          className="absolute right-1.5 top-1.5 z-10 inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[0.55rem] font-bold uppercase tracking-wide text-white"
-          style={{ background: "rgba(0,0,0,0.55)" }}
-        >
-          <Crown size={9} /> Premium
-        </span>
-      )}
       {(template.decoration === "filigree" || template.decoration === "botanical") && (
         <div
           className="absolute bottom-1 left-1 z-[6] h-6 w-6 opacity-80"

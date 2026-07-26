@@ -4,7 +4,6 @@ export type EnvelopeTemplate = {
   id: string;
   name: string;
   description: string;
-  tier: "free" | "premium";
   decoration: EnvelopeDecoration;
   /** Tints the decoration (mask-based, so any color works regardless of the source SVG). */
   decorationColor: string;
@@ -33,7 +32,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "warm-coral",
     name: "Warm Coral",
     description: "Sun-warmed paper, a green wax seal, a little gold tape. Tender and bright.",
-    tier: "free",
     decoration: "none",
     decorationColor: "#d19a35",
     colors: {
@@ -57,7 +55,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "sunlit-parchment",
     name: "Sunlit Parchment",
     description: "Tan parchment, a deep red seal. Steady, old-friend warmth.",
-    tier: "free",
     decoration: "none",
     decorationColor: "#8a6a3c",
     colors: {
@@ -81,7 +78,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "midnight-airmail",
     name: "Midnight Airmail",
     description: "Cream paper, a red wax seal, airmail stripes. Quietly classic.",
-    tier: "free",
     decoration: "none",
     decorationColor: "#c9a05c",
     colors: {
@@ -105,7 +101,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "celebration",
     name: "Celebration",
     description: "Marigold paper, a berry-pink seal, teal tape. Confetti in envelope form.",
-    tier: "free",
     decoration: "none",
     decorationColor: "#f2933f",
     colors: {
@@ -129,7 +124,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "gratitude",
     name: "Gratitude",
     description: "Sage paper, a terracotta seal, cream tape. Grounded and grateful.",
-    tier: "free",
     decoration: "none",
     decorationColor: "#b5622f",
     colors: {
@@ -153,7 +147,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "encouragement",
     name: "Encouragement",
     description: "Sky-blue paper, a coral seal, sunflower tape. Bright and rooting for you.",
-    tier: "free",
     decoration: "none",
     decorationColor: "#4f8cae",
     colors: {
@@ -177,7 +170,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "golden-filigree",
     name: "Golden Filigree",
     description: "Ink-black paper, gold foil flourishes, an ornate gold seal. Formal and unforgettable.",
-    tier: "premium",
     decoration: "filigree",
     decorationColor: "#d4af5a",
     colors: {
@@ -201,7 +193,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "blush-botanical",
     name: "Blush Botanical",
     description: "Ivory paper, hand-drawn botanical sprigs, a dusty-rose seal. Soft and romantic.",
-    tier: "premium",
     decoration: "botanical",
     decorationColor: "#7a8f6a",
     colors: {
@@ -225,7 +216,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "midnight-confetti",
     name: "Midnight Confetti",
     description: "Emerald paper scattered with gold and silver confetti, a bold coral seal. Pure celebration.",
-    tier: "premium",
     decoration: "confetti",
     decorationColor: "#e6c874",
     colors: {
@@ -249,7 +239,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "ivory-filigree",
     name: "Ivory Filigree",
     description: "Ivory paper, silvered filigree flourishes, a deep plum seal. Elegant and quietly romantic.",
-    tier: "premium",
     decoration: "filigree",
     decorationColor: "#b0a48f",
     colors: {
@@ -273,7 +262,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "sage-botanical",
     name: "Sage Botanical",
     description: "Sage-green paper, hand-drawn botanical sprigs, a terracotta seal. Grounded and warm.",
-    tier: "premium",
     decoration: "botanical",
     decorationColor: "#5c6b4f",
     colors: {
@@ -297,7 +285,6 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
     id: "sunset-confetti",
     name: "Sunset Confetti",
     description: "Coral paper scattered with gold confetti, a berry-pink seal. Bright and celebratory.",
-    tier: "premium",
     decoration: "confetti",
     decorationColor: "#f2c14e",
     colors: {
@@ -321,11 +308,4 @@ export const ENVELOPE_TEMPLATES: EnvelopeTemplate[] = [
 
 export function getEnvelopeTemplate(id: string): EnvelopeTemplate {
   return ENVELOPE_TEMPLATES.find((t) => t.id === id) ?? ENVELOPE_TEMPLATES[0];
-}
-
-/** Purchasing isn't wired up yet — enforced server-side too, not just hidden
- * in the wizard UI, so a direct API call can't ship a premium template for
- * free by skipping the client. */
-export function isPurchasableTemplateBlocked(id: string): boolean {
-  return getEnvelopeTemplate(id).tier === "premium";
 }
